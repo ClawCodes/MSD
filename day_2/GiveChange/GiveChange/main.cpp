@@ -20,13 +20,13 @@ int main(int argc, const char * argv[]) {
     std::cout << "Change = " << change  << " cents\n";
     
     int remaining;
-    int numQuarters = floor(change / 25);
+    int numQuarters = change / 25;
     remaining = change % 25;
     
-    int numDimes = floor(remaining / 10);
-    remaining = change % 10;
+    int numDimes = remaining / 10;
+    remaining = remaining % 10;
     
-    int numNickels = floor(remaining / 5);
+    int numNickels = remaining / 5;
     remaining = remaining % 5;
     
     std::cout << "Quarters: " << numQuarters << "\n";
