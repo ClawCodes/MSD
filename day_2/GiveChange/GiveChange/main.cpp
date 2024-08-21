@@ -20,6 +20,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Change = " << change  << " cents\n";
     
     int remaining;
+    
     int numQuarters = change / 25;
     remaining = change % 25;
     
