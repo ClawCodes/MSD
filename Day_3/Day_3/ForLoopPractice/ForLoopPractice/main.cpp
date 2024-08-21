@@ -40,5 +40,34 @@ int main(int argc, const char * argv[]) {
         std::cout << i << "\n";
     }
     
+    // Print odd numbers
+    // Using if statement
+    for (i=1; i<=20; i++){
+        if (i % 2 != 0){
+            std::cout << i << "\n";
+        }
+    }
+    // Not using if statement
+    for (i=1; i<=20; i+=2){
+        std::cout << i << "\n";
+    }
+    // Not using an if statement is better as it reduces the amount of iterations and the additiona if computation required
+    
+    i = 0;
+    int userInput = 0;
+    while (userInput >= 0){
+        std::cout << "Enter a positive number to sum\n";
+        std::cin >> userInput;
+        if (userInput >= 0){
+            i += userInput;
+        }
+    }
+    std::cout << "The sum of your entered numbers is: " << i << "\n";
+    for (i = 1; i <= 5; i++){
+        std::cout << "\n" << i << "x*: ";
+        for (int j = 1; j <= 5; j++){
+            std::cout << i * j << ' ';
+        }
+    }
     return 0;
 }
