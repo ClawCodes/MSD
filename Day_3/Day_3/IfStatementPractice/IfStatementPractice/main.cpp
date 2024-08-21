@@ -36,6 +36,7 @@ int main(int argc, const char * argv[]) {
     // Determine if the user will get sleep
     char weekdayResponse, holidayResponse, childrenResponse;
     bool isWeekday, isHoliday, hasChildren;
+    
     std::cout << "Is it a weekday?\n";
     std::cin >> weekdayResponse;
     isWeekday = (weekdayResponse == 'Y');
