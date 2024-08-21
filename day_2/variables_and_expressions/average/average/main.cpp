@@ -3,7 +3,7 @@
 //  average
 //
 //  Created by Christopher Lawton on 8/20/24.
-// Progrmmer partner: Alexia Pappas
+//  Programmer partner: Alexia Pappas
 
 #include <iostream>
 
