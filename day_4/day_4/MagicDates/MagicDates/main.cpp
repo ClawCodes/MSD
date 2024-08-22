@@ -22,7 +22,8 @@ int main(int argc, const char * argv[]) {
     year = stoi(calendarDate.substr(6,4));
     
     if(!(month > 0 && month < 13) || !(day > 0 && day < 32) || !(year > 999 && year < 10000)){
-        cout << "Invalid date";
+        cout << "Invalid date" << endl;
+        return 1;
     }
  
     if(month == 1){
@@ -52,6 +53,14 @@ int main(int argc, const char * argv[]) {
     }
     
     cout << calendarMonth + " " << day << ", " << year << endl;
+    
+    // Determining if date is a Magic Date
+    
+    if(month * day == stoi(calendarDate.substr(8,2))){
+        cout << calendarDate << " IS a magic date" << endl;
+    } else {
+        cout << calendarDate << " is NOT a magic date" << endl;
+    }
     
     return 0;
 }
