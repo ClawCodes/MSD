@@ -20,7 +20,9 @@ int main(int argc, const char * argv[]) {
     }
     
     if (userInput == result){
-        std::cout << "Your string is a palindrome" << std::endl;
+        std::cout << userInput << " is a palindrome" << std::endl;
+    } else {
+        std::cout << userInput << " is NOT a palindrome" << std::endl;
     }
     
     return 0;
