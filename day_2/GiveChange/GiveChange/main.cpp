@@ -46,7 +46,7 @@ int main(int argc, const char * argv[]) {
     if (numNickels > numAvailable) {
         numNickels = numAvailable;
     }
-    remaining = remaining - (numDimes * 5);
+    remaining = remaining - (numNickels * 5);
     
     if (remaining > 2){
         std::cout << "Sorry, the machine does not have enough coins to provide you with change. Returning your money.";

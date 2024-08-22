@@ -63,6 +63,7 @@ int main(int argc, const char * argv[]) {
         }
     }
     std::cout << "The sum of your entered numbers is: " << i << "\n";
+    
     for (i = 1; i <= 5; i++){
         std::cout << "\n" << i << "x*: ";
         for (int j = 1; j <= 5; j++){
