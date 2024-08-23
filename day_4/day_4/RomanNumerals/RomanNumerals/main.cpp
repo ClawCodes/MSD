@@ -9,70 +9,63 @@
 using namespace std;
 #include <string>
 
-// 1000 -> one iteration
-// 1200 -> two iterations
 
 int main(int argc, const char * argv[]) {
-    string decimalIntStr;
+    string userInput;
     int decimalInteger;
     
     cout << "Enter a decimal number:";
-    cin >> decimalIntStr;
+    cin >> userInput;
     
-    decimalInteger = stoi(decimalIntStr);
+    decimalInteger = stoi(userInput);
+    
+    if (decimalInteger <= 0){
+        cout << "Please enter a number which is greater than 0.";
+        return 1;
+    }
     
     while(decimalInteger > 0){
-        int multiplier = 1;
-        int subtractInt = 0;
         
         if (decimalInteger >= 1000){
-            multiplier = decimalInteger / 1000;
-            cout << string(multiplier, 'M');
-            subtractInt = multiplier * 1000;
+            cout << 'M';
+            decimalInteger = decimalInteger - 1000;
         } else if (decimalInteger >= 900){
             cout << "CM";
-            subtractInt = 900;
+            decimalInteger = decimalInteger - 900;
         } else if (decimalInteger >= 500){
-            multiplier = decimalInteger / 100;
-            cout << string(multiplier, 'D');
-            subtractInt = multiplier * 100;
+            cout << 'D';
+            decimalInteger = decimalInteger - 100;
         } else if (decimalInteger >= 400){
             cout << "CD";
-            subtractInt = 400;
+            decimalInteger = decimalInteger - 400;
         } else if (decimalInteger >= 100){
-            multiplier = decimalInteger / 100;
-            cout << string(multiplier, 'C');
-            subtractInt = multiplier * 100;
+            cout << 'C';
+            decimalInteger = decimalInteger - 100;
         } else if (decimalInteger >= 90){
             cout << "XC";
-            subtractInt = 90;
+            decimalInteger = decimalInteger - 90;
         } else if (decimalInteger >= 50){
-            multiplier = decimalInteger / 10;
-            cout << string(multiplier, 'L');
-            subtractInt = multiplier * 10;
+            cout << 'L';
+            decimalInteger = decimalInteger - 10;
         } else if (decimalInteger >= 40){
             cout << "XL";
-            subtractInt = 40;
+            decimalInteger = decimalInteger - 40;
         } else if (decimalInteger >= 10){
-            multiplier = decimalInteger / 10;
-            cout << string(multiplier, 'X');
-            subtractInt = multiplier * 10;
+            cout << 'X';
+            decimalInteger = decimalInteger - 10;
         } else if (decimalInteger >= 9){
             cout << "IX";
-            subtractInt = 9;
+            decimalInteger = decimalInteger - 9;
         } else if (decimalInteger >= 5){
             cout << 'V';
-            cout << string(decimalInteger - 5, 'I');
-            subtractInt = decimalInteger;
+            decimalInteger = decimalInteger - 5;
         } else if (decimalInteger >= 4){
             cout << "IV";
-            subtractInt = 4;
+            decimalInteger = decimalInteger - 4;
         } else {
-            cout << string(decimalInteger, 'I');
-            subtractInt = decimalInteger;
+            cout << 'I';
+            decimalInteger = decimalInteger - 1;
         }
-        
-        decimalInteger = decimalInteger - subtractInt;
     }
     cout << endl;
 }
