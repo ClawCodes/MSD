@@ -9,18 +9,19 @@
 #include <string>
 using namespace std;
 
-char period = '.';
-char question = '?';
-char exclamation = '!';
 
+/// <#Description#> Check if a given character is a sentence terminator
+/// - Parameter c: character to check
 bool IsTerminator(char c){
-    if (c == period || c == question || c == exclamation) {
+    if (c == '.' || c == '?' || c == '!') {
         return true;
     } else{
         return false;
     }
 }
 
+/// <#Description#> Check if a given character is punctuation
+/// - Parameter c: character to check
 bool IsPunctuation(char c){
     if (c == ',' || IsTerminator(c)){
         return true;
@@ -29,6 +30,8 @@ bool IsPunctuation(char c){
     }
 }
 
+/// <#Description#> Check if a given character is a vowel
+/// - Parameter c: character to check
 bool IsVowel(char c){
     char cLower = tolower(c);
     if (cLower == 'a' || cLower == 'e' || cLower == 'i' || cLower == 'o' || cLower == 'u' || cLower == 'y'){
@@ -38,6 +41,8 @@ bool IsVowel(char c){
     }
 }
 
+/// <#Description#> Check if a given character is a space
+/// - Parameter c: character to check
 bool IsSpace(char c){
     if (c == ' '){
         return true;
@@ -46,6 +51,8 @@ bool IsSpace(char c){
     }
 }
 
+/// <#Description#>  Count the number of consanants in a given string
+/// - Parameter c:The string to count the number of consonants with
 bool IsConsonant(char c){
     if (!(IsPunctuation(c) || IsVowel(c) || IsSpace(c))){
         return true;
@@ -54,6 +61,8 @@ bool IsConsonant(char c){
     }
 }
 
+/// <#Description#> Count the number of words in a given string
+/// - Parameter s: The string to count the number of words with
 int NumWords(string s){
     int wordCount = 0;
     char previous = ' ';
@@ -67,6 +76,8 @@ int NumWords(string s){
     return wordCount;
 }
 
+/// <#Description#> Count the number of sentences in a given string
+/// - Parameter s: The string to search for sentences in
 int NumSentences(string s){
     int sCount = 0;
     for (int i = 0; i < s.length(); i++){
@@ -78,6 +89,8 @@ int NumSentences(string s){
 }
 
 
+/// <#Description#> Get the number of vowels in a word
+/// - Parameter s: sentence to count vowels with
 int NumVowels(string s){
     int vCount = 0;
     for (int i = 0; i < s.length(); i++){
@@ -88,6 +101,8 @@ int NumVowels(string s){
     return vCount;
 }
 
+/// <#Description#> Get the number of consonants in a word
+/// - Parameter s: sentence to count consants with
 int NumConsonants(string s){
     int cCount = 0;
     for (int i = 0; i < s.length(); i++){
@@ -99,6 +114,8 @@ int NumConsonants(string s){
     
 }
 
+/// <#Description#> Calculate the average word length in a given sentence
+/// - Parameter s: sentence to compute average with
 double AverageWordLength(string s){
     double numLetters = 0;
     double numWords = NumWords(s);
@@ -110,6 +127,8 @@ double AverageWordLength(string s){
     return numLetters / numWords;
 }
 
+/// Calculate the average vowels per word in a sentence
+/// - Parameter s: sentence to compute average with
 double AverageVowelsPerWord(string s){
     double numWords = NumWords(s);
     double numVowles = NumVowels(s);
@@ -125,6 +144,7 @@ int main(int argc, const char * argv[]) {
         cout << "Please enter a sentence or 'done' to terminate the prompt" << endl;
         getline(cin, userInput);
         if (userInput != "done"){
+            // Print sentence statistics
             cout << "Analysis:" << endl;
             cout << "\tNumber of words: " << NumWords(userInput) << endl;
             cout << "\tNumber of sentences: " << NumSentences(userInput) << endl;
