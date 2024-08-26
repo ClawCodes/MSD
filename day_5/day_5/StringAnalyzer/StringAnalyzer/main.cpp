@@ -13,52 +13,32 @@ using namespace std;
 /// <#Description#> Check if a given character is a sentence terminator
 /// - Parameter c: character to check
 bool IsTerminator(char c){
-    if (c == '.' || c == '?' || c == '!') {
-        return true;
-    } else{
-        return false;
-    }
+    return (c == '.' || c == '?' || c == '!');
 }
 
 /// <#Description#> Check if a given character is punctuation
 /// - Parameter c: character to check
 bool IsPunctuation(char c){
-    if (c == ',' || IsTerminator(c)){
-        return true;
-    } else {
-        return false;
-    }
+    return (c == ',' || IsTerminator(c));
 }
 
 /// <#Description#> Check if a given character is a vowel
 /// - Parameter c: character to check
 bool IsVowel(char c){
     char cLower = tolower(c);
-    if (cLower == 'a' || cLower == 'e' || cLower == 'i' || cLower == 'o' || cLower == 'u' || cLower == 'y'){
-        return true;
-    } else {
-        return false;
-    }
+    return (cLower == 'a' || cLower == 'e' || cLower == 'i' || cLower == 'o' || cLower == 'u' || cLower == 'y');
 }
 
 /// <#Description#> Check if a given character is a space
 /// - Parameter c: character to check
 bool IsSpace(char c){
-    if (c == ' '){
-        return true;
-    } else {
-        return false;
-    }
+    return (c == ' ');
 }
 
 /// <#Description#>  Count the number of consanants in a given string
 /// - Parameter c:The string to count the number of consonants with
 bool IsConsonant(char c){
-    if (!(IsPunctuation(c) || IsVowel(c) || IsSpace(c))){
-        return true;
-    } else {
-        return false;
-    }
+    return (!(IsPunctuation(c) || IsVowel(c) || IsSpace(c)));
 }
 
 /// <#Description#> Count the number of words in a given string
@@ -79,38 +59,38 @@ int NumWords(string s){
 /// <#Description#> Count the number of sentences in a given string
 /// - Parameter s: The string to search for sentences in
 int NumSentences(string s){
-    int sCount = 0;
+    int sentenceCount = 0;
     for (int i = 0; i < s.length(); i++){
         if (IsTerminator(s[i])){
-            sCount += 1;
+            sentenceCount += 1;
         }
     }
-    return sCount;
+    return sentenceCount;
 }
 
 
 /// <#Description#> Get the number of vowels in a word
 /// - Parameter s: sentence to count vowels with
 int NumVowels(string s){
-    int vCount = 0;
+    int vowelCount = 0;
     for (int i = 0; i < s.length(); i++){
         if (IsVowel(s[i])){
-            vCount += 1;
+            vowelCount += 1;
         }
     }
-    return vCount;
+    return vowelCount;
 }
 
 /// <#Description#> Get the number of consonants in a word
 /// - Parameter s: sentence to count consants with
 int NumConsonants(string s){
-    int cCount = 0;
+    int consonantCount = 0;
     for (int i = 0; i < s.length(); i++){
         if (IsConsonant(s[i])){
-            cCount += 1;
+            consonantCount += 1;
         }
     }
-    return cCount;
+    return consonantCount;
     
 }
 
