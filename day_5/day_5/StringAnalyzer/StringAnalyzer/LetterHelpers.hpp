@@ -8,6 +8,14 @@
 #ifndef LetterHelpers_hpp
 #define LetterHelpers_hpp
 
-#include <stdio.h>
+bool IsTerminator(char c);
+
+bool IsPunctuation(char c);
+
+bool IsVowel(char c);
+
+bool IsSpace(char c);
+
+bool IsConsonant(char c);
 
 #endif /* LetterHelpers_hpp */

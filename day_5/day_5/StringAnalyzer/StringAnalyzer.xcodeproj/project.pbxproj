@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8D8BDA512C790CFA009E2822 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDA502C790CFA009E2822 /* main.cpp */; };
+		8D8BDA822C7D5A0D009E2822 /* LetterHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDA802C7D5A0D009E2822 /* LetterHelpers.cpp */; };
+		8D8BDA852C7D5A58009E2822 /* WordHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDA832C7D5A58009E2822 /* WordHelpers.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		8D8BDA4D2C790CFA009E2822 /* StringAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = StringAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8BDA502C790CFA009E2822 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8D8BDA802C7D5A0D009E2822 /* LetterHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LetterHelpers.cpp; sourceTree = "<group>"; };
+		8D8BDA812C7D5A0D009E2822 /* LetterHelpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LetterHelpers.hpp; sourceTree = "<group>"; };
+		8D8BDA832C7D5A58009E2822 /* WordHelpers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WordHelpers.cpp; sourceTree = "<group>"; };
+		8D8BDA842C7D5A58009E2822 /* WordHelpers.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WordHelpers.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,10 @@
 			isa = PBXGroup;
 			children = (
 				8D8BDA502C790CFA009E2822 /* main.cpp */,
+				8D8BDA802C7D5A0D009E2822 /* LetterHelpers.cpp */,
+				8D8BDA812C7D5A0D009E2822 /* LetterHelpers.hpp */,
+				8D8BDA832C7D5A58009E2822 /* WordHelpers.cpp */,
+				8D8BDA842C7D5A58009E2822 /* WordHelpers.hpp */,
 			);
 			path = StringAnalyzer;
 			sourceTree = "<group>";
@@ -119,7 +129,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D8BDA852C7D5A58009E2822 /* WordHelpers.cpp in Sources */,
 				8D8BDA512C790CFA009E2822 /* main.cpp in Sources */,
+				8D8BDA822C7D5A0D009E2822 /* LetterHelpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
