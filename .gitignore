@@ -28,3 +28,6 @@
 
 ## obnoxious file that has thumbnails and stuff
 .DS_Store
+
+# C++ specific files
+*.o
