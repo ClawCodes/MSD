@@ -61,11 +61,15 @@ int main(int argc, const char * argv[]) {
     }
     std::cout << "}" << std::endl;
     
+    // reverse the vector defined at the beginning of main
     std::vector<int> reversedVector = reverse(sampleVector);
     
+    // assert the input and output vectore lengths are the same
     assert(reversedVector.size() == sampleVector.size());
-    assert(reversedVector[0] == 5 && reversedVector[1] == 4 && reversedVector[2] == 3 && reversedVector[3] == 2 && reversedVector[4] == 1);
+    // assert the vector values are in reverse order
+    assert(reversedVector[0] == sampleVector[4] && reversedVector[1] == sampleVector[3] && reversedVector[2] == sampleVector[2] && reversedVector[3] == sampleVector[1] && reversedVector[4] == sampleVector[0]);
     
+    // Print the action made for the vector reversal
     std::cout << "We reversed the sample vector: " << "{";
     for (int i = 0; i < sampleVector.size(); i++){
         std::cout << sampleVector[i];
