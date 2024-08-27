@@ -114,6 +114,103 @@ int main()
         ErrorExit("FindMin() - test 7");
     }
     
+    /*
+     * FindMax test cases
+     */
+    
+    // Find max which is negative
+      std::vector<int> vecMaxNegative = {-4, -1, -3};
+      if (!(FindMax(vecMaxNegative) == -1)){
+          ErrorExit("FindMax() - test 1");
+      }
+    // Find max which is positive
+      std::vector<int> vecMaxPositive = {2, 1, 3};
+      if (!(FindMax(vecMaxPositive) == 3)){
+          ErrorExit("FindMax() - test 2");
+      }
+    // Find max which is 0
+      std::vector<int> vecMaxZero = {-1, -3, 0};
+      if (!(FindMax(vecMaxZero) == 0)){
+          ErrorExit("FindMax() - test 3");
+      }
+    // Find max when the first element is smaller than the true max
+      std::vector<int> vecMaxNotInZerothIdx = {3, 1, 5};
+      if (!(FindMax(vecMaxNotInZerothIdx) == 5)){
+          ErrorExit("FindMax() - test 4");
+      }
+    // Find max when the first element is the true max
+      std::vector<int> vecMaxAtZerothIdx = {5, 1, 3};
+      if (!(FindMax(vecMaxAtZerothIdx) == 5)){
+          ErrorExit("FindMax() - test 5");
+      }
+    // Find max when all elements are the same
+      std::vector<int> vecMaxAllZero = {0, 0, 0};
+      if (!(FindMax(vecMaxAllZero) == 0)){
+          ErrorExit("FindMax() - test 6");
+      }
+    // Find max with array of one element
+      std::vector<int> vecMaxOneElement = {0};
+      if (!(FindMax(vecMaxOneElement) == 0)){
+          ErrorExit("FindMax() - test 7");
+      }
+    
+    /*
+     * Average test cases
+     */
+    
+    // Find average from array of positive integers
+    std::vector<int> vecAllPositive = {1, 2, 3};
+    if (!(Average(vecAllPositive) == 2)){
+        ErrorExit("Average() - test 1");
+    }
+    // Find average from array of negative integers
+    std::vector<int> vecAllNegative = {-1, -2, -3};
+    if (!(Average(vecAllNegative) == -2)){
+        ErrorExit("Average() - test 2");
+    }
+    
+    // Find average from array of the same integer
+    std::vector<int> vecAllTheSame = {2, 2, 2};
+    if (!(Average(vecAllTheSame) == 2)){
+        ErrorExit("Average() - test 3");
+    }
+    
+    // Find average of array with one element
+    std::vector<int> vecAvgOneElement = {2};
+    if (!(Average(vecAvgOneElement) == 2)){
+        ErrorExit("Average() - test 4");
+    }
+    
+    /*
+     * IsSorted test cases
+     */
+    
+    // is sorted without duplicates
+    std::vector<int> vecSortedNoDups = {1, 2, 3, 4};
+    if (!(IsSorted(vecSortedNoDups))){
+        ErrorExit("IsSorted() - test 1");
+    }
+    // is sorted with duplicates
+    std::vector<int> vecSortedWithDups = {1, 2, 2, 3, 4, 4};
+    if (!(IsSorted(vecSortedWithDups))){
+        ErrorExit("IsSorted() - test 2");
+    }
+    // is sorted with negative and positive ints
+    std::vector<int> vecSortedWithNegAndPos = {-10, -2, 2, 3, 4};
+    if (!(IsSorted(vecSortedWithNegAndPos))){
+        ErrorExit("IsSorted() - test 3");
+    }
+    // is not sorted with violation occuring at first element
+    std::vector<int> vecNotSortedFirstElem = {10, 1, 2, 3};
+    if (IsSorted(vecNotSortedFirstElem)){
+        ErrorExit("IsSorted() - test 4");
+    }
+    // is not sorted with violation occuring at last element
+    std::vector<int> vecNotSortedLastElem = {-1, 1, 2, 2, -10};
+    if (IsSorted(vecNotSortedLastElem)){
+        ErrorExit("IsSorted() - test 5");
+    }
+    
   // Since any failed test exits the program, if we made it this far, we passed all tests.
   std::cout << "All tests passed!\n";
 

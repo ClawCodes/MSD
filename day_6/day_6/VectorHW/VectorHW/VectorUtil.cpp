@@ -72,9 +72,13 @@ int FindMin( vector<int> input ){
  */
 int FindMax( vector<int> input )
 {
-  // TODO: Fill in implementation. Do not always return 0.
-
-  return 0;
+    int max = input[0];
+    for(int i = 1; i < input.size(); i++){
+        if (input[i] > max){
+            max = input[i];
+        }
+    }
+  return max;
 }
 
 /*
@@ -90,9 +94,12 @@ int FindMax( vector<int> input )
  */
 int Average( vector<int> input )
 {
-  // TODO: Fill in implementation. Do not always return 0.
-
-  return 0;
+    int sum = 0;
+    for (int i = 0; i < input.size(); i++){
+        sum += input[i];
+    }
+    // Cast input size to integer as the return of size is of type long
+  return sum / int(input.size());
 }
 
 
@@ -118,7 +125,12 @@ int Average( vector<int> input )
  */
 bool IsSorted( vector<int> input )
 {
-  // TODO: Fill in implementation. Do not always return false.
+    int previous = input[0];
+    for (int i = 1; i < input.size(); i++){
+        if (input[i] < previous){
+            return false;
+        }
+    }
 
-  return false;
+  return true;
 }
