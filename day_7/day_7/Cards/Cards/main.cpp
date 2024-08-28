@@ -19,6 +19,7 @@
  * @return Instance of Deck
  */
 Deck getDeck(std::vector<CardRank> excludeRanks = {}){
+    // Get all ranks to construct deck with
     std::vector<CardRank> includedRanks;
     for (CardRank rank : allRanks){
         auto itfound = std::find(excludeRanks.begin(), excludeRanks.end(), rank);
@@ -27,6 +28,7 @@ Deck getDeck(std::vector<CardRank> excludeRanks = {}){
             includedRanks.push_back(rank);
         }
     };
+    // Construct deck
     std::vector<Card> cards;
     for (std::string suit : allSuits){
         for (CardRank rank: includedRanks)

@@ -21,12 +21,16 @@ struct Deck{
     DeckType type;
     std::vector<Card> cards;
     
+    
+    /// <#Description#> - Member function to get the human readable form of DeckType
+    /// returns - string of 'standard 'or 'stripped' depeding of type value
     std::string getTypeName(){
         if (type == STANDARD)
             return "standard";
         else
             return "stripped";
     }
+    /// <#Description#> - Member function fo get the deck representation as a string containing the deck type and a sample of the set of card representations
     void printDeck(){
         std::string cardRepr;
         if (cards.size() == 0)

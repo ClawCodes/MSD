@@ -60,6 +60,8 @@ struct Card{
     CardRank rank;
     std::string suit;
     
+    /// <#Description#> Member function to get card representation as string containing Suit, Name (human readable), and rank.
+    /// returns - string of representation
     std::string getCardRepr(){
         std::string rankName;
         if (rank == ACE)
