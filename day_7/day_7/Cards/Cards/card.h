@@ -9,6 +9,7 @@
 #define card_h
 
 #include <iostream>
+#include <vector>
 
 // Enumeration of card ranks to enforce a limited set of allowed ranks
 // ORDER MATTERS

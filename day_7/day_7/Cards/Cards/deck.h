@@ -8,6 +8,8 @@
 #ifndef deck_h
 #define deck_h
 
+#include <iostream>
+#include <vector>
 #include "card.h"
 
 enum DeckType{
