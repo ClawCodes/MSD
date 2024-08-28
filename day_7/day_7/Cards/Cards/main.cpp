@@ -9,105 +9,15 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
-// Enumeration of card ranks to enforce a limited set of allowed ranks
-// ORDER MATTERS
-enum CardRank {
-    ACE = 1,
-    TWO = 2,
-    THREE = 3,
-    FOUR = 4,
-    FIVE = 5,
-    SIX = 6,
-    SEVEN = 7,
-    EIGHT = 8,
-    NINE = 9,
-    TEN = 10,
-    JACK = 11,
-    QUEEN = 12,
-    KING = 13
-};
-
-// Vector of ranks in standard sorted order for convenient iteration
-const std::vector<CardRank> allRanks = {
-    ACE,
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
-    TEN,
-    JACK,
-    QUEEN,
-    KING
-};
-
-// Create constants for reusable suit names
-const std::string hearts = "Hearts";
-const std::string spades = "Diamonds";
-const std::string diamonds = "Diamonds";
-const std::string clubs = "Clubs";
-
-// Vector of suit names in standard sorted order for convenient iteration
-const std::vector<std::string> allSuits = {hearts, clubs, diamonds, spades};
-
-// Representation of an individual card
-struct Card{
-    CardRank rank;
-    std::string suit;
-    
-    std::string getCardRepr(){
-        std::string rankName;
-        if (rank == ACE)
-            rankName = "Ace";
-        else if (rank == KING)
-            rankName = "King";
-        else if (rank == QUEEN)
-            rankName = "Queen";
-        else if (rank == JACK)
-            rankName = "Jack";
-        else
-            rankName = "pip";
-        
-        return "Card{Suit: " + suit + ", Name: " + rankName + ", Rank: " + std::to_string(rank) + "}";
-    }
-    /// <#Description#> member function to print the representation of the Card
-    void printCard(){
-        std::cout << getCardRepr() << std::endl;
-    }
-};
+#include "deck.h"
 
 
-enum DeckType{
-    STRIPPED,
-    STANDARD
-};
-
-struct Deck{
-    DeckType type;
-    std::vector<Card> cards;
-    
-    std::string getTypeName(){
-        if (type == STANDARD)
-            return "standard";
-        else
-            return "stripped";
-    }
-    void printDeck(){
-        std::string cardRepr;
-        if (cards.size() == 0)
-            cardRepr = "NO CARDS IN DECK";
-        else if (cards.size() == 1)
-            cardRepr = cards[0].getCardRepr();
-        else
-            cardRepr = cards[0].getCardRepr() + "..." + cards[cards.size() - 1].getCardRepr();
-        std::cout << "Deck{Type: " << getTypeName() << ", Count: " << cards.size() << ", Cards: " << cardRepr << std::endl;
-    }
-};
-
+/**
+ * Create a Deck instance of a standard (52) or stripped (less than 52) deck of cards
+ *
+ * @param excludeRanks A vecotor of CardRank values to exclude to generate a stripped deck. A standard deck will be generated if not provided.
+ * @return Instance of Deck
+ */
 Deck getDeck(std::vector<CardRank> excludeRanks = {}){
     std::vector<CardRank> includedRanks;
     for (CardRank rank : allRanks){

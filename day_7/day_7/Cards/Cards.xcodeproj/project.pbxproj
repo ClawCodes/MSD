@@ -25,6 +25,8 @@
 /* Begin PBXFileReference section */
 		8D8BDAE02C7E4737009E2822 /* Cards */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Cards; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8BDAE32C7E4737009E2822 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		8D8BDAF02C7EC615009E2822 /* card.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = card.h; sourceTree = "<group>"; };
+		8D8BDAF12C7EC620009E2822 /* deck.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deck.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,8 @@
 			isa = PBXGroup;
 			children = (
 				8D8BDAE32C7E4737009E2822 /* main.cpp */,
+				8D8BDAF02C7EC615009E2822 /* card.h */,
+				8D8BDAF12C7EC620009E2822 /* deck.h */,
 			);
 			path = Cards;
 			sourceTree = "<group>";
