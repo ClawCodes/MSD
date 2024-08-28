@@ -49,7 +49,7 @@ int main(int argc, const char * argv[]) {
     Deck standardDeck = getDeck();
     standardDeck.printDeck();
     
-    // Create and print a stripped deck that start at hearts of rank 2 and ends at Queen of rank 12
+    // Create and print a stripped deck that start at hearts of rank 2 and ends at Queen of Diamonds
     std::vector<CardRank> ignoreRanks = {ACE, KING};
     Deck strippedDeck = getDeck(ignoreRanks);
     strippedDeck.printDeck();
