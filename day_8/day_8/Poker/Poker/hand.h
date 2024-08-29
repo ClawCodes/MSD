@@ -76,7 +76,16 @@ struct Hand{
     }
 };
 
-Hand dealHand(Deck &deck);
+Hand dealHand(Deck &deck){
+    // Seed pseudorandom generator
+    std::srand(unsigned(time(NULL)));
+    std::vector<Card> sampleHand;
+    for (int i = 0; i < 5; i++){
+        int sampleIndex = rand() % deck.cards.size();
+        sampleHand.push_back(deck.cards[sampleIndex]);
+    }
+    return Hand{sampleHand};
+}
 
 
 // Function to run assertions against member functions of the Hand struct
