@@ -23,6 +23,7 @@
 
 
 int main(int argc, const char * argv[]) {
+    testHand();
     std::map<std::string, int> handCounter;
     const std::string flush = "Flush";
     const std::string straight = "Straight";

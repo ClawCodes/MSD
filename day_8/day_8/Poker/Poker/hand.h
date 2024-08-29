@@ -78,20 +78,20 @@ struct Hand{
         return cards[0].rank == ACE && cards[1].rank == TEN && isStraightFlush();
     }
     bool isFullHouse(){
-        std::map<std::string, int> suitCounter;
+        std::map<CardRank, int> rankCounter;
         for (Card card : cards){
-            std::string suit = card.suit;
-            if (suitCounter.count(suit))
-                suitCounter[suit] += 1;
+            CardRank rank = card.rank;
+            if (rankCounter.count(rank))
+                rankCounter[rank] += 1;
             // If we already have 2 suits captured and found a new one then it's not a fullhouse
-            else if (suitCounter.size() == 2)
+            else if (rankCounter.size() == 2)
                 return false;
             else
-                suitCounter[suit] = 1;
+                rankCounter[rank] = 1;
         }
-        int firstSuitCount = suitCounter.begin()->second;
+        int firstRankCount = rankCounter.begin()->second;
         // At this point there are only two suits
-        return firstSuitCount == 2 || firstSuitCount == 3;
+        return firstRankCount == 2 || firstRankCount == 3;
     }
 };
 
@@ -228,10 +228,10 @@ void testHand(){
     Hand fullHouse = Hand{
         {
             Card{TEN, hearts},
-            Card{JACK, hearts},
-            Card{QUEEN, hearts},
+            Card{TEN, clubs},
+            Card{TEN, diamonds},
             Card{KING, clubs},
-            Card{THREE, clubs}
+            Card{KING, hearts}
         }
     };
     
