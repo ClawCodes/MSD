@@ -15,7 +15,7 @@
 #include "deck.h"
 
 void swapCard(Card &a, Card &b){
-    Card temp = a;
+    Card temp = b;
     b = a;
     a = temp;
 }
@@ -53,7 +53,7 @@ struct Hand{
         
         // If an ace exists and the following card is not two
         // then we can consider the ace high
-        if (cards[0].rank == ACE && cards[1].rank != 2){
+        if (cards[0].rank == ACE && cards[1].rank > 2){
             CardRank* aceRank = &cards[0].rank;
             *aceRank = ACEHIGH;
             sortHand(cards);
@@ -134,7 +134,7 @@ void testHand(){
     assert(!(notFlush.isFlush()));
 
     // Assert hand is stright
-    Hand stright = Hand{
+    Hand straight = Hand{
         {
             Card{TWO, hearts},
             Card{ACE, clubs},
@@ -144,10 +144,10 @@ void testHand(){
         }
     };
     
-    assert(stright.isStraight());
+    assert(straight.isStraight());
     
     // Assert hand is not stright
-    Hand notStright = Hand{
+    Hand notStraight = Hand{
         {
             Card{KING, hearts},
             Card{ACE, clubs},
@@ -157,10 +157,10 @@ void testHand(){
         }
     };
     
-    assert(!(notStright.isStraight()));
+    assert(!(notStraight.isStraight()));
     
     // Assert hand is stright with Ace high
-    Hand strightAceHigh = Hand{
+    Hand straightAceHigh = Hand{
         {
             Card{TEN, hearts},
             Card{ACE, clubs},
@@ -170,10 +170,10 @@ void testHand(){
         }
     };
     
-    assert(stright.isStraight());
+    assert(straight.isStraight());
     
     // Assert hand is stright flush
-    Hand strightFlush = Hand{
+    Hand straightFlush = Hand{
         {
             Card{TWO, hearts},
             Card{ACE, hearts},
@@ -183,10 +183,10 @@ void testHand(){
         }
     };
     
-    assert(strightFlush.isStraightFlush());
+    assert(straightFlush.isStraightFlush());
     
     // Assert hand is NOT stright flush
-    Hand notStrightFlush = Hand{
+    Hand notStraightFlush = Hand{
         {
             Card{TWO, hearts},
             Card{ACE, hearts},
@@ -196,7 +196,7 @@ void testHand(){
         }
     };
     
-    assert(!(notStrightFlush.isStraightFlush()));
+    assert(!(notStraightFlush.isStraightFlush()));
     
     // Assert hand is a royal flush
     Hand royalFlush = Hand{
@@ -222,7 +222,7 @@ void testHand(){
         }
     };
     
-    assert(royalFlush.isRoyalFlush());
+    assert((!(notRoyalFlush.isRoyalFlush())));
     
     // Assert hand is a full house
     Hand fullHouse = Hand{
