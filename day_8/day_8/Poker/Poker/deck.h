@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 #include "card.h"
 
 enum DeckType{
@@ -20,7 +21,6 @@ enum DeckType{
 struct Deck{
     DeckType type;
     std::vector<Card> cards;
-    
     
     /// <#Description#> - Member function to get the human readable form of DeckType
     /// returns - string of 'standard 'or 'stripped' depeding of type value
@@ -41,8 +41,13 @@ struct Deck{
             cardRepr = cards[0].getCardRepr() + "..." + cards[cards.size() - 1].getCardRepr();
         std::cout << "Deck{Type: " << getTypeName() << ", Count: " << cards.size() << ", Cards: " << cardRepr << std::endl;
     }
+    void shuffleDeck(){
+        
+    }
 };
 
 Deck createDeck(std::vector<CardRank> excludeRanks = {});
+
+void shuffleDeck(Deck &deck);
 
 #endif /* deck_h */

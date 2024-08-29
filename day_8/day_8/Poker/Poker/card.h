@@ -83,4 +83,8 @@ struct Card{
     }
 };
 
+bool rank_sorter(Card const& left, Card const& right);
+
+std::vector<Card> sort_cards(std::vector<Card> cards);
+
 #endif /* card_h */

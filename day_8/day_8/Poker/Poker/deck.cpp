@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <chrono>
 #include "deck.h"
 
 /**
@@ -41,3 +42,22 @@ Deck createDeck(std::vector<CardRank> excludeRanks){
     
     return Deck{deckType, cards};
 };
+
+void shuffleDeck(Deck &deck){
+    for (int i = 0; i < deck.cards.size(); i++){
+        // Seed pseudorandom generator each iteration
+        std::srand(i + int(time(NULL)));
+        // Get random index to swap with ith index
+        int j = rand() % deck.cards.size();
+        
+        std::cout << "SWAP:\n" << i << "<->" << j << "\n";
+        
+        Card temp = deck.cards[i];
+        Card* jCard = &deck.cards[j];
+        Card* iCard = &deck.cards[i];
+        
+        iCard = &temp;
+        jCard = iCard;
+    }
+}
+    
