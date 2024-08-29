@@ -48,15 +48,9 @@ void shuffleDeck(Deck &deck){
     for (int i = 0; i < deck.cards.size(); i++){
         // Get random index to swap with ith index
         int j = rand() % deck.cards.size();
-                
-        // TODO: Can this be changed to not store the values locally?
-        // Store the values locally for future assignemet
-        Card itemp = deck.cards[i];
-        Card jtemp = deck.cards[j];
-        Card* jCardPointer = &deck.cards[j];
-        Card* iCardPointer = &deck.cards[i];
         
-        *iCardPointer = jtemp;
-        *jCardPointer = itemp;
+        Card itemp = deck.cards[i];
+        deck.cards[i] = deck.cards[j];
+        deck.cards[j] = itemp;
     }
 }    
