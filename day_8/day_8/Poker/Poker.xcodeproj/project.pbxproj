@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8D8BDB1B2C7F8AF1009E2822 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDB192C7F8AF1009E2822 /* main.cpp */; };
 		8D8BDB232C7FB56E009E2822 /* deck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDB222C7FB56E009E2822 /* deck.cpp */; };
+		8D8BDB432C810AD8009E2822 /* hand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D8BDB422C810AD8009E2822 /* hand.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +32,7 @@
 		8D8BDB212C7FB54C009E2822 /* notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = notes.md; sourceTree = "<group>"; };
 		8D8BDB222C7FB56E009E2822 /* deck.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = deck.cpp; sourceTree = "<group>"; };
 		8D8BDB242C7FFA63009E2822 /* hand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hand.h; sourceTree = "<group>"; };
+		8D8BDB422C810AD8009E2822 /* hand.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hand.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				8D8BDB242C7FFA63009E2822 /* hand.h */,
 				8D8BDB1A2C7F8AF1009E2822 /* card.h */,
 				8D8BDB182C7F8AF0009E2822 /* deck.h */,
+				8D8BDB422C810AD8009E2822 /* hand.cpp */,
 				8D8BDB222C7FB56E009E2822 /* deck.cpp */,
 				8D8BDB192C7F8AF1009E2822 /* main.cpp */,
 				8D8BDB212C7FB54C009E2822 /* notes.md */,
@@ -132,6 +135,7 @@
 			files = (
 				8D8BDB232C7FB56E009E2822 /* deck.cpp in Sources */,
 				8D8BDB1B2C7F8AF1009E2822 /* main.cpp in Sources */,
+				8D8BDB432C810AD8009E2822 /* hand.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
