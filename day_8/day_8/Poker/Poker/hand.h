@@ -14,6 +14,25 @@
 #include <map>
 #include "deck.h"
 
+void swapCard(Card &a, Card &b){
+    Card temp = a;
+    b = a;
+    a = temp;
+}
+
+void sortHand(std::vector<Card> &cards){
+    int min;
+    for (int i = 0; i < cards.size(); i++){
+        min = i;
+        for (int j = i+1; j < cards.size(); j++){
+            if (cards[min].rank > cards[j].rank){
+                min = j;
+                }
+            }
+        swapCard(cards[min], cards[i]);
+    }
+}
+
 struct Hand{
 //    Card cards[5];
     std::vector<Card> cards;
@@ -30,22 +49,22 @@ struct Hand{
     /// <#Description#> Determine if the hand is a stright
     bool isStraight(){
         // First sort cards by rank in ascending order
-        std::vector<Card> sortedCards = sort_cards(cards);
+        sortHand(cards);
         
         // If an ace exists and the following card is not two
         // then we can consider the ace high
-        if (sortedCards[0].rank == ACE && sortedCards[1].rank != 2){
-            CardRank* aceRank = &sortedCards[0].rank;
+        if (cards[0].rank == ACE && cards[1].rank != 2){
+            CardRank* aceRank = &cards[0].rank;
             *aceRank = ACEHIGH;
-            sortedCards = sort_cards(sortedCards);
+            sortHand(cards);
         }
         
-        CardRank previous = sortedCards[0].rank;
-        for (int i = 1; i < sortedCards.size(); i++){
-            if (previous + 1 != sortedCards[i].rank)
+        CardRank previous = cards[0].rank;
+        for (int i = 1; i < cards.size(); i++){
+            if (previous + 1 != cards[i].rank)
                 return false;
             else
-                previous = sortedCards[i].rank;
+                previous = cards[i].rank;
         }
         return true;
     }
@@ -55,8 +74,8 @@ struct Hand{
     }
     /// <#Description#> Determine if the hand is a royal flush
     bool isRoyalFlush(){
-        std::vector<Card> sortedCards = sort_cards(cards);
-        return sortedCards[0].rank == ACE && sortedCards[1].rank == TEN && isStraightFlush();
+        sortHand(cards);
+        return cards[0].rank == ACE && cards[1].rank == TEN && isStraightFlush();
     }
     bool isFullHouse(){
         std::map<std::string, int> suitCounter;
