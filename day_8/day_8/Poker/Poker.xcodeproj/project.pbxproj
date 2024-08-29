@@ -65,11 +65,11 @@
 		8D8BDB102C7F8A7E009E2822 /* Poker */ = {
 			isa = PBXGroup;
 			children = (
-				8D8BDB242C7FFA63009E2822 /* hand.h */,
 				8D8BDB1A2C7F8AF1009E2822 /* card.h */,
 				8D8BDB182C7F8AF0009E2822 /* deck.h */,
-				8D8BDB422C810AD8009E2822 /* hand.cpp */,
+				8D8BDB242C7FFA63009E2822 /* hand.h */,
 				8D8BDB222C7FB56E009E2822 /* deck.cpp */,
+				8D8BDB422C810AD8009E2822 /* hand.cpp */,
 				8D8BDB192C7F8AF1009E2822 /* main.cpp */,
 				8D8BDB212C7FB54C009E2822 /* notes.md */,
 			);

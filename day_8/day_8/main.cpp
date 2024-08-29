@@ -7,12 +7,12 @@
 // No partner worked on this with me (I was out of the classroom that day)
 //
 // RESULTS:
-// Counts of hand types after 1000000 shuffles and deals:
-//    Flush = 624
-//    Full house = 148526
+//Counts of hand types after 1000000 shuffles and deals:
+//    Flush = 21545
+//    Full house = 9523
 //    Royal flush = 0
-//    Straight = 766
-//    Straight flush = 0
+//    Straight = 2569
+//    Straight flush = 6
 
 #include <iostream>
 #include <string>
