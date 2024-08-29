@@ -26,10 +26,12 @@ enum CardRank {
     TEN = 10,
     JACK = 11,
     QUEEN = 12,
-    KING = 13
+    KING = 13,
+    ACEHIGH = 14
 };
 
 // Vector of ranks in standard sorted order for convenient iteration
+// NOTE: Exclude ACEHIGH as this only needs to be considered when analyzing a hand, ACE (low) is default.
 const std::vector<CardRank> allRanks = {
     ACE,
     TWO,

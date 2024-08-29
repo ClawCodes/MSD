@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <string>
+#include <map>
 #include "card.h"
 
 struct Hand{
@@ -30,6 +31,14 @@ struct Hand{
         // First sort cards by rank in ascending order
         std::vector<Card> sortedCards = sort_cards(cards);
         
+        // If an ace exists and the following card is not two
+        // then we can consider the ace high
+        if (sortedCards[0].rank == ACE && sortedCards[1].rank != 2){
+            CardRank* aceRank = &sortedCards[0].rank;
+            *aceRank = ACEHIGH;
+            sortedCards = sort_cards(sortedCards);
+        }
+        
         CardRank previous = sortedCards[0].rank;
         for (int i = 1; i < sortedCards.size(); i++){
             if (previous + 1 != sortedCards[i].rank)
@@ -45,12 +54,22 @@ struct Hand{
     }
     /// <#Description#> Determine if the hand is a royal flush
     bool isRoyalFlush(){
-        CardRank smallestRank = sort_cards(cards)[0].rank;
-        return smallestRank == TEN && isStraightFlush();
+        std::vector<Card> sortedCards = sort_cards(cards);
+        return sortedCards[0].rank == ACE && sortedCards[1].rank == TEN && isStraightFlush();
     }
     bool isFullHouse(){
-        
-        return true;
+        std::map<std::string, int> suitCounter;
+        for (Card card : cards){
+            std::string suit = card.suit;
+            if (suitCounter.count(suit))
+                suitCounter[suit] += 1;
+            else if (suitCounter.size() == 2)
+                return false;
+            else
+                suitCounter[suit] = 1;
+        }
+        int firstSuitCount = suitCounter.begin()->second;
+        return firstSuitCount == 2 || firstSuitCount == 3;
     }
 };
 
@@ -84,10 +103,11 @@ void testHand(){
     // Assert hand is stright
     Hand stright = Hand{
         {
-        Card{TWO, hearts},
-        Card{ACE, clubs},
-        Card{FOUR, diamonds},
-        Card{THREE, hearts}
+            Card{TWO, hearts},
+            Card{ACE, clubs},
+            Card{FOUR, diamonds},
+            Card{THREE, hearts},
+            Card{FIVE, hearts}
         }
     };
     
@@ -96,22 +116,37 @@ void testHand(){
     // Assert hand is not stright
     Hand notStright = Hand{
         {
-        Card{KING, hearts},
-        Card{ACE, clubs},
-        Card{FOUR, diamonds},
-        Card{THREE, hearts}
+            Card{KING, hearts},
+            Card{ACE, clubs},
+            Card{FOUR, diamonds},
+            Card{THREE, hearts},
+            Card{FIVE, hearts}
         }
     };
     
     assert(!(notStright.isStraight()));
     
+    // Assert hand is stright with Ace high
+    Hand strightAceHigh = Hand{
+        {
+            Card{TEN, hearts},
+            Card{ACE, clubs},
+            Card{JACK, diamonds},
+            Card{KING, hearts},
+            Card{QUEEN, hearts}
+        }
+    };
+    
+    assert(stright.isStraight());
+    
     // Assert hand is stright flush
     Hand strightFlush = Hand{
         {
-        Card{TWO, hearts},
-        Card{ACE, hearts},
-        Card{FOUR, hearts},
-        Card{THREE, hearts}
+            Card{TWO, hearts},
+            Card{ACE, hearts},
+            Card{FOUR, hearts},
+            Card{THREE, hearts},
+            Card{FIVE, hearts}
         }
     };
     
@@ -120,10 +155,11 @@ void testHand(){
     // Assert hand is NOT stright flush
     Hand notStrightFlush = Hand{
         {
-        Card{TWO, hearts},
-        Card{ACE, hearts},
-        Card{FOUR, hearts},
-        Card{THREE, clubs}
+            Card{TWO, hearts},
+            Card{ACE, hearts},
+            Card{FOUR, hearts},
+            Card{THREE, clubs},
+            Card{FIVE, hearts}
         }
     };
     
@@ -132,10 +168,11 @@ void testHand(){
     // Assert hand is a royal flush
     Hand royalFlush = Hand{
         {
-        Card{TEN, hearts},
-        Card{JACK, hearts},
-        Card{QUEEN, hearts},
-        Card{KING, hearts}
+            Card{TEN, hearts},
+            Card{JACK, hearts},
+            Card{QUEEN, hearts},
+            Card{KING, hearts},
+            Card{ACE, hearts},
         }
     };
     
@@ -144,14 +181,41 @@ void testHand(){
     // Assert hand is NOT a royal flush
     Hand notRoyalFlush = Hand{
         {
-        Card{JACK, clubs},
-        Card{JACK, hearts},
-        Card{QUEEN, hearts},
-        Card{KING, hearts}
+            Card{JACK, clubs},
+            Card{JACK, hearts},
+            Card{QUEEN, hearts},
+            Card{KING, hearts},
+            Card{ACE, hearts},
         }
     };
     
     assert(royalFlush.isRoyalFlush());
+    
+    // Assert hand is a full house
+    Hand fullHouse = Hand{
+        {
+            Card{TEN, hearts},
+            Card{JACK, hearts},
+            Card{QUEEN, hearts},
+            Card{KING, clubs},
+            Card{THREE, clubs}
+        }
+    };
+    
+    assert(fullHouse.isFullHouse());
+    
+    // Assert hand is a full house
+    Hand notFullHouse = Hand{
+        {
+            Card{TEN, hearts},
+            Card{JACK, hearts},
+            Card{QUEEN, diamonds},
+            Card{KING, clubs},
+            Card{THREE, clubs}
+        }
+    };
+    
+    assert(!(notFullHouse.isFullHouse()));
 }
 
 #endif /* hand_h */
