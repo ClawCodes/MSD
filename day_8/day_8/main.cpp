@@ -10,35 +10,53 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
+#include <map>
 #include "deck.h"
 #include "hand.h"
 
 
 int main(int argc, const char * argv[]) {
+    std::map<std::string, int> handCounter;
+    const std::string flush = "Flush";
+    const std::string straight = "Straight";
+    const std::string straightFlush = "Straight flush";
+    const std::string royalFlush = "Royal flush";
+    const std::string fullHouse = "Full house";
     
-//    // Create and print the standrd 52 card deck
-//    Deck standardDeck = createDeck();
-//    standardDeck.printDeck();
-//    
-//    // Create and print a stripped deck that start at hearts of rank 2 and ends at Queen of Diamonds
-//    std::vector<CardRank> ignoreRanks = {ACE, KING};
-//    Deck strippedDeck = createDeck(ignoreRanks);
-//    strippedDeck.printDeck();
+    handCounter[flush] = 0;
+    handCounter[straight] = 0;
+    handCounter[straightFlush] = 0;
+    handCounter[royalFlush] = 0;
+    handCounter[fullHouse] = 0;
     
-    // Testing
-//    std::vector<CardRank> ignoreRanks = {ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN};
-//    Deck strippedDeck = createDeck(ignoreRanks);
-//    
-//    std::cout << "ORIGINAL:\n";
-//    for (Card c : strippedDeck.cards)
-//        std::cout << c.getCardRepr() << std::endl;
-//    
-//    std::cout << "\nSHUFFLED:\n";
-//    shuffleDeck(strippedDeck);
-//    for (Card c : strippedDeck.cards)
-//        std::cout << c.getCardRepr() << std::endl;
+    Deck deck = createDeck();
     
-    testHand();
+    int itercount = 0;
+    int numHands = 100;
+    while(itercount <= numHands){
+        shuffleDeck(deck);
+        Hand hand = dealHand(deck);
+        
+        // Check hands in order of highest to lowest score
+        if (hand.isRoyalFlush())
+            handCounter[royalFlush] += 1;
+        else if (hand.isStraightFlush())
+            handCounter[straightFlush] += 1;
+        else if (hand.isFullHouse())
+            handCounter[fullHouse] += 1;
+        else if (hand.isFlush())
+            handCounter[flush] += 1;
+        else if (hand.isStraight())
+            handCounter[straight] += 1;
+        
+        itercount += 1;
+    }
+    
+    std::cout << "Counts of hand types after " << numHands << " shuffles and deals: " << std::endl;
+    
+    for (auto const& [key, value] : handCounter){
+        std::cout << key << " = " << value << std::endl;
+    }
     
     return 0;
 }

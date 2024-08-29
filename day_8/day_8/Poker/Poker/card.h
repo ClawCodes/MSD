@@ -50,7 +50,7 @@ const std::vector<CardRank> allRanks = {
 
 // Create constants for reusable suit names
 const std::string hearts = "Hearts";
-const std::string spades = "Diamonds";
+const std::string spades = "spades";
 const std::string diamonds = "Diamonds";
 const std::string clubs = "Clubs";
 

@@ -10,8 +10,9 @@
 
 #include <algorithm>
 #include <string>
+#include <cassert>
 #include <map>
-#include "card.h"
+#include "deck.h"
 
 struct Hand{
 //    Card cards[5];
@@ -63,18 +64,22 @@ struct Hand{
             std::string suit = card.suit;
             if (suitCounter.count(suit))
                 suitCounter[suit] += 1;
+            // If we already have 2 suits captured and found a new one then it's not a fullhouse
             else if (suitCounter.size() == 2)
                 return false;
             else
                 suitCounter[suit] = 1;
         }
         int firstSuitCount = suitCounter.begin()->second;
+        // At this point there are only two suits
         return firstSuitCount == 2 || firstSuitCount == 3;
     }
 };
 
+Hand dealHand(Deck &deck);
 
-/// <#Description#> Function to run assertions against member functions of the Hand struct
+
+// Function to run assertions against member functions of the Hand struct
 void testHand(){
     // Assert hand is flush
     Hand flush = Hand{

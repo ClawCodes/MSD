@@ -8,7 +8,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <chrono>
 #include "deck.h"
 
 /**
@@ -44,20 +43,20 @@ Deck createDeck(std::vector<CardRank> excludeRanks){
 };
 
 void shuffleDeck(Deck &deck){
+    // Seed pseudorandom generator
+    std::srand(unsigned(time(NULL)));
     for (int i = 0; i < deck.cards.size(); i++){
-        // Seed pseudorandom generator each iteration
-        std::srand(i + int(time(NULL)));
         // Get random index to swap with ith index
         int j = rand() % deck.cards.size();
+                
+        // TODO: Can this be changed to not store the values locally?
+        // Store the values locally for future assignemet
+        Card itemp = deck.cards[i];
+        Card jtemp = deck.cards[j];
+        Card* jCardPointer = &deck.cards[j];
+        Card* iCardPointer = &deck.cards[i];
         
-        std::cout << "SWAP:\n" << i << "<->" << j << "\n";
-        
-        Card temp = deck.cards[i];
-        Card* jCard = &deck.cards[j];
-        Card* iCard = &deck.cards[i];
-        
-        iCard = &temp;
-        jCard = iCard;
+        *iCardPointer = jtemp;
+        *jCardPointer = itemp;
     }
-}
-    
+}    
