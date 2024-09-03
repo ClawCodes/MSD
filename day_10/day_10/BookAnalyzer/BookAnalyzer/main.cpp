@@ -54,7 +54,6 @@ int main(int argc, const char * argv[]) {
     }
     std::string const userBook = argv[1];
     
-    // TODO: this is not working...
     if (!(containsString(userBook, availableBooks))){
         std::cout << "The entered book " << userBook << " is not available. Please choose a book from the following:" << std::endl;
         listBooks(availableBooks);
