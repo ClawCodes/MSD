@@ -21,7 +21,7 @@ void testExtractLine(){
     std::string end;
     std::vector<std::string> input;
     std::string expectedMatch;
-    textMatch actual;
+    std::string actual;
     
     // Test extraction with simple case
     start = "Title:";
@@ -31,9 +31,7 @@ void testExtractLine(){
     
     actual = extractLine(start, end, input);
     
-    assert(actual.match == expectedMatch);
-    assert(actual.startIdx = 2);
-    assert(actual.endIdx = 6);
+    assert(actual == expectedMatch);
     
     // Test extract no match to start word
     start = "Title:";
@@ -41,9 +39,7 @@ void testExtractLine(){
     input = {"test", "nothin", "to", "match"};
     actual = extractLine(start, end, input);
     
-    assert(actual.match.empty());
-    assert(!actual.startIdx);
-    assert(!actual.startIdx);
+    assert(actual.empty());
     
     // Test extract no match end word
     start = "Title:";
@@ -51,9 +47,7 @@ void testExtractLine(){
     input = {"Title:", "test", "nothin", "to", "match"};
     actual = extractLine(start, end, input);
     
-    assert(actual.match.empty());
-    assert(!actual.startIdx);
-    assert(!actual.startIdx);
+    assert(actual.empty());
     
     // Test extract no match exceeds allowed range
     start = "Title:";
@@ -66,7 +60,14 @@ void testExtractLine(){
     
     actual = extractLine(start, end, input);
     
-    assert(actual.match.empty());
-    assert(!actual.startIdx);
-    assert(!actual.startIdx);
+    assert(actual.empty());
+}
+
+void testfindWordOccurance(){
+    std::vector<std::string> bookBody = {
+        "This", "is", "a", "test.", "We'll", "see", "if", "this", "function", "works!"
+    };
+    Book book = Book{"test", "test", bookBody};
+    
+    book.findWordOccurance("this");
 }

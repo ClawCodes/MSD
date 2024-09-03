@@ -51,7 +51,7 @@ std::vector<std::string> getDirFileNames(std::string path){
 }
 
 bool containsString (std::string target, std::vector<std::string> collection){
-    return std::find(collection.begin(), collection.end(), target) == collection.end();
+    return std::find(collection.begin(), collection.end(), target) != collection.end();
 }
 
 std::vector<std::string> readFile(std::string fileName){
@@ -95,4 +95,11 @@ std::vector<std::string> sliceWordVec(std::vector<std::string> &input, int start
     copy(start, end, slicedVec.begin());
     
     return slicedVec;
+}
+
+int getCharCount(std::vector<std::string> wordVec){
+    int count = 0;
+    for (auto &word : wordVec)
+        count += word.size();
+    return count;
 }

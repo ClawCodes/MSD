@@ -8,9 +8,11 @@
 #ifndef book_hpp
 #define book_hpp
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
+#include "utils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -24,12 +26,69 @@ struct Book{
     std::string tile;
     std::string author;
     std::vector<std::string> text;
+    std::vector<std::string> rawFile;
+    
+    void findWordOccurance(std::string searchWord){
+        std::string previous = "";
+        std::vector<std::string> matchStatements;
+        for (int i = 0; i<text.size(); i++){
+            if (text[i] == searchWord){
+                std::string end;
+                if (i == text.size() - 1){
+                    end = "";
+                } else {
+                    end = text[i + 1];
+                }
+                int idxPercent = double(i) / text.size() * 100;
+                
+                std::string statement = std::to_string(idxPercent) + "%: \"" + previous + ' ' + text[i] + ' ' + end + '"';
+                matchStatements.push_back(statement);
+            }
+            previous = text[i];
+        }
+        std::string suffix;
+        if (matchStatements.empty()){
+            suffix = " 0 times";
+        } else{
+            suffix = std::to_string(matchStatements.size()) + " times:";
+        }
+        std::cout << "The word \"" + searchWord + "\" appears " + suffix << std::endl;
+        for (const std::string &statement : matchStatements){
+            std::cout << "\tat " << statement << std::endl;
+        }
+        std::cout << std::endl;
+    }
+    std::string shortestWord(){
+        std::string shortest = text[0];
+        for (const auto &word : text){
+            if (word.size() < shortest.size())
+                shortest = word;
+        }
+        return shortest;
+    }
+    
+    std::string longestWord(){
+        std::string longest = text[0];
+        for (const auto &word : text){
+            if (word.size() > longest.size())
+                longest = word;
+        }
+        return longest;
+    }
+    
+    size_t wordCount(){
+        return text.size();
+    }
+    
+    int characterCount(){
+        return getCharCount(text);
+    }
 };
 
 Book createBook(fs::path &fileName);
 
 std::vector<std::string> extractHeaderInfo(std::string book);
 
-textMatch extractLine(std::string startWord, std::string endWord, std::vector<std::string> &text, int allowedRange = 100);
+std::string extractLine(std::string startWord, std::string endWord, std::vector<std::string> &text, int allowedRange = 100);
 
 #endif /* book_hpp */

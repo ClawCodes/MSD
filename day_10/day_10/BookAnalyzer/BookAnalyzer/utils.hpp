@@ -25,4 +25,6 @@ std::string joinText(std::vector<std::string> inputText, char delim = ' ');
 
 std::vector<std::string> sliceWordVec(std::vector<std::string> &input, int startIdx, int endIdx);
 
+int getCharCount(std::vector<std::string> wordVec);
+
 #endif /* utils_hpp */
