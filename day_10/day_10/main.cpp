@@ -36,25 +36,26 @@ int * createNumbers(){
 int main(int argc, const char * argv[]) {
     
     // If you use C-style arrays, then it implicilty uses pointers (it is not pass by value)
-    int numbers[5] = {1,2,3,4,5};
+//    int numbers[5] = {1,2,3,4,5};
 //    incrementArray( numbers, 5 );
 //    
 //    for (int i = 0; i < 5; i++){
 //        std::cout << numbers[i] << std::endl;
 //    }
     
-    int *numP;
-    numP = numbers;
+//    int *numP;
+//    numP = numbers;
 //    int * = &numbers;
 //    numP = createNumbers();
-    
-    std::cout << numP << std::endl;
-    std::cout << *numP << std::endl; // Wut??
-    
+//    
+//    std::cout << numP << std::endl;
+//    std::cout << *numP << std::endl; // Wut??
+//    
 //    for (int i = 0; i < 5; i++){
 //        
 //        std::count << numP[i] << std::endl;
 //    }
-//    
+//
+    
     return 0;
 }
