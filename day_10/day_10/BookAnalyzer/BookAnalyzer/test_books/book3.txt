@@ -5,9 +5,9 @@ Author: author name
 
 Release date: January 1, 1998 [eBook #1153]
                 Most recently updated: December 31, 2020
-                
-*** END OF THE PROJECT GUTENBERG EBOOK THE CHESSMEN OF MARS ***
+
+*** START OF THE PROJECT GUTENBERG EBOOK THE CHESSMEN OF MARS ***
 
 This is the book body.
 
-*** START OF THE PROJECT GUTENBERG EBOOK THE CHESSMEN OF MARS ***
+*** END OF THE PROJECT GUTENBERG EBOOK THE CHESSMEN OF MARS ***

@@ -29,7 +29,8 @@ void runTests(){
     testSliceWordVec();
     testExtractLine();
     testGetCharCount();
-//    testFindBookStartIdx();
+    testFindBookStartIdx();
+    testFindBookEndIdx();
     std::cout << "All tests passed!" << std::endl;
 }
 

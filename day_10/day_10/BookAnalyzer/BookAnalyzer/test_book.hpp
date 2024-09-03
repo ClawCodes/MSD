@@ -14,4 +14,6 @@ void testExtractLine();
 
 void testFindBookStartIdx();
 
+void testFindBookEndIdx();
+
 #endif /* test_book_hpp */

@@ -66,6 +66,14 @@ void testExtractLine(){
 
 void testFindBookStartIdx(){
     std::vector<std::string> testBook = readFile(parentDir / "test_books/book3.txt");
-//    int actual = findBookStartIdx(testBook);
-    
+    int expected = 31;
+    int actual = findBookStartIdx(testBook);
+    assert(actual == expected);
+}
+
+void testFindBookEndIdx(){
+    std::vector<std::string> testBook = readFile(parentDir / "test_books/book3.txt");
+    int expected = 37;
+    int actual = findBookEndIdx(testBook);
+    assert(actual == expected);
 }

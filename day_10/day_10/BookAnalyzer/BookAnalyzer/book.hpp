@@ -93,4 +93,8 @@ std::vector<std::string> extractHeaderInfo(std::string book);
 
 std::string extractLine(std::string startWord, std::string endWord, std::vector<std::string> &text, int allowedRange = 100);
 
+int findBookStartIdx(std::vector<std::string> book);
+
+int findBookEndIdx(std::vector<std::string> book);
+
 #endif /* book_hpp */
