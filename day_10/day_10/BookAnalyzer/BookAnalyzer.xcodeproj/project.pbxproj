@@ -42,6 +42,7 @@
 		8D8BDBA02C86438D009E2822 /* test_book.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = test_book.hpp; sourceTree = "<group>"; };
 		8D8BDBA22C86686F009E2822 /* book1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = book1.txt; sourceTree = "<group>"; };
 		8D8BDBA32C86686F009E2822 /* book2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = book2.txt; sourceTree = "<group>"; };
+		8D8BDBA62C875379009E2822 /* book3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = book3.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +103,7 @@
 		8D8BDBA42C86686F009E2822 /* test_books */ = {
 			isa = PBXGroup;
 			children = (
+				8D8BDBA62C875379009E2822 /* book3.txt */,
 				8D8BDBA22C86686F009E2822 /* book1.txt */,
 				8D8BDBA32C86686F009E2822 /* book2.txt */,
 			);

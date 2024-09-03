@@ -29,6 +29,7 @@ void runTests(){
     testSliceWordVec();
     testExtractLine();
     testGetCharCount();
+//    testFindBookStartIdx();
     std::cout << "All tests passed!" << std::endl;
 }
 
@@ -72,7 +73,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Number of Words: " << book.wordCount() << std::endl;
     std::cout << "Number of Characters: " << book.characterCount() << std::endl;
     std::cout << "Shortest word: " << book.shortestWord() << std::endl;
-    std::cout << "Longest word: " << book.shortestWord() << std::endl << std::endl;
+    std::cout << "Longest word: " << book.longestWord() << std::endl << std::endl;
     book.findWordOccurance(searchWord);
     
     return 0;

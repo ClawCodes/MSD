@@ -74,6 +74,7 @@ struct Book{
             if (word.size() > longest.size())
                 longest = word;
         }
+
         return longest;
     }
     

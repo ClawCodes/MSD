@@ -62,3 +62,10 @@ void testExtractLine(){
     
     assert(actual.empty());
 }
+
+
+void testFindBookStartIdx(){
+    std::vector<std::string> testBook = readFile(parentDir / "test_books/book3.txt");
+//    int actual = findBookStartIdx(testBook);
+    
+}
