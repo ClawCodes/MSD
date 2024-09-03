@@ -26,7 +26,6 @@ struct Book{
     std::string tile;
     std::string author;
     std::vector<std::string> text;
-    std::vector<std::string> rawFile;
     
     void findWordOccurance(std::string searchWord){
         std::string previous = "";
@@ -34,9 +33,11 @@ struct Book{
         for (int i = 0; i<text.size(); i++){
             if (text[i] == searchWord){
                 std::string end;
+                // Handle when i is the last element in the array
                 if (i == text.size() - 1){
                     end = "";
                 } else {
+                    // Retrieve the following word to add it to the context of the match
                     end = text[i + 1];
                 }
                 int idxPercent = double(i) / text.size() * 100;
@@ -60,7 +61,7 @@ struct Book{
     }
     std::string shortestWord(){
         std::string shortest = text[0];
-        for (const auto &word : text){
+        for (const std::string &word : text){
             if (word.size() < shortest.size())
                 shortest = word;
         }
@@ -69,7 +70,7 @@ struct Book{
     
     std::string longestWord(){
         std::string longest = text[0];
-        for (const auto &word : text){
+        for (const std::string &word : text){
             if (word.size() > longest.size())
                 longest = word;
         }

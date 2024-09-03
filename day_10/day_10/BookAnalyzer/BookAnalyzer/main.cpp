@@ -28,6 +28,7 @@ void runTests(){
     testJoinTest();
     testSliceWordVec();
     testExtractLine();
+    testGetCharCount();
     std::cout << "All tests passed!" << std::endl;
 }
 

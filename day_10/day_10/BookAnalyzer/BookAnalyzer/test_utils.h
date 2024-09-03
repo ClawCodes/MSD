@@ -23,4 +23,6 @@ void testJoinTest();
 
 void testSliceWordVec();
 
+void testGetCharCount();
+
 #endif /* test_utils_h */

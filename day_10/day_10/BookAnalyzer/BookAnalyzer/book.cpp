@@ -84,12 +84,11 @@ Book createBook(fs::path &fileName){
 
     int bookEnd = findBookEndIdx(book);
     
-    std::vector<std::string> strippedBook = sliceWordVec(book, bookStart, bookEnd);
+    book = sliceWordVec(book, bookStart, bookEnd);
     
     return Book{
         title,
         author,
-        strippedBook,
         book
     };
 }

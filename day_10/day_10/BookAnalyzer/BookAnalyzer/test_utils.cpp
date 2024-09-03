@@ -151,3 +151,26 @@ void testSliceWordVec(){
     assert(actual[1] == expected[1]);
     assert(actual[2] == expected[2]);
 }
+
+
+void testGetCharCount(){
+    // Arrange
+    std::vector<std::string> input = {};
+    int expected;
+    int actual;
+    
+    // With valid array of length two
+    input = {"one", "two"};
+    expected = 6;
+    
+    actual = getCharCount(input);
+    assert(actual == expected);
+    
+    
+    // With empty array
+    input = {};
+    expected = 0;
+    
+    actual = getCharCount(input);
+    assert(actual == expected);
+}
