@@ -12,6 +12,4 @@
 
 void testExtractLine();
 
-void testfindWordOccurance();
-
 #endif /* test_book_hpp */

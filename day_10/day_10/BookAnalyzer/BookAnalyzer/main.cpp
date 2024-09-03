@@ -19,12 +19,6 @@ namespace fs = std::filesystem;
 // Get parent dir of main to use for absolute path creation
 const fs::path parentDir = fs::path(__FILE__).parent_path();
 
-//vector<std::string> readBook(std::string bookName){
-//    // Return book as vector of strings?
-//    // TODO: Create book struct to capture header info and words?
-//}
-
-
 void runTests(){
     testGetFileNames();
     testGetFileName();
@@ -34,7 +28,6 @@ void runTests(){
     testJoinTest();
     testSliceWordVec();
     testExtractLine();
-    testfindWordOccurance();
     std::cout << "All tests passed!" << std::endl;
 }
 
@@ -46,7 +39,7 @@ void listBooks(std::vector<std::string> books){
 
 int main(int argc, const char * argv[]) {
     // tests
-//    runTests();
+    runTests();
     
     std::vector<std::string> availableBooks = getDirFileNames("books");
     

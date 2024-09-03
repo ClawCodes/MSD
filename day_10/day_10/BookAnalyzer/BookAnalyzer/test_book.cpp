@@ -62,12 +62,3 @@ void testExtractLine(){
     
     assert(actual.empty());
 }
-
-void testfindWordOccurance(){
-    std::vector<std::string> bookBody = {
-        "This", "is", "a", "test.", "We'll", "see", "if", "this", "function", "works!"
-    };
-    Book book = Book{"test", "test", bookBody};
-    
-    book.findWordOccurance("this");
-}
