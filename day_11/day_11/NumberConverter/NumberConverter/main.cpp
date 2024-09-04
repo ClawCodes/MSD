@@ -19,7 +19,14 @@ int charToInt(char c){
     }
 }
 
-// TODO: handle negatives
+char intToChar(int num){
+    if (num>=10){
+        return '7' + num;
+    } else {
+        return '0' + num;
+    }
+}
+
 int stringToInt(std::string numberStr, int base){
     bool isNegative = numberStr[0] == '-';
     if (isNegative){
@@ -40,20 +47,14 @@ std::string _numToString(int num, int base){
     }
     std::string result;
     while (num > 0){
-        char converted;
         int remainder = num % base;
-        if (remainder>=10){
-            converted = '7' + remainder;
-        } else {
-            converted = '0' + remainder;
-        }
+        char converted = intToChar(remainder);
         result.insert(result.begin(), converted);
         num = num / base;
     }
     return isNegative ? '-' + result : result;
 }
 
-// TODO: handle negative numbers
 std::string intToString(int num){
     return _numToString(num, 10);
 }

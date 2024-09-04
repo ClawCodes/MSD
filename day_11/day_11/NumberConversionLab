@@ -5,7 +5,7 @@
 4. 127 | 0111111 | 0x7F
 5. 254 | 11111110 | 0xFE
 
-# Convert the followqing binary numbers to decimal and hexidecimal
+# Convert the following binary numbers to decimal and hexidecimal
 1. 100 | 4 | 0x4
 2. 10001 | 17 | 0x11
 3. 100010 | 34 | 0x22
