@@ -120,10 +120,10 @@ void compareToASCII(std::string fileName){
 
 int main(int argc, const char * argv[]) {
 
-//    intRepresentations();
+    intRepresentations();
     
     std::cout << std::setprecision(18); //print numbers to 18 digits of accuracy
-//    floatRepresentations();
+    floatRepresentations();
     
     fs::path filePath = fs::path(__FILE__).parent_path() / "number_rep_part_3.txt";
     compareToASCII(filePath);
