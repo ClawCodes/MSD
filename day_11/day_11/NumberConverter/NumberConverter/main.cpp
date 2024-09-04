@@ -40,7 +40,7 @@ int stringToInt(std::string numberStr, int base){
     return isNegative ? result * -1 : result;
 }
 
-std::string _numToString(int num, int base){
+std::string numToString(int num, int base){
     bool isNegative = num < 0;
     if (isNegative){
         num = num * -1;
@@ -56,15 +56,15 @@ std::string _numToString(int num, int base){
 }
 
 std::string intToString(int num){
-    return _numToString(num, 10);
+    return numToString(num, 10);
 }
 
 std::string intToBinary(int num){
-    return _numToString(num, 2);
+    return numToString(num, 2);
 }
 
 std::string intToHex(int num){
-    return _numToString(num, 16);
+    return numToString(num, 16);
 }
 
 void testStringtoInt(){
