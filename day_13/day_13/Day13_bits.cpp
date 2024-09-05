@@ -11,6 +11,8 @@
   * Each function's purpose is described in a comment.
   * main() runs many tests on your functions and reports which ones passed or failed.
   * Make sure you pass all tests.
+ 
+    Partners: Isaac Shaw and Alexia Pappas
 */
 
 
