@@ -184,12 +184,14 @@ int Negate( int input )
 */
 int Increment( uint32_t x ){
 
-    int m = 1;
-    while (x & m){
-        x = x ^ m;
-        m <<= 1;
+    int mask = 1;
+    // Iteratively carries the 1
+    while (x & mask){
+        x = x ^ mask;
+        mask <<= 1;
     }
-    x = x ^ m;
+    // x is zero whil the mask carries the last 1
+    x = x ^ mask;
     return x;
 }
 
