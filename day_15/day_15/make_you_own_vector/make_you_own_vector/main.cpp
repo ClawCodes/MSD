@@ -12,37 +12,35 @@
 
 int main(int argc, const char * argv[]) {
     
-    myVector vector = makeVector(10);
-    assert(vector.capacity == 10);
-    assert(vector.size == 0);
     
-    pushBack(vector, 7);
-    assert(*vector.arrayStart == 7);
-    assert(vector.size == 1);
+    auto vector = myVector(10);
+    assert(vector.getCapacity() == 10);
+    assert(vector.getSize() == 0);
     
-    pushBack(vector, 13);
-    assert(*(vector.arrayStart + 1) == 13);
-    assert(vector.size == 2);
+    vector.pushBack(7);
+    assert(vector.get(0) == 7);
+    assert(vector.getSize() == 1);
     
-    popBack(vector);
-    assert(*vector.arrayStart == 7);
-    assert(vector.size == 1);
+    vector.pushBack(13);
+    assert(vector.get(1) == 13);
+    assert(vector.getSize() == 2);
     
-    set(vector, 0, 8);
-    assert(*vector.arrayStart == 8);
-    assert(vector.size == 2);
+    vector.popBack();
+    assert(vector.get(0) == 7);
+    assert(vector.getSize() == 1);
     
-    set(vector, 1, 24);
-    assert(*(vector.arrayStart + 1) == 24);
-    assert(vector.size == 3);
+    vector.set(0, 8);
+    assert(vector.get(0) == 8);
+    assert(vector.getSize() == 1);
+    
+    vector.set(1, 24);
+    assert(vector.get(1) == 24);
+    assert(vector.getSize() == 2);
 
-    assert(get(vector, 1) == 24);
+    assert(vector.get(1) == 24);
     
-    freeVector(vector);
-    assert(vector.arrayStart == nullptr);
-    
-    
-    
+    vector.~myVector();
+    assert(vector.getSize() == 0);
     
     return 0;
 }

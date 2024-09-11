@@ -8,48 +8,58 @@
 #include <iostream>
 
 
-myVector makeVector(int initialCapacity){
-    int* arrayStart = new int[initialCapacity];
-    auto newVector = myVector{0, initialCapacity, arrayStart};
-    return newVector;
+myVector::myVector(int initialCapacity){
+    arrayStart = new int[initialCapacity];
+    capacity = initialCapacity;
+    size = 0;
 }
 
-void freeVector(myVector &newVector){
-    delete newVector.arrayStart;
-    newVector.arrayStart = nullptr;
+myVector::~myVector(){
+    delete arrayStart;
+    arrayStart = nullptr;
+    size = 0;
 }
 
-void growvector(myVector &vector){
-    int newCapacity = vector.capacity * 2;
+void myVector::growvector(){
+    int newCapacity = capacity * 2;
     int* newVector = new int[newCapacity];
-    for (int i = 0; i < vector.size; i++){
+    for (int i = 0; i < size; i++){
         int* addressToSet = newVector + i;
-        *addressToSet = vector.arrayStart[i];
+        *addressToSet = arrayStart[i];
     }
-    freeVector(vector);
-    vector.arrayStart = newVector;
-    vector.capacity = newCapacity;
+    this->~myVector();
+    arrayStart = newVector;
+    capacity = newCapacity;
 }
 
-void pushBack(myVector &vector, int value){
-    if (vector.size >= vector.capacity){
-        growvector(vector);
+void myVector::pushBack(int value){
+    if (size >= capacity){
+        growvector();
     }
-    set(vector, vector.size, value);
+    set(size, value);
 }
 
-void popBack(myVector &vector){
-    vector.size--;
+void myVector::popBack(){
+    size--;
 }
 
-int get(myVector &vector, int index){
-    return *(vector.arrayStart + index);
+int myVector::get(int index){
+    return *(arrayStart + index);
 }
 
-void set(myVector &vector, int index, int newValue){
-    if (index <= vector.size){
-        *(vector.arrayStart + index) = newValue;
-        vector.size = vector.size + 1;
+void myVector::set(int index, int newValue){
+    if (index <= size){
+        *(arrayStart + index) = newValue;
+        if (index == size)
+            size = size + 1;
     } else
-        std::cout << "You cannot set a value beyond index " <<  vector.size + 1 << std::endl;
+        std::cout << "You cannot set a value beyond index " <<  size + 1 << std::endl;
+}
+
+int myVector::getSize(){
+    return size;
+}
+
+int myVector::getCapacity(){
+    return capacity;
 }
