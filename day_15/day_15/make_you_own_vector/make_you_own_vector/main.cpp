@@ -42,5 +42,11 @@ int main(int argc, const char * argv[]) {
     vector.~myVector();
     assert(vector.getSize() == 0);
     
+    // Test copy operator
+    myVector vector2 = vector;
+    assert(vector2.getSize() == vector.getSize());
+    assert(vector2.getCapacity() == vector.getCapacity());
+    assert(vector2.getArray() != vector.getArray());
+    
     return 0;
 }

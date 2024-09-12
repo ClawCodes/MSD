@@ -14,11 +14,38 @@ myVector::myVector(int initialCapacity){
     size = 0;
 }
 
+// Destructor
 myVector::~myVector(){
     delete arrayStart;
     arrayStart = nullptr;
     size = 0;
 }
+
+// Copy constructor
+myVector::myVector(const myVector& vector){
+    arrayStart = new int[capacity];
+    capacity = vector.capacity;
+    size = vector.size;
+    
+    for(int i = 0; i < vector.size; i++){
+        arrayStart[i] = vector.arrayStart[i];
+    }
+};
+
+myVector& myVector::operator=(myVector rhs){
+  // rhs is already a copy from the copy constructor call
+    int* tmp= rhs.arrayStart;
+    arrayStart = rhs.arrayStart;
+    size = rhs.size;
+    capacity = rhs.capacity;
+    rhs.arrayStart = tmp;
+    
+    return *this;
+};
+
+int myVector::operator[](int index) const {return arrayStart[index];};
+
+int& myVector::operator[](int index) {return arrayStart[index];};
 
 void myVector::growvector(){
     int newCapacity = capacity * 2;
@@ -63,3 +90,7 @@ int myVector::getSize(){
 int myVector::getCapacity(){
     return capacity;
 }
+
+int* myVector::getArray(){
+    return arrayStart;
+};

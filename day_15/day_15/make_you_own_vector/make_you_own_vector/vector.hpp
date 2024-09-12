@@ -20,6 +20,14 @@ public:
     
     ~myVector();
     
+    myVector(const myVector& vector);
+    
+    myVector& operator=(myVector rhs);
+    
+    int operator[](int index) const;
+    
+    int& operator[](int index);
+    
     void growvector();
     
     void pushBack(int value);
@@ -33,6 +41,8 @@ public:
     int getSize();
     
     int getCapacity();
+    
+    int* getArray();
     
 };
 
