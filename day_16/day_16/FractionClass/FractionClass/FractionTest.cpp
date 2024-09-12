@@ -81,8 +81,21 @@ void TestConstructors()
   result = f2.toString();
   Test( "Basic constructor", "1/2", result );
 
-  //TODO: Add your own additional tests here
-
+  Fraction f3(1, -2);
+  result = f3.toString();
+  Test("Basic constructor - Negative denominator results in negative numerator", "-1/2", result );
+    
+  Fraction f4(-1, -2);
+  result = f4.toString();
+  Test("Basic constructor - Negative denominator and numerator results in positive fraction", "1/2", result );
+    
+ Fraction f5(2, 4);
+ result = f5.toString();
+ Test("Basic constructor - Positive fraction is reduced", "1/2", result );
+    
+ Fraction f6(-2, 4);
+ result = f6.toString();
+ Test("Basic constructor - Negative fraction is reduced", "-1/2", result );
 }
 
 
@@ -108,8 +121,13 @@ void TestNegative()
   result = f4.toString();
   Test( "Negative denominator and reduce", "-1/4", result );
 
-
-  //TODO: Add your own additional tests here
+  Fraction f5(0, -1);
+  result = f5.toString();
+  Test( "Zero numerator and negative denominator results in 0 numerator", "0/1", result );
+    
+  Fraction f6(-0, -0);
+  result = f6.toString();
+  Test( "Allow negative zeros to be stripped of negative", "0/0", result );
 }
 
 
@@ -123,7 +141,25 @@ void TestReduced()
   result = f1.toString();
   Test( "Reduce fraction (2/4)", "1/2", result );
 
-  //TODO: Add your own additional tests here
+  Fraction f2(-2, 4);
+  result = f2.toString();
+  Test( "Reduce fraction with negative (-2/4)", "-1/2", result );
+    
+  Fraction f3(1, 2);
+  result = f3.toString();
+  Test( "Reduce already reduced fraction (1/2)", "1/2", result );
+    
+  Fraction f4(12, 12);
+  result = f4.toString();
+  Test( "Reduce whole number fraction (12/12)", "1/1", result );
+    
+  Fraction f5(0, 0);
+  result = f5.toString();
+  Test( "Reduce zero remains (0/0)", "0/0", result );
+    
+  Fraction f6(16, 8);
+  result = f6.toString();
+  Test( "Reduce greater numerator (16/8)", "2/1", result );
 }
 
 
@@ -148,7 +184,15 @@ void TestReciprocal()
   result = f3.toString();
   Test( "Reciprocal of non-reduced", "1/3", result );
 
-  //TODO: Add your own additional tests here
+  Fraction f4;
+  f4 = f4.reciprocal();
+  result = f4.toString();
+  Test( "Reciprocal of default remains the same", "1/0", result );
+    
+  Fraction f5(-1, -2);
+  f5 = f5.reciprocal();
+  result = f5.toString();
+  Test( "Reciprocal of double negative", "2/1", result );
 }
 
 /*
@@ -165,23 +209,413 @@ void TestPlus()
   result = f3.toString();
   Test( "Addition of non-reduced", "17/12", result );
 
-  //TODO: Add your own additional tests here
+  result = Fraction(-1,2).plus(Fraction(1,2)).toString();
+  Test( "Addition positive and negative fraction resulting in zero numerator", "0/1", result );
+    
+  result = Fraction(-1,2).plus(Fraction(1,3)).toString();
+  Test( "Addition positive and negative fraction resulting in non-zero numerator", "-1/6", result );
+    
+  result = Fraction(0,2).plus(Fraction(0,3)).toString();
+  Test( "Addition of zeroed numerators results in default", "0/1", result );
+    
+  result = Fraction(1,2).plus(Fraction(1,3)).toString();
+  Test( "Addition of positive fractions with different numerators", "5/6", result );
+    
+  result = Fraction(-1,2).plus(Fraction(-1,3)).toString();
+  Test( "Addition of negative fractions with different numerators", "-5/6", result );
+    
+  result = Fraction(1,2).plus(Fraction(0,0)).toString();
+  Test( "Addition of fraction and undefined (0/0) results in undefined", "0/0", result );
+    
+  result = Fraction(1,2).plus(Fraction(0,1)).toString();
+  Test( "Addition of fraction with zero (0/1) results in original fraction", "1/2", result );
 }
 
+void TestAdditionOp(){
+    std::string result = "";
+    
+    result = (Fraction(-1,2) + Fraction(1,2)).toString();
+    Test( "Operator Addition of positive and negative fraction resulting in zero numerator", "0/1", result );
+      
+    result = (Fraction(-1,2) + Fraction(1,3)).toString();
+    Test( "Operator Addition of positive and negative fraction resulting in non-zero numerator", "-1/6", result );
+      
+    result = (Fraction(0,2) + Fraction(0,3)).toString();
+    Test( "Operator Addition of zeroed numerators results in default", "0/1", result );
+      
+    result = (Fraction(1,2) + Fraction(1,3)).toString();
+    Test( "Operator Addition of positive fractions with different numerators", "5/6", result );
+      
+    result = (Fraction(-1,2) + Fraction(-1,3)).toString();
+    Test( "Operator Addition of negative fractions with different numerators", "-5/6", result );
+      
+    result = (Fraction(1,2) + Fraction(0,0)).toString();
+    Test( "Operator Addition of fraction and undefined (0/0) results in undefined", "0/0", result );
+      
+    result = (Fraction(1,2) + Fraction(0,1)).toString();
+    Test( "Operator Addition of fraction with zero (0/1) results in original fraction", "1/2", result );
+}
+
+void TestAdditionEqualsOp(){
+    Fraction result;
+    
+    result = Fraction(-1,2);
+    result += Fraction(1,2);
+    Test( "Operator Addition Equals of positive and negative fraction resulting in zero numerator", "0/1", result.toString() );
+      
+    result = Fraction(-1,2);
+    result += Fraction(1,3);
+    Test( "Operator Addition Equals of positive and negative fraction resulting in non-zero numerator", "-1/6", result.toString() );
+      
+    result = Fraction(0,2);
+    result += Fraction(0,3);
+    Test( "Operator Addition Equals of zeroed numerators results in default", "0/1", result.toString() );
+      
+    result = Fraction(1,2);
+    result += Fraction(1,3);
+    Test( "Operator Addition Equals of positive fractions with different numerators", "5/6", result.toString() );
+      
+    result = Fraction(-1,2);
+    result += Fraction(-1,3);
+    Test( "Operator Addition Equals of negative fractions with different numerators", "-5/6", result.toString() );
+      
+    result = Fraction(1,2);
+    result += Fraction(0,0);
+    Test( "Operator Addition Equals of fraction and undefined (0/0) results in undefined", "0/0", result.toString() );
+      
+    result = Fraction(1,2);
+    result += Fraction(0,1);
+    Test( "Operator Addition Equals of fraction with zero (0/1) results in original fraction", "1/2", result.toString() );
+}
+
+void TestMinus()
+{
+  std::string result = "";
+    
+  result = Fraction(-1,2).minus(Fraction(-1,2)).toString();
+  Test( "Subtraction of fractions resulting in zero numerator", "0/1", result );
+    
+  result = Fraction(-1,2).minus(Fraction(1,3)).toString();
+  Test( "Subtraction of positive and negative fraction resulting in non-zero numerator", "-5/6", result );
+    
+  result = Fraction(0,2).minus(Fraction(0,3)).toString();
+  Test( "Subtraction of zeroed numerators results in default", "0/1", result );
+    
+  result = Fraction(1,2).minus(Fraction(1,3)).toString();
+  Test( "Subtraction of positive fractions with different numerators", "1/6", result );
+    
+  result = Fraction(-1,2).minus(Fraction(-1,3)).toString();
+  Test( "Subtraction of negative fractions with different numerators", "-1/6", result );
+    
+  result = Fraction(1,2).minus(Fraction(0,0)).toString();
+  Test( "Subtraction of fraction and undefined (0/0) results in undefined", "0/0", result );
+    
+  result = Fraction(1,2).minus(Fraction(0,1)).toString();
+  Test( "Subtraction of fraction with zero (0/1) results in original fraction", "1/2", result );
+}
+
+void TestSubtractionOp()
+{
+  std::string result = "";
+    
+  result = (Fraction(-1,2) - Fraction(-1,2)).toString();
+  Test( "Operator subtraction of fractions resulting in zero numerator", "0/1", result );
+    
+  result = (Fraction(-1,2) - Fraction(1,3)).toString();
+  Test( "Operator subtraction of positive and negative fraction resulting in non-zero numerator", "-5/6", result );
+    
+  result = (Fraction(0,2) - Fraction(0,3)).toString();
+  Test( "Operator subtraction of zeroed numerators results in default", "0/1", result );
+    
+  result = (Fraction(1,2) - Fraction(1,3)).toString();
+  Test( "Operator subtraction of positive fractions with different numerators", "1/6", result );
+    
+  result = (Fraction(-1,2) - Fraction(-1,3)).toString();
+  Test( "Operator subtraction of negative fractions with different numerators", "-1/6", result );
+    
+  result = (Fraction(1,2) - Fraction(0,0)).toString();
+  Test( "Operator subtraction of fraction and undefined (0/0) results in undefined", "0/0", result );
+    
+  result = (Fraction(1,2) - Fraction(0,1)).toString();
+  Test( "Operator subtraction of fraction with zero (0/1) results in original fraction", "1/2", result );
+}
+
+void TestSubtractionEqualsOp()
+{
+  Fraction result;
+    
+  result = Fraction(-1,2);
+  result -= Fraction(-1,2);
+  Test( "Operator subtraction equals of fractions resulting in zero numerator", "0/1", result.toString() );
+    
+  result = Fraction(-1,2);
+  result -= Fraction(1,3);
+  Test( "Operator subtraction equals of positive and negative fraction resulting in non-zero numerator", "-5/6", result.toString() );
+    
+  result = Fraction(0,2);
+  result -= Fraction(0,3);
+  Test( "Operator subtraction equals of zeroed numerators results in default", "0/1", result.toString() );
+    
+  result = Fraction(1,2);
+  result -= Fraction(1,3);
+  Test( "Operator subtraction equals of positive fractions with different numerators", "1/6", result.toString() );
+    
+  result = Fraction(-1,2);
+  result -= Fraction(-1,3);
+  Test( "Operator subtraction equals of negative fractions with different numerators", "-1/6", result.toString() );
+    
+  result = Fraction(1,2);
+  result -= Fraction(0,0);
+  Test( "Operator subtraction equals of fraction and undefined (0/0) results in undefined", "0/0", result.toString() );
+    
+  result = Fraction(1,2);
+  result -= Fraction(0,1);
+  Test( "Operator subtraction equals of fraction with zero (0/1) results in original fraction", "1/2", result.toString() );
+}
+
+void TestTimes()
+{
+  std::string result = "";
+    
+  result = Fraction(1,2).times(Fraction(1,2)).toString();
+  Test( "Multiplication of positive fractions result in smaller positive", "1/4", result );
+    
+  result = Fraction(-1,2).times(Fraction(1,3)).toString();
+  Test( "Multiplication of positive and negative fractions result in negative fraction", "-1/6", result );
+
+  result = Fraction(0,2).times(Fraction(0,3)).toString();
+  Test( "Multiplication of zeroed numerators results in default", "0/1", result );
+
+  result = Fraction(1,2).times(Fraction(1,3)).toString();
+  Test( "Multiplication of positive fractions with different numerators", "1/6", result );
+
+  result = Fraction(-1,2).times(Fraction(-1,3)).toString();
+  Test( "Multiplication of negative fractions with different numerators", "1/6", result );
+
+  result = Fraction(1,2).times(Fraction(0,0)).toString();
+  Test( "Multiplication of fraction and undefined (0/0) results in undefined", "0/0", result );
+
+  result = Fraction(1,2).times(Fraction(0,1)).toString();
+  Test( "Multiplication of fraction with zero (0/1) results in zero", "0/1", result );
+}
+
+void TestMultiplicationOp(){
+    std::string result = "";
+      
+    result = (Fraction(1,2) * Fraction(1,2)).toString();
+    Test( "Operator Multiplication of positive fractions result in smaller positive", "1/4", result );
+      
+    result = (Fraction(-1,2) * Fraction(1,3)).toString();
+    Test( "Operator Multiplication of positive and negative fractions result in negative fraction", "-1/6", result );
+
+    result = (Fraction(0,2) * Fraction(0,3)).toString();
+    Test( "Operator Multiplication of zeroed numerators results in default", "0/1", result );
+
+    result = (Fraction(1,2) * Fraction(1,3)).toString();
+    Test( "Operator Multiplication of positive fractions with different numerators", "1/6", result );
+
+    result = (Fraction(-1,2) * Fraction(-1,3)).toString();
+    Test( "Operator Multiplication of negative fractions with different numerators", "1/6", result );
+
+    result = (Fraction(1,2) * Fraction(0,0)).toString();
+    Test( "Operator Multiplication of fraction and undefined (0/0) results in undefined", "0/0", result );
+
+    result = (Fraction(1,2) * Fraction(0,1)).toString();
+    Test( "Operator Multiplication of fraction with zero (0/1) results in zero", "0/1", result );
+}
+
+void TestMultiplicationEqualsOp(){
+    Fraction result;
+      
+    result = Fraction(1,2);
+    result *= Fraction(1,2);
+    Test( "Operator Multiplication Equals of positive fractions result in smaller positive", "1/4", result.toString() );
+      
+    result = Fraction(-1,2);
+    result *= Fraction(1,3);
+    Test( "Operator Multiplication Equals of positive and negative fractions result in negative fraction", "-1/6", result.toString() );
+
+    result = Fraction(0,2);
+    result *= Fraction(0,3);
+    Test( "Operator Multiplication Equals of zeroed numerators results in default", "0/1", result.toString() );
+
+    result = Fraction(1,2);
+    result *= Fraction(1,3);
+    Test( "Operator Multiplication Equals of positive fractions with different numerators", "1/6", result.toString() );
+
+    result = Fraction(-1,2);
+    result *= Fraction(-1,3);
+    Test( "Operator Multiplication Equals of negative fractions with different numerators", "1/6", result.toString() );
+
+    result = Fraction(1,2);
+    result *= Fraction(0,0);
+    Test( "Operator Multiplication Equals of fraction and undefined (0/0) results in undefined", "0/0", result.toString() );
+
+    result = Fraction(1,2);
+    result *= Fraction(0,1);
+    Test( "Operator Multiplication Equals of fraction with zero (0/1) results in zero", "0/1", result.toString() );
+}
+
+void TestdividedBy()
+{
+  std::string result = "";
+    
+  result = Fraction(1,2).dividedBy(Fraction(1,2)).toString();
+  Test( "Division of positive fractions result in larger positive", "1/1", result );
+    
+  result = Fraction(-1,2).dividedBy(Fraction(1,3)).toString();
+  Test( "Division of positive and negative fractions result in negative fraction", "-3/2", result );
+
+  result = Fraction(0,2).dividedBy(Fraction(0,3)).toString();
+  Test( "Division of zeroed numerators results in undefined", "0/0", result );
+
+  result = Fraction(1,2).dividedBy(Fraction(1,3)).toString();
+  Test( "Division of positive fractions with different numerators", "3/2", result );
+
+  result = Fraction(-1,2).dividedBy(Fraction(-1,3)).toString();
+  Test( "Division of negative fractions with different numerators", "3/2", result );
+
+  result = Fraction(1,2).dividedBy(Fraction(0,0)).toString();
+  Test( "Division of fraction and undefined (0/0) results in undefined", "0/0", result );
+
+  result = Fraction(1,2).dividedBy(Fraction(0,1)).toString();
+  Test( "Division of fraction with zero (0/1) results in lhs.numerator/0", "1/0", result );
+}
+
+void TestDivisionOp()
+{
+  std::string result = "";
+    
+  result = (Fraction(1,2) / Fraction(1,2)).toString();
+  Test( "Operator Division of positive fractions result in larger positive", "1/1", result );
+    
+  result = (Fraction(-1,2) / Fraction(1,3)).toString();
+  Test( "Operator Division of positive and negative fractions result in negative fraction", "-3/2", result );
+
+  result = (Fraction(0,2) / Fraction(0,3)).toString();
+  Test( "Operator Division of zeroed numerators results in undefined", "0/0", result );
+
+  result = (Fraction(1,2) / Fraction(1,3)).toString();
+  Test( "Operator Division of positive fractions with different numerators", "3/2", result );
+
+  result = (Fraction(-1,2) / Fraction(-1,3)).toString();
+  Test( "Operator Division of negative fractions with different numerators", "3/2", result );
+
+  result = (Fraction(1,2) / Fraction(0,0)).toString();
+  Test( "Operator Division of fraction and undefined (0/0) results in undefined", "0/0", result );
+
+  result = (Fraction(1,2) / Fraction(0,1)).toString();
+  Test( "Operator Division of fraction with zero (0/1) results in lhs.numerator/0", "1/0", result );
+}
+
+void TestDivisionEqualsOp()
+{
+  Fraction result;
+    
+  result = Fraction(1,2);
+  result /= Fraction(1,2);
+  Test( "Operator Division Equals of positive fractions result in larger positive", "1/1", result.toString() );
+    
+  result = Fraction(-1,2);
+  result /= Fraction(1,3);
+  Test( "Operator Division Equals of positive and negative fractions result in negative fraction", "-3/2", result.toString() );
+
+  result = Fraction(0,2);
+  result /= Fraction(0,3);
+  Test( "Operator Division Equals of zeroed numerators results in undefined", "0/0", result.toString() );
+
+  result = Fraction(1,2);
+  result /= Fraction(1,3);
+  Test( "Operator Division Equals of positive fractions with different numerators", "3/2", result.toString() );
+
+  result = Fraction(-1,2);
+  result /= Fraction(-1,3);
+  Test( "Operator Division Equals of negative fractions with different numerators", "3/2", result.toString() );
+
+  result = Fraction(1,2);
+  result /= Fraction(0,0);
+  Test( "Operator Division Equals of fraction and undefined (0/0) results in undefined", "0/0", result.toString() );
+
+  result = Fraction(1,2);
+  result /= Fraction(0,1);
+  Test( "Operator Division Equals of fraction with zero (0/1) results in lhs.numerator/0", "1/0", result.toString() );
+}
+
+// TEST COMPARISON OPERATORS
 void TestEqualsComparisonOp(){
-    assert(Fraction(1,2) == Fraction(1,2));
-    assert(Fraction(-1,2) == Fraction(-1,2));
-    assert(Fraction(-1,-2) == Fraction(-1,-2));
-    assert(Fraction(1,-2) == Fraction(-1,2));
-    assert(!(Fraction(1,2) == Fraction(1,4)));
+    Test("1/2 == 1/2", true, Fraction(1,2) == Fraction(1,2));
+    Test("-1/2 == -1/2", true, Fraction(-1,2) == Fraction(-1,2));
+    Test("-1/-2 == -1/-2", true, Fraction(-1,-2) == Fraction(-1,-2));
+    Test("1/-2 == 1/-2", true, Fraction(1,-2) == Fraction(1,-2));
+    Test("1/2 == 1/4 evaluates to false", false, Fraction(1,2) == Fraction(1,4));
+    Test("0/0 == 0/0 (consider undefined == undefined)", true, Fraction(0,0) == Fraction(0,0));
 }
 
-void TestPlusEqualsOperator(){
-    Fraction one = Fraction(1, 2);
-    Fraction two = Fraction(1, 3);
-    one += two;
-//    assert(one == Fraction())
+void TestNotEqualsComparisonOp(){
+    Test("1/2 != 1/2 evaluates to false", false, Fraction(1,2) != Fraction(1,2));
+    Test("-1/2 != -1/2 evaluates to false", false, Fraction(-1,2) != Fraction(-1,2));
+    Test("-1/-2 != -1/-2 evaluates to false", false, Fraction(-1,-2) != Fraction(-1,-2));
+    Test("1/-2 != 1/-2 evaluates to false", false, Fraction(1,-2) != Fraction(1,-2));
+    Test("1/2 != 1/4 evaluates to true", true, Fraction(1,2) != Fraction(1,4));
+    Test("0/0 != 0/0 evaluates to false", false, Fraction(0,0) != Fraction(0,0));
+    Test("1/4 != 1/2 evaluates to true", true, Fraction(1,4) != Fraction(1,2));
+    Test("-1/4 != -1/2 evaluates to true", true, Fraction(-1,4) != Fraction(-1,2));
+    Test("-1/-4 != -1/-2 evaluates to true", true, Fraction(-1,-4) != Fraction(-1,-2));
 }
+
+void TestLessThanOp(){
+    Test("1/2 < 1/2 evaluates to false", false, Fraction(1,2) < Fraction(1,2));
+    Test("-1/2 < -1/2 evaluates to false", false, Fraction(-1,2) < Fraction(-1,2));
+    Test("-1/-2 < -1/-2 evaluates to false", false, Fraction(-1,-2) < Fraction(-1,-2));
+    Test("1/-2 < 1/-2 evaluates to false", false, Fraction(1,-2) < Fraction(1,-2));
+    Test("0/0 < 0/0 evaluates to false", false, Fraction(0,0) < Fraction(0,0));
+    Test("1/2 < 1/4 evaluates to false", false, Fraction(1,2) < Fraction(1,4));
+    Test("1/4 < 1/2 evaluates to true", true, Fraction(1,4) < Fraction(1,2));
+    Test("-1/2 < 1/2 evaluates to true", true, Fraction(-1,2) < Fraction(1,2));
+    Test("-1/-4 < -1/-2 evaluates to true", true, Fraction(-1,-4) < Fraction(-1,-2));
+    Test("1/-4 < 1/-2 evaluates to false", false, Fraction(1,-4) < Fraction(1,-2));
+}
+
+void TestGreaterThanOp(){
+    Test("1/2 > 1/2 evaluates to false", false, Fraction(1,2) > Fraction(1,2));
+    Test("-1/2 > -1/2 evaluates to false", false, Fraction(-1,2) > Fraction(-1,2));
+    Test("-1/-2 > -1/-2 evaluates to false", false, Fraction(-1,-2) > Fraction(-1,-2));
+    Test("1/-2 > 1/-2 evaluates to false", false, Fraction(1,-2) > Fraction(1,-2));
+    Test("0/0 > 0/0 evaluates to false", false, Fraction(0,0) > Fraction(0,0));
+    Test("1/2 > 1/4 evaluates to true", true, Fraction(1,2) > Fraction(1,4));
+    Test("1/4 > 1/2 evaluates to false", false, Fraction(1,4) > Fraction(1,2));
+    Test("-1/2 > 1/2 evaluates to false", false, Fraction(-1,2) > Fraction(1,2));
+    Test("-1/-4 > -1/-2 evaluates to false", false, Fraction(-1,-4) > Fraction(-1,-2));
+    Test("1/-4 > 1/-2 evaluates to true", true, Fraction(1,-4) > Fraction(1,-2));
+}
+
+void TestGreaterThanOrEqualToOp(){
+    Test("1/2 >= 1/2 evaluates to true", true, Fraction(1,2) >= Fraction(1,2));
+    Test("-1/2 >= -1/2 evaluates to true", true, Fraction(-1,2) >= Fraction(-1,2));
+    Test("-1/-2 >= -1/-2 evaluates to true", true, Fraction(-1,-2) >= Fraction(-1,-2));
+    Test("1/-2 >= 1/-2 evaluates to true", true, Fraction(1,-2) >= Fraction(1,-2));
+    Test("0/0 >= 0/0 evaluates to true", true, Fraction(0,0) >= Fraction(0,0));
+    Test("1/2 >= 1/4 evaluates to true", true, Fraction(1,2) >= Fraction(1,4));
+    Test("1/4 >= 1/2 evaluates to false", false, Fraction(1,4) >= Fraction(1,2));
+    Test("-1/2 >= 1/2 evaluates to false", false, Fraction(-1,2) >= Fraction(1,2));
+    Test("-1/-4 >= -1/-2 evaluates to false", false, Fraction(-1,-4) >= Fraction(-1,-2));
+    Test("1/-4 >= 1/-2 evaluates to true", true, Fraction(1,-4) >= Fraction(1,-2));
+}
+
+
+void TestLessThanOREqualToOp(){
+    Test("1/2 <= 1/2 evaluates to true", true, Fraction(1,2) <= Fraction(1,2));
+    Test("-1/2 <= -1/2 evaluates to true", true, Fraction(-1,2) <= Fraction(-1,2));
+    Test("-1/-2 <= -1/-2 evaluates to true", true, Fraction(-1,-2) <= Fraction(-1,-2));
+    Test("1/-2 <= 1/-2 evaluates to true", true, Fraction(1,-2) <= Fraction(1,-2));
+    Test("0/0 <= 0/0 evaluates to true", true, Fraction(0,0) <= Fraction(0,0));
+    Test("1/2 <= 1/4 evaluates to false", false, Fraction(1,2) <= Fraction(1,4));
+    Test("1/4 <= 1/2 evaluates to true", true, Fraction(1,4) <= Fraction(1,2));
+    Test("-1/2 <= 1/2 evaluates to true", true, Fraction(-1,2) <= Fraction(1,2));
+    Test("-1/-4 <= -1/-2 evaluates to true", true, Fraction(-1,-4) <= Fraction(-1,-2));
+    Test("1/-4 <= 1/-2 evaluates to false", false, Fraction(1,-4) <= Fraction(1,-2));
+}
+
 
 void TestToDouble()
 {
@@ -235,12 +669,26 @@ namespace TestEntry {
         TestReciprocal();
         TestToDouble();
         TestPlus();
+        TestAdditionOp();
+        TestAdditionEqualsOp();
+        TestMinus();
+        TestSubtractionOp();
+        TestSubtractionEqualsOp();
+        TestTimes();
+        TestMultiplicationOp();
+        TestMultiplicationEqualsOp();
+        TestdividedBy();
+        TestDivisionOp();
+        TestDivisionEqualsOp();
         TestEqualsComparisonOp();
-//        TestPlusEqualsOperator();
+        TestNotEqualsComparisonOp();
+        TestLessThanOp();
+        TestGreaterThanOp();
+        TestGreaterThanOrEqualToOp();
+        TestLessThanOREqualToOp();
         
         Test("Approximating pi", 3.141592, ComputePi());
         
-        // TODO: Add your own additional tests
         return 0;
     }
 }

@@ -45,7 +45,7 @@ Fraction Fraction::times(Fraction rhs){
 };
 
 Fraction Fraction::dividedBy(Fraction rhs){
-    return times(reciprocal());
+    return times(rhs.reciprocal());
 };
 
 Fraction Fraction::reciprocal(){
@@ -106,38 +106,38 @@ bool Fraction::operator==(Fraction rhs){
     return (denominator == rhs.denominator) && (numerator == rhs.numerator);
 }
 
-Fraction operator+(Fraction& lhs, Fraction rhs){
+Fraction operator+(Fraction lhs, Fraction rhs){
     lhs += rhs;
     return lhs;
 }
 
-Fraction operator-(Fraction& lhs, Fraction rhs){
+Fraction operator-(Fraction lhs, Fraction rhs){
     lhs -= rhs;
     return lhs;
 }
 
-Fraction operator/(Fraction& lhs, Fraction rhs){
+Fraction operator/(Fraction lhs, Fraction rhs){
     lhs /= rhs;
     return lhs;
 }
 
-Fraction operator*(Fraction& lhs, Fraction rhs){
+Fraction operator*(Fraction lhs, Fraction rhs){
     lhs *= rhs;
     return lhs;
 }
 
-bool operator!=(Fraction& lhs, Fraction& rhs){
-    return ~(lhs == rhs);
+bool operator!=(Fraction lhs, Fraction rhs){
+    return !(lhs == rhs);
 }
 
-bool operator>(Fraction& lhs, Fraction& rhs){
-    return !(lhs < rhs);
+bool operator>(Fraction lhs, Fraction rhs){
+    return !(lhs < rhs) && !(lhs == rhs);
 }
 
-bool operator<=(Fraction& lhs, Fraction& rhs){
+bool operator<=(Fraction lhs, Fraction rhs){
     return !(lhs > rhs);
 }
 
-bool operator>=(Fraction& lhs, Fraction& rhs){
+bool operator>=(Fraction lhs, Fraction rhs){
     return !(lhs < rhs);
 }

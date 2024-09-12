@@ -37,13 +37,45 @@ void TestReciprocal();
 
 void TestPlus();
 
-void TestAdditionOpperator();
+void TestAdditionOp();
+
+void TestAdditionEqualsOp();
+
+void TestMinus();
+
+void TestSubtractionOp();
+
+void TestSubtractionEqualsOp();
+
+void TestTimes();
+
+void TestMultiplicationOp();
+
+void TestMultiplicationEqualsOp();
+
+void TestdividedBy();
+
+void TestDivisionOp();
+
+void TestDivisionEqualsOp();
 
 void TestToDouble();
 
 double ComputePi();
 
 void TestEqualsComparisonOp();
+
+void TestNotEqualsComparisonOp();
+
+void TestLessThanOp();
+
+void TestGreaterThanOp();
+
+void TestGreaterThanOrEqualToOp();
+
+void TestLessThanOREqualToOp();
+
+void TestAdditionOpperator();
 
 namespace TestEntry{
 int main();
