@@ -8,41 +8,100 @@
 #define vector_hpp
 
 #include <stdio.h>
+#include <iostream>
 
+template<typename T>
 class myVector{
     
     int size;
     int capacity;
-    int* arrayStart;
+    T* arrayStart;
 
 public:
-    myVector(int initialCapacity);
+    myVector(int initialCapacity){
+        arrayStart = new T[initialCapacity];
+        capacity = initialCapacity;
+        size = 0;
+    }
     
-    ~myVector();
+    ~myVector(){
+        delete arrayStart;
+        arrayStart = nullptr;
+        size = 0;
+    }
     
-    myVector(const myVector& vector);
+    myVector(const myVector& vector){
+        arrayStart = new T[capacity];
+        capacity = vector.capacity;
+        size = vector.size;
+        
+        for(int i = 0; i < vector.size; i++){
+            arrayStart[i] = vector.arrayStart[i];
+        }
+    };
     
-    myVector& operator=(myVector rhs);
+    myVector& operator=(myVector rhs){
+      // rhs is already a copy from the copy constructor call
+        int* tmp= rhs.arrayStart;
+        arrayStart = rhs.arrayStart;
+        size = rhs.size;
+        capacity = rhs.capacity;
+        rhs.arrayStart = tmp;
+        
+        return *this;
+    };
     
-    int operator[](int index) const;
+    int operator[](int index) const {return arrayStart[index];};
     
-    int& operator[](int index);
+    int& operator[](int index) {return arrayStart[index];};
+
+    void growvector(){
+        int newCapacity = capacity * 2;
+        T* newVector = new T[newCapacity];
+        for (int i = 0; i < size; i++){
+            T* addressToSet = newVector + i;
+            *addressToSet = arrayStart[i];
+        }
+        this->~myVector();
+        arrayStart = newVector;
+        capacity = newCapacity;
+    }
     
-    void growvector();
+    void pushBack(T value){
+        if (size >= capacity){
+            growvector();
+        }
+        set(size, value);
+    }
     
-    void pushBack(int value);
+    void popBack(){
+        size--;
+    }
     
-    void popBack();
+    T get(int index){
+        return *(arrayStart + index);
+    }
     
-    int get(int index);
+    void set(int index, T newValue){
+        if (index <= size){
+            *(arrayStart + index) = newValue;
+            if (index == size)
+                size = size + 1;
+        } else
+            std::cout << "You cannot set a value beyond index " <<  size + 1 << std::endl;
+    }
     
-    void set(int index, int newValue);
-    
-    int getSize();
-    
-    int getCapacity();
-    
-    int* getArray();
+    int getSize(){
+        return size;
+    }
+
+    int getCapacity(){
+        return capacity;
+    }
+
+    T* getArray(){
+        return arrayStart;
+    };
     
 };
 

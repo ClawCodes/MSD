@@ -8,12 +8,9 @@
 #include <cassert>
 #include "vector.hpp"
 
-
-
-int main(int argc, const char * argv[]) {
-    
-    
-    auto vector = myVector(10);
+template <typename T>
+void testNumericTypeVector(){
+    auto vector = myVector<T>(10);
     assert(vector.getCapacity() == 10);
     assert(vector.getSize() == 0);
     
@@ -47,6 +44,15 @@ int main(int argc, const char * argv[]) {
     assert(vector2.getSize() == vector.getSize());
     assert(vector2.getCapacity() == vector.getCapacity());
     assert(vector2.getArray() != vector.getArray());
+}
+
+int main(int argc, const char * argv[]) {
+    
+    testNumericTypeVector<int>();
+    testNumericTypeVector<long>();
+    testNumericTypeVector<double>();
+    testNumericTypeVector<float>();
+    
     
     return 0;
 }
