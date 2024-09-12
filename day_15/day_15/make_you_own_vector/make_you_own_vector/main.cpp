@@ -46,13 +46,35 @@ void testNumericTypeVector(){
     assert(vector2.getArray() != vector.getArray());
 }
 
+
+
 int main(int argc, const char * argv[]) {
     
+    // Test with different numeric types
     testNumericTypeVector<int>();
     testNumericTypeVector<long>();
     testNumericTypeVector<double>();
     testNumericTypeVector<float>();
     
+    // Test comparison operators
+    int capacity = 10;
+    auto vector1 = myVector<int>(capacity);
+    auto vector2 = myVector<int>(capacity);
+    auto vector3 = myVector<int>(capacity);
+    
+    // make the equivalent and non equivalent arrays
+    for (int i = 0; i < 10; i++){
+        vector1[i] = i;
+        vector2[i] = i;
+        vector3[i] = i + 1;
+    }
+    
+    assert(vector1 == vector2);
+    assert(!(vector1 != vector2));
+    assert(vector1 < vector3);
+    assert(vector3 > vector1);
+    assert(vector1 <= vector3);
+    assert(vector3 >= vector1);
     
     return 0;
 }

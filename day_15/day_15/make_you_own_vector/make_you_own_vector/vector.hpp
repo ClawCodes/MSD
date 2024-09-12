@@ -31,7 +31,7 @@ public:
     }
     
     myVector(const myVector& vector){
-        arrayStart = new T[capacity];
+        arrayStart = new T[vector.capacity];
         capacity = vector.capacity;
         size = vector.size;
         
@@ -51,9 +51,14 @@ public:
         return *this;
     };
     
-    int operator[](int index) const {return arrayStart[index];};
+    T operator[](int index) const {
+        return arrayStart[index];
+    };
     
-    int& operator[](int index) {return arrayStart[index];};
+    T& operator[](int index) {
+        size++;
+        return arrayStart[index];
+    };
 
     void growvector(){
         int newCapacity = capacity * 2;
@@ -103,6 +108,45 @@ public:
         return arrayStart;
     };
     
+    // Comparison operators
+    bool operator<(const myVector<T>& rhs){
+        for (int i = 0; i < size; i++){
+            if (arrayStart[i] < rhs.arrayStart[i]){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool operator==(const myVector<T>& rhs){
+        if (size != rhs.size) return false;
+        for (int i = 0; i < size; i++){
+            if (arrayStart[i] != rhs.arrayStart[i]){
+                return false;
+            }
+        }
+        return true;
+    }
 };
+
+template <typename T>
+bool operator!=(myVector<T> lhs, myVector<T> rhs){
+    return !(lhs == rhs);
+}
+
+template <typename T>
+bool operator>(myVector<T> lhs, myVector<T> rhs){
+    return !(lhs < rhs) && !(lhs == rhs);
+}
+
+template <typename T>
+bool operator<=(myVector<T> lhs, myVector<T> rhs){
+    return !(lhs > rhs);;
+}
+
+template <typename T>
+bool operator>=(myVector<T> lhs, myVector<T> rhs){
+    return !(lhs < rhs);
+}
 
 #endif /* vector_hpp */
