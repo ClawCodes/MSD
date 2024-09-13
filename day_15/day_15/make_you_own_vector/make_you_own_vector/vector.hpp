@@ -56,7 +56,8 @@ public:
     };
     
     T& operator[](int index) {
-        size++;
+        if (index > size - 1)
+            size++;
         return arrayStart[index];
     };
 
