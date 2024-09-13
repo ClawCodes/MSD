@@ -118,7 +118,7 @@ public:
         return false;
     }
 
-    bool operator==(const myVector<T>& rhs){
+    bool operator==(const myVector<T>& rhs) const{
         if (size != rhs.size) return false;
         for (int i = 0; i < size; i++){
             if (arrayStart[i] != rhs.arrayStart[i]){
