@@ -25,7 +25,8 @@ public:
     }
     
     ~myVector(){
-        delete arrayStart;
+//        free(arrayStart);
+        delete[] arrayStart;
         arrayStart = nullptr;
         size = 0;
     }
