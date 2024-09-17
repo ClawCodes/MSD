@@ -25,7 +25,6 @@ public:
     }
     
     ~myVector(){
-//        free(arrayStart);
         delete[] arrayStart;
         arrayStart = nullptr;
         size = 0;
@@ -40,6 +39,22 @@ public:
             arrayStart[i] = vector.arrayStart[i];
         }
     };
+    
+    T* begin(){
+        return arrayStart;
+    }
+    
+    T* begin() const{
+        return arrayStart;
+    }
+    
+    T* end(){
+        return begin() + size;
+    }
+    
+    T* end() const{
+        return begin() + size;
+    }
     
     myVector& operator=(myVector rhs){
       // rhs is already a copy from the copy constructor call
