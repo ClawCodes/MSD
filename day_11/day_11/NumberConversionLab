@@ -19,3 +19,7 @@
 4. BEEF | 1011111011101111 | 48879
 5. F00D | 1111000000001101 | 61453
 
+# Biggest number
+* 11111111 | 255 | 0xFF | -> This is significant as this is the maximum value you can store in an unsigned bytes
+
+# You will need 5 bits to count to 31
