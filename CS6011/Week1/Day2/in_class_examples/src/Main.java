@@ -60,7 +60,7 @@ public class Main {
         System.out.println("The original number is: " + originalNumber);
 
         // Create new array. This is different from ArrayList as it is a fixed size (same as vector vs. array in c++)
-        int [] numbers = new int[4];
+        int [] numbers = new int[4]; // numbers is on the stack and the array is on the heap
         for (int i = 0; i < numbers.length; i++) {
             numbers[i] = i;
             System.out.println(numbers[i]);
@@ -73,29 +73,35 @@ public class Main {
             System.out.println(numbers[i]);
         }
 
-//        Student student = new Student();
-//        student.setName("Chris");
-//
-//        System.out.println(student.getName());
-//
-//        ArrayList<Student> students = new ArrayList<>();
-//        students.add(new Student(1, "John"));
-//        students.add(new Student(2, "Jane"));
-//        students.add(new Student(3, "Bob"));
-//        students.add(new Student(4, "Mary"));
-//
-//        for (int i = 0; i < students.size(); i++) {
-//            System.out.println(students.get(i).getName());
-//        }
-//
-//        for (Student s : students) {
-//            System.out.println(s.getGpa());
-//        }
-//
-//        // Captures stream of bytes from keyboard and pass to program
-//        // The scanner does the processing
-//        Scanner sc = new Scanner(System.in);
-//        int number = sc.nextInt();
-//        System.out.println("The user entered number is: " + number);
+        // ArrayList for wrapped primitive
+        // This will create a shallow copy -> Create a new heap of pointers which point to the same heap array containing the primitives
+        // To do a deep copy, you must use a loop to reset the values
+//        ArrayList<Integer> numbersCopy = new ArrayList<Integer>(numbers);
+
+
+        Student student = new Student();
+        student.setName("Chris");
+
+        System.out.println(student.getName());
+
+        ArrayList<Student> students = new ArrayList<>();
+        students.add(new Student(1, "John"));
+        students.add(new Student(2, "Jane"));
+        students.add(new Student(3, "Bob"));
+        students.add(new Student(4, "Mary"));
+
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(students.get(i).getName());
+        }
+
+        for (Student s : students) {
+            System.out.println(s.getGpa());
+        }
+
+        // Captures stream of bytes from keyboard and pass to program
+        // The scanner does the processing
+        Scanner sc = new Scanner(System.in);
+        int number = sc.nextInt();
+        System.out.println("The user entered number is: " + number);
     }
 }
