@@ -10,18 +10,8 @@ class FractionTest {
     }
 
     @Test
-    public void testReduce(){
-        Fraction positive = new Fraction(2, 4);
-        Assertions.assertEquals(1, positive.numerator);
-        Assertions.assertEquals(2, positive.denominator);
-
-        Fraction negative = new Fraction(-2, 4);
-        Assertions.assertEquals(-1, negative.numerator);
-        Assertions.assertEquals(2, negative.denominator);
-    }
-
-    @Test
     public void testConstructor(){
+        // Testing constructor also tests Reduce()
         Fraction preReduced = new Fraction(1, 4);
         Assertions.assertEquals(preReduced.numerator, 1);
         Assertions.assertEquals(preReduced.denominator, 4);
@@ -117,7 +107,6 @@ class FractionTest {
     @Test
     public void runAllTests(){
         this.testDefaultConstructor();
-        this.testReduce();
         this.testConstructor();
         this.testToString();
         this.testPlus();
