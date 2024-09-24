@@ -31,3 +31,6 @@
 
 # C++ specific files
 *.o
+
+# IntelliJ
+.idea/
