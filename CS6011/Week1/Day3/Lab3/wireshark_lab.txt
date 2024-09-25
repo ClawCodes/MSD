@@ -1,0 +1,21 @@
+Ping
+
+What data is being sent to the other computer?
+* We are sending ping packets which are ICMP packets conforming to a data
+* The source address is my machine's IP address
+* The destination address is the my partners IP address when I am sending a request and the reverse when I am recieving a response
+* How do the integer values compare with the ASCII that is displayed in the terminal? - The integer values correspond directly. When looking up the hex values on the ASCII table, the lookup value matches which is displayed.
+* Does it match anything we have seen before? [ANSWER]
+* How long does it take a ping packet to travel to your classmate's machine and back? - the time ranges from the tens to hundreds of miliseconds
+* Pinging google - The ping requests and reponses are taking tens of miliseconds
+* Pinging louvre - Pinging louvre is in the high thens of miliseconds. Longer than pinging google but sometimes shorter than pinging my partner.
+
+HTTP
+* Open in browser - I observed the handshake along with the connection being established and maintained. But, I did not expect the RST response when the server decided to break the connection with my machine
+* curl
+	- curl is a tool for transferring data from or to a server using URLs
+	- We are seeing a different, more simplified response. It seems the handshake still occurs, but then we observe the direct HTTP GET and 200 response from the server. There is no  TCP keep-alive and TCP window update info lines as I recieved when using the web browser.
+* http://github.com
+	- The URL gets set to the default https://github.com which omits the url to your profile.
+	- I can't understand the output from wireshark becuase it can no longer inspect requests and responses on port 43 as it is a secure connection and won't allow third party applications to snoop.
+	- You can see the first messages which are establishing the connection before the connection is then secured and we're unable to read them. It seems this is the switch from HTTP -> HTTPS. 
