@@ -23,7 +23,7 @@ class RainLog{
 };
 
 public class RainData {
-    private ArrayList<RainLog> rainData = new ArrayList<>();
+    private final ArrayList<RainLog> rainData = new ArrayList<>();
     private static final DecimalFormat decFormat = new DecimalFormat("0.00");
 
     public RainData(String fileName) throws FileNotFoundException {
