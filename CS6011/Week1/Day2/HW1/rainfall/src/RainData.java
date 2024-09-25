@@ -31,7 +31,7 @@ public class RainData {
 
         this.cityName = reader.nextLine();
 
-        while (reader.hasNextLine()) {
+        while (reader.hasNext()) {
             rainData.add(new RainLog(reader.next(), reader.nextInt(), reader.nextDouble()));
         }
         reader.close();
@@ -43,12 +43,9 @@ public class RainData {
         for (RainLog log : rainData) {
             if (averages.containsKey(log.month)) {
                 averages.put(log.month, averages.get(log.month) + log.amount);
-            } else {
-                averages.put(log.month, log.amount);
-            }
-            if (monthCounts.containsKey(log.month)) {
                 monthCounts.put(log.month, monthCounts.get(log.month) + 1);
             } else {
+                averages.put(log.month, log.amount);
                 monthCounts.put(log.month, 1);
             }
         }
