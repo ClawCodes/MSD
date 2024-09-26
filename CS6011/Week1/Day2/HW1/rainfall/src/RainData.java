@@ -49,9 +49,7 @@ public class RainData {
                 monthCounts.put(log.month, 1);
             }
         }
-        for (String month : averages.keySet()) {
-            averages.put(month, averages.get(month) / monthCounts.get(month));
-        }
+        averages.replaceAll((m, _) -> averages.get(m) / monthCounts.get(m));
         return averages;
     }
 
