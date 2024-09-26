@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.Map;
 import java.text.DecimalFormat;
+import java.util.regex.Pattern;
 
 class RainLog {
     public String month;
@@ -22,14 +23,24 @@ class RainLog {
 
 public class RainData {
     private final ArrayList<RainLog> rainData = new ArrayList<>();
-    private String cityName;
+    private String cityName = "NO CITY";
     private static final DecimalFormat decFormat = new DecimalFormat("0.00");
+
+    public void setCityName(String name) {
+        Pattern linePattern = Pattern.compile("^\\w+\\s+\\d{4}\\s+\\d\\.\\d+");
+        boolean match = linePattern.matcher(name).find();
+        if (match) {
+            throw new IllegalArgumentException("The provided city name " + name + " is not valid.");
+        } else {
+            this.cityName = name;
+        }
+    }
 
     public RainData(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
         Scanner reader = new Scanner(file);
 
-        this.cityName = reader.nextLine();
+        setCityName(reader.nextLine());
 
         while (reader.hasNext()) {
             rainData.add(new RainLog(reader.next(), reader.nextInt(), reader.nextDouble()));
@@ -37,7 +48,15 @@ public class RainData {
         reader.close();
     }
 
-    private Map<String, Double> calculateAverages() {
+    public ArrayList<RainLog> getRainData() {
+        return rainData;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public Map<String, Double> calculateAverages() {
         Map<String, Double> averages = new HashMap<>();
         Map<String, Integer> monthCounts = new HashMap<>();
         for (RainLog log : rainData) {
@@ -49,7 +68,7 @@ public class RainData {
                 monthCounts.put(log.month, 1);
             }
         }
-        averages.replaceAll((m, _) -> averages.get(m) / monthCounts.get(m));
+        averages.replaceAll((m, v) -> v / monthCounts.get(m));
         return averages;
     }
 
