@@ -10,4 +10,4 @@ The average rainfall amount for February is 4.23 inches.
 The average rainfall amount for April is 3.58 inches.
 The average rainfall amount for August is 4.08 inches.
 The average rainfall amount for November is 3.73 inches.
-The overall average for Atlanta is 48.18 inches.
+The overall average for Atlanta is 4.02 inches.

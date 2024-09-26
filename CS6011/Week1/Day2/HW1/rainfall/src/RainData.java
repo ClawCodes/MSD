@@ -68,7 +68,7 @@ public class RainData {
                 monthCounts.put(log.month, 1);
             }
         }
-        averages.replaceAll((m, v) -> v / monthCounts.get(m));
+        averages.replaceAll((month, summation) -> summation / monthCounts.get(month));
         return averages;
     }
 
@@ -84,7 +84,7 @@ public class RainData {
                     "The average rainfall amount for " + entry.getKey() + " is " + decFormat.format(entry.getValue()) + " inches.\n"
             );
         }
-        writer.write("The overall average for " + this.cityName + " is " + decFormat.format(overall) + " inches.\n");
+        writer.write("The overall average for " + this.cityName + " is " + decFormat.format(overall / averages.size()) + " inches.\n");
         writer.close();
     }
 }

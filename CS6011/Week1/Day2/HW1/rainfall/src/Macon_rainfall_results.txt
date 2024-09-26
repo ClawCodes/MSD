@@ -10,4 +10,4 @@ The average rainfall amount for January is 3.65 inches.
 The average rainfall amount for April is 3.36 inches.
 The average rainfall amount for August is 4.16 inches.
 The average rainfall amount for November is 3.33 inches.
-The overall average for Macon is 45.44 inches.
+The overall average for Macon is 3.79 inches.
