@@ -1,8 +1,6 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
@@ -32,10 +30,10 @@ public class Main {
         File file = new File("resources/" + fileName);
         Scanner reader = new Scanner(file);
 
-        String fileContent = reader.nextLine();
+        String fileContent = reader.nextLine() + "\n";
 
         while (reader.hasNext()) {
-            fileContent = fileContent + reader.nextLine();
+            fileContent = fileContent + reader.nextLine() + "\n";
         }
 
         reader.close();
