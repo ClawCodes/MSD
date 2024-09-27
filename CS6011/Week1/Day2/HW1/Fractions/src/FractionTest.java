@@ -39,13 +39,13 @@ class FractionTest {
         }
 
         // Assertions using Junit
-        Exception expection = Assertions.assertThrows(ArithmeticException.class, () -> {
+        Exception exception = Assertions.assertThrows(ArithmeticException.class, () -> {
             new Fraction(1, 0);
         });
 
         String expectedMesage = "A fraction cannot have a denominator of 0 as you cannot divide by zero";
 
-        Assertions.assertEquals(expectedMesage, expection.getMessage());
+        Assertions.assertEquals(expectedMesage, exception.getMessage());
     }
 
     @Test
