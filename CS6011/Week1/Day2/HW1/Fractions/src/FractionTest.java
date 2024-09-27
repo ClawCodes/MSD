@@ -30,6 +30,25 @@ class FractionTest {
     }
 
     @Test
+    public void testConstructorThrows(){
+        // Assertions using try/catch
+        try{
+            new Fraction(1, 0);
+        } catch (ArithmeticException e){
+            Assertions.assertEquals("A fraction cannot have a denominator of 0 as you cannot divide by zero", e.getMessage());
+        }
+
+        // Assertions using Junit
+        Exception expection = Assertions.assertThrows(ArithmeticException.class, () -> {
+            new Fraction(1, 0);
+        });
+
+        String expectedMesage = "A fraction cannot have a denominator of 0 as you cannot divide by zero";
+
+        Assertions.assertEquals(expectedMesage, expection.getMessage());
+    }
+
+    @Test
     public void testToString(){
         Fraction positive = new Fraction(1, 4);
         Assertions.assertEquals("1/4", positive.toString());
@@ -85,9 +104,6 @@ class FractionTest {
     public void testReciprocal(){
         Fraction oneHalf = new Fraction(1, 2);
         Assertions.assertEquals("2/1", oneHalf.reciprocal().toString());
-
-        Fraction default_ = new Fraction();
-        Assertions.assertEquals("1/0", default_.reciprocal().toString());
 
         Fraction negative = new Fraction(-2, 4);
         Assertions.assertEquals("-2/1", negative.reciprocal().toString());

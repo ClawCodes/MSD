@@ -9,6 +9,9 @@ public class Fraction {
         denominator = 1;
     }
     public Fraction(long numerator, long denominator) {
+        if (denominator == 0){
+            throw new ArithmeticException("A fraction cannot have a denominator of 0 as you cannot divide by zero");
+        }
         if ((numerator < 0 && denominator < 0) || (numerator >= 0 && denominator < 0)){
             numerator = numerator * -1;
             denominator = denominator * -1;
