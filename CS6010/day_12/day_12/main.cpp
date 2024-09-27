@@ -128,5 +128,8 @@ int main(int argc, const char * argv[]) {
     fs::path filePath = fs::path(__FILE__).parent_path() / "number_rep_part_3.txt";
     compareToASCII(filePath);
     
+    // We are seeing \\d\d\d print as by default we are using the base ASCII encoding table and not the extended.
+    // If we used the extended ASCII, then we would be able to print the extended ASCII characters to screen
+    
     return 0;
 }

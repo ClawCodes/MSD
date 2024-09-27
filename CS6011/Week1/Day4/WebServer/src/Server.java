@@ -17,13 +17,6 @@ public class Server {
         serverSocket = new ServerSocket(port);
     }
 
-    public static String parseRequest(Scanner scanner) throws IOException {
-        if (!scanner.hasNextLine()) {
-            throw new IOException("No request provided");
-        }
-        return scanner.nextLine().split(" ")[1];
-    }
-
     public static String createSuccessResponse(String resource) {
         String reponse = """
                 HTTP/1.1 200 OK
@@ -44,18 +37,15 @@ public class Server {
         while (true) {
             Socket socket = serverSocket.accept();
 
-            InputStream inputStream = socket.getInputStream();
-            Scanner scanner = new Scanner(inputStream);
+            String fileName = HTTPRequest.getResourceName(socket);
 
             String response;
-            try {
-                String fileName = parseRequest(scanner);
+//            try {
                 String fileContent = readFile(fileName);
                 response = createSuccessResponse(fileContent);
-
-            } catch (IOException e) {
-                response = failureResponse;
-            }
+//            } catch (IOException e) {
+//                    response = failureResponse + "\nThe requested file " + fileName + " was not found.";
+//            }
 
             OutputStream outputStream = socket.getOutputStream();
             outputStream.write(response.getBytes());
