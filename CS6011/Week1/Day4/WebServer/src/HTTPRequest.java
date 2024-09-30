@@ -9,10 +9,14 @@ public class HTTPRequest {
     }
 
     public static String getResourceName(Socket socket) throws IOException {
-        // TODO: How to create IO exception from socket.getInputStream()?
-        InputStream inputStream = socket.getInputStream();
-        Scanner scanner = new Scanner(inputStream);
-
-        return HTTPRequest.parseRequest(scanner);
+        try {
+            InputStream inputStream = socket.getInputStream();
+            Scanner scanner = new Scanner(inputStream);
+            return HTTPRequest.parseRequest(scanner);
+        } catch (IOException e) {
+            System.out.println("Error when attempting to handle request: ");
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
