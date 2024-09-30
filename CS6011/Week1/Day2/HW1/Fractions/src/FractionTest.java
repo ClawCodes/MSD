@@ -130,11 +130,17 @@ class FractionTest {
         // Less than
         Fraction oneHalf = new Fraction(1, 4);
         Fraction oneThird = new Fraction(1, 3);
-        Fraction negativeThird = new Fraction(-1, 3);
 
         Assertions.assertEquals(-1, oneHalf.compareTo(oneThird));
         Assertions.assertEquals(1, oneThird.compareTo(oneHalf));
         Assertions.assertEquals(0, oneHalf.compareTo(oneHalf));
+
+        // Assert nullpointer exception raised
+        try{
+            oneThird.compareTo(null);
+        } catch (Exception e){
+            Assertions.assertInstanceOf(NullPointerException.class, e);
+        }
     }
 
     @Test
