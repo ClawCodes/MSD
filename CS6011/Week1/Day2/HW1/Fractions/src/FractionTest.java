@@ -1,5 +1,10 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 class FractionTest {
     @Test
@@ -121,6 +126,37 @@ class FractionTest {
     }
 
     @Test
+    public void testCompareTo(){
+        // Less than
+        Fraction oneHalf = new Fraction(1, 4);
+        Fraction oneThird = new Fraction(1, 3);
+        Fraction negativeThird = new Fraction(-1, 3);
+
+        Assertions.assertEquals(-1, oneHalf.compareTo(oneThird));
+        Assertions.assertEquals(1, oneThird.compareTo(oneHalf));
+        Assertions.assertEquals(0, oneHalf.compareTo(oneHalf));
+    }
+
+    @Test
+    public void testSortFracArray(){
+        ArrayList<Fraction> fractions = new ArrayList<>();
+
+        Fraction zero = new Fraction(0,1);
+        Fraction one = new Fraction(1,1);
+        Fraction oneHalf = new Fraction(1, 2);
+
+        fractions.add(oneHalf);
+        fractions.add(one);
+        fractions.add(zero);
+
+        Collections.sort(fractions);
+
+        Assertions.assertEquals(zero.toString(), fractions.get(0).toString());
+        Assertions.assertEquals(oneHalf.toString(), fractions.get(1).toString());
+        Assertions.assertEquals(one.toString(), fractions.get(2).toString());
+    }
+
+    @Test
     public void runAllTests(){
         this.testDefaultConstructor();
         this.testConstructor();
@@ -131,6 +167,8 @@ class FractionTest {
         this.testDividedBy();
         this.testReciprocal();
         this.testToDouble();
+        this.testCompareTo();
+        this.testSortFracArray();
         System.out.println("All tests passed!");
     }
 }
