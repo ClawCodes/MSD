@@ -17,7 +17,7 @@ public class VolumeAdjuster implements AudioComponent{
         this.scale = scale;
     }
 
-    void setScale(int scale){this.scale = scale;}
+    void setScale(double scale){this.scale = scale;}
 
     @Override
     public AudioClip getClip() {
