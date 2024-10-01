@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.sound.sampled.LineUnavailableException;
+import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 class AudioClipTest {
     @Test
@@ -24,9 +26,12 @@ class AudioClipTest {
     @Test
     public void testSetData(){
         AudioClip audioClip = new AudioClip();
-        for (short i = Short.MIN_VALUE; i < Short.MAX_VALUE; i++) {
-            audioClip.setSample(0, i);
-            Assertions.assertEquals(i, audioClip.getSample(0));
+        // Create an inclusive range of all short values to test
+        ArrayList<Short> shortRange = new ArrayList<>();
+        IntStream.rangeClosed(Short.MIN_VALUE, Short.MAX_VALUE).forEach(i -> shortRange.add((short) i));
+        for (short value : shortRange) {
+            audioClip.setSample(0, value);
+            Assertions.assertEquals(value, audioClip.getSample(0));
         }
     }
 
