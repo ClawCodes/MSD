@@ -6,10 +6,12 @@ public class AudioClip {
     private static final double duration = 2.0;
     private static final int sampleRate = 44100;
     private byte[] clip = new byte[sampleRate * (short)duration];
+    private static final int maxSampleIndex = sampleRate - 1;
 
     public int getSample(int index) {
-        if (index > clip.length - 1) {
-            throw new IllegalArgumentException("Index out of bounds");
+        if (index > maxSampleIndex) {
+            throw new IllegalArgumentException(String.format("Index out of bounds, cannot set index %s." +
+                    " Max index is %s.", index, maxSampleIndex));
         }
         int startIdx = index * 2;
         int significantByte = clip[startIdx + 1];
@@ -19,9 +21,9 @@ public class AudioClip {
     }
 
     public void setSample(int index, short value) {
-        if (index > clip.length - 1) {
-            throw new IllegalArgumentException("Cannot set index " + index +
-                    ". The current clip length is " + clip.length + ".");
+        if (index > maxSampleIndex) {
+            throw new IllegalArgumentException(String.format("Cannot set index %s." +
+                    " The maximum index that can be set is %s.", index, maxSampleIndex));
         }
 
         int startIdx = index * 2;

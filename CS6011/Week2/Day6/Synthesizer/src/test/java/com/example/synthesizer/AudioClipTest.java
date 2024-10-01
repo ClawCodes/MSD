@@ -17,13 +17,17 @@ class AudioClipTest {
         // The array should have defaults
         Assertions.assertEquals(0, audioClip.getSample(0));
         Assertions.assertEquals(0, audioClip.getSample(200));
-        Assertions.assertEquals(0, audioClip.getSample(44100));
+        Assertions.assertEquals(0, audioClip.getSample(44099));
     }
 
     @Test
     public void testSetData(){
+//        IntStream.range(1, 100).toArray()
         AudioClip audioClip = new AudioClip();
-
+        for (short i = Short.MIN_VALUE; i < Short.MAX_VALUE; i++) {
+            audioClip.setSample(0, i);
+            Assertions.assertEquals(i, audioClip.getSample(0));
+        }
     }
 
     @Test
