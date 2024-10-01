@@ -9,9 +9,7 @@ class VolumeAdjusterTest {
     @Test
     void testGetClip() throws LineUnavailableException {
         SineWave wave = new SineWave();
-        AudioClip clip = wave.getClip();
-        VolumeAdjuster adjuster = new VolumeAdjuster(clip);
-
+        VolumeAdjuster adjuster = new VolumeAdjuster(wave);
         adjuster.getClip().playClip();
     }
 }

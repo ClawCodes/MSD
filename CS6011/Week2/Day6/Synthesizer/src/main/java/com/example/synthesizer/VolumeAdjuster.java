@@ -1,36 +1,32 @@
 package com.example.synthesizer;
 
 public class VolumeAdjuster implements AudioComponent{
-    AudioClip input;
-    AudioClip output = new AudioClip();
-    int scale = 1;
+    AudioComponent input;
+    double scale = 0.5;
 
     VolumeAdjuster(){
         input = null;
     }
 
-    VolumeAdjuster(AudioClip input){
+    VolumeAdjuster(AudioComponent input){
         this.input = input;
     }
 
-    VolumeAdjuster(AudioClip input, int scale){
+    VolumeAdjuster(AudioComponent input, int scale){
         this.input = input;
         this.scale = scale;
     }
 
     void setScale(int scale){this.scale = scale;}
 
-    public void setOutput(){
-        byte[] clipArray = input.getData();
-        for (int i = 0; i < AudioClip.sampleRate; i++){
-            this.output.setSample(i, (short)(clipArray[i] * scale));
-        }
-    }
-
     @Override
     public AudioClip getClip() {
-        this.setOutput();
-        return this.output;
+        AudioClip clip = new AudioClip();
+        byte[] clipArray = input.getClip().getData();
+        for (int i = 0; i < AudioClip.sampleRate; i++){
+            clip.setSample(i, (short)(clipArray[i] * scale));
+        }
+        return clip;
     }
 
     @Override
@@ -39,7 +35,7 @@ public class VolumeAdjuster implements AudioComponent{
     }
 
     @Override
-    public void connectInput(AudioClip clip) {
-        input = clip;
+    public void connectInput(AudioComponent component) {
+        input = component;
     }
 }
