@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class AudioClip {
     private static final double duration = 2.0;
-    private static final int sampleRate = 44100;
+    public static final int sampleRate = 44100;
     private byte[] clip = new byte[sampleRate * (short)duration];
     private static final int maxSampleIndex = sampleRate - 1;
 

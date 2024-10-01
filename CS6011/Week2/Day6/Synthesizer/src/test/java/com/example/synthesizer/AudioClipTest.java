@@ -1,6 +1,5 @@
 package com.example.synthesizer;
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,6 @@ class AudioClipTest {
 
     @Test
     public void testSetData(){
-//        IntStream.range(1, 100).toArray()
         AudioClip audioClip = new AudioClip();
         for (short i = Short.MIN_VALUE; i < Short.MAX_VALUE; i++) {
             audioClip.setSample(0, i);
@@ -34,6 +32,7 @@ class AudioClipTest {
     public void testAll(){
         this.testGetData();
         this.testGetSample();
+        this.testSetData();
         System.out.println("All tests passed!");
     }
 }
