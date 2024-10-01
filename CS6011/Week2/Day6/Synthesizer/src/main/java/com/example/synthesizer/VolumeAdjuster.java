@@ -21,10 +21,10 @@ public class VolumeAdjuster implements AudioComponent{
 
     @Override
     public AudioClip getClip() {
+        AudioClip inputclip = input.getClip();
         AudioClip clip = new AudioClip();
-        byte[] clipArray = input.getClip().getData();
         for (int i = 0; i < AudioClip.sampleRate; i++){
-            clip.setSample(i, (short)(clipArray[i] * scale));
+            clip.setSample(i, (short)(inputclip.getSample(i) * scale));
         }
         return clip;
     }

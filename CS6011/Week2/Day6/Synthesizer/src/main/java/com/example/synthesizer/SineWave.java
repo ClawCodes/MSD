@@ -12,7 +12,7 @@ public class SineWave implements AudioComponent {
 
     SineWave(double frequency) {
         this.frequency = frequency;
-        this.maxValue = Short.MAX_VALUE / 2;;
+        this.maxValue = Short.MAX_VALUE / 2;
     };
 
     SineWave(double frequency, short maxValue) {
