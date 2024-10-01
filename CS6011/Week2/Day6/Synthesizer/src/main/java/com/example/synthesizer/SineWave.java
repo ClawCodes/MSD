@@ -1,7 +1,5 @@
 package com.example.synthesizer;
 
-import com.beust.ah.A;
-
 public class SineWave implements AudioComponent {
     private int frequency;
     private int maxValue;
@@ -10,6 +8,11 @@ public class SineWave implements AudioComponent {
         frequency = 440;
         maxValue = Short.MAX_VALUE / 2;
     }
+
+    SineWave(int frequency) {
+        this.frequency = frequency;
+        this.maxValue = Short.MAX_VALUE / 2;;
+    };
 
     SineWave(int frequency, short maxValue) {
         this.frequency = frequency;

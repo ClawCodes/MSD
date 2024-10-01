@@ -3,6 +3,8 @@ package com.example.synthesizer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.sound.sampled.LineUnavailableException;
+
 class AudioClipTest {
     @Test
     public void testGetData(){
@@ -26,6 +28,13 @@ class AudioClipTest {
             audioClip.setSample(0, i);
             Assertions.assertEquals(i, audioClip.getSample(0));
         }
+    }
+
+    @Test
+    public void testPlayClip() throws LineUnavailableException {
+        SineWave wave = new SineWave();
+        AudioClip clip = wave.getClip();
+        clip.playClip();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.example.synthesizer;
 
 import java.util.Arrays;
+import javax.sound.sampled.*;
 
 public class AudioClip {
     private static final double duration = 2.0;
@@ -34,5 +35,20 @@ public class AudioClip {
 
     public byte[] getData() {
         return Arrays.copyOf(clip, clip.length);
+    }
+
+    public void playClip() throws LineUnavailableException {
+        Clip c = AudioSystem.getClip();
+        AudioFormat format16 = new AudioFormat( 44100, 16, 1, true, false );
+        c.open( format16, clip, 0, clip.length );
+
+        c.start();
+        c.loop(2);
+
+        while( c.getFramePosition() < AudioClip.sampleRate || c.isActive() || c.isRunning() ){
+            // Do nothing while we wait for the note to play.
+        }
+
+        c.close();
     }
 }
