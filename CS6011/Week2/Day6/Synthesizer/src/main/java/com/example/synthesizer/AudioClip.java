@@ -9,6 +9,7 @@ public class AudioClip {
     private byte[] clip = new byte[sampleRate * (short)duration];
     private static final int maxSampleIndex = sampleRate - 1;
 
+
     public int getSample(int index) {
         if (index > maxSampleIndex) {
             throw new IllegalArgumentException(String.format("Index out of bounds, cannot set index %s." +
@@ -38,17 +39,17 @@ public class AudioClip {
     }
 
     public void playClip() throws LineUnavailableException {
-        Clip c = AudioSystem.getClip();
+        Clip systemClip = AudioSystem.getClip();
         AudioFormat format16 = new AudioFormat( 44100, 16, 1, true, false );
-        c.open( format16, clip, 0, clip.length );
+        systemClip.open( format16, clip, 0, clip.length );
 
-        c.start();
-        c.loop(2);
+        systemClip.start();
+        systemClip.loop(2);
 
-        while( c.getFramePosition() < AudioClip.sampleRate || c.isActive() || c.isRunning() ){
+        while( systemClip.getFramePosition() < AudioClip.sampleRate || systemClip.isActive() || systemClip.isRunning() ){
             // Do nothing while we wait for the note to play.
         }
 
-        c.close();
+        systemClip.close();
     }
 }

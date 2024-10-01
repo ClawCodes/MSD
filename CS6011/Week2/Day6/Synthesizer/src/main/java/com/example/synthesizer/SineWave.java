@@ -3,6 +3,7 @@ package com.example.synthesizer;
 public class SineWave implements AudioComponent {
     private int frequency;
     private int maxValue;
+    AudioClip input = null;
 
     SineWave() {
         frequency = 440;
@@ -30,12 +31,12 @@ public class SineWave implements AudioComponent {
     }
 
     @Override
-    public boolean hadInput() {
-        return false;
+    public boolean hasInput() {
+        return this.input != null;
     }
 
     @Override
-    public void connectInput() {
-
+    public void connectInput(AudioClip clip) {
+        this.input = clip;
     }
 }
