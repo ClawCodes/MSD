@@ -43,6 +43,22 @@ class AudioClipTest {
     }
 
     @Test
+    public void testCombine() {
+        AudioClip one = new AudioClip();
+        one.setSample(0, (short)1);
+        one.setSample(1, (short)2);
+
+        AudioClip two = new AudioClip();
+        two.setSample(0, (short)2);
+        two.setSample(1, (short)3);
+
+        one.combine(two);
+
+        Assertions.assertEquals(3, one.getSample(0));
+        Assertions.assertEquals(5, one.getSample(1));
+    }
+
+    @Test
     public void testAll(){
         this.testGetData();
         this.testGetSample();

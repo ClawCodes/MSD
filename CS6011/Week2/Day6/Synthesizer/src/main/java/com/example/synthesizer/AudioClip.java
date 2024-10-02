@@ -9,6 +9,27 @@ public class AudioClip {
     private byte[] clip = new byte[sampleRate * (short)duration];
     private static final int maxSampleIndex = sampleRate - 1;
 
+    public AudioClip() {};
+    public AudioClip(AudioClip clip) {
+        this.clip = clip.getData();
+    }
+
+    public void combine(AudioClip clip){
+        for (int index = 0; index < maxSampleIndex; index++) {
+            int thisValue = this.getSample(index);
+            int otherValue = clip.getSample(index);
+            int summation = thisValue + otherValue;
+
+            // Clamp
+            if (summation > Short.MAX_VALUE) {
+                summation = Short.MAX_VALUE;
+            } else if (summation < Short.MIN_VALUE) {
+                summation = Short.MIN_VALUE;
+            }
+
+            this.setSample(index, (short)summation);
+        }
+    }
 
     public int getSample(int index) {
         if (index > maxSampleIndex) {
