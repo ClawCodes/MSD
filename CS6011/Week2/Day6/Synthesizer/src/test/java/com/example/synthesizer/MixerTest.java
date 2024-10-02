@@ -11,14 +11,12 @@ class MixerTest {
         Mixer mixer = new Mixer();
         SineWave sineWave = new SineWave(440);
         SineWave sineWave2 = new SineWave(220);
-        SineWave sineWave3 = new SineWave(350);
-        SineWave sineWave4 = new SineWave(100);
 
         mixer.connectInput(sineWave);
         mixer.connectInput(sineWave2);
-        mixer.connectInput(sineWave3);
-        mixer.connectInput(sineWave4);
 
-        mixer.getClip().playClip();
+        AudioClip actualClip = mixer.getClip();
+        Assertions.assertEquals(1539, actualClip.getSample(1));
+        Assertions.assertEquals(-1026, actualClip.getSample(AudioClip.sampleRate - 1));
     }
 }
