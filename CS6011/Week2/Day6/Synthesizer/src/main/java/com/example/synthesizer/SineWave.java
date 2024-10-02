@@ -25,6 +25,10 @@ public class SineWave implements AudioComponent {
             double setValue = (maxValue * Math.sin((2*Math.PI*frequency * i / AudioClip.sampleRate)));
             clip.setSample(i, (short) setValue);
         }
+        // Combine with input if it exists
+        if (this.hasInput()){
+            clip.combine(input.getClip());
+        }
         return clip;
     }
 

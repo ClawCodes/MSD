@@ -2,7 +2,7 @@ package com.example.synthesizer;
 
 public class VolumeAdjuster implements AudioComponent{
     AudioComponent input;
-    double scale = 0.5;
+    double scale = 1; // Set default to 1 so the input doesn't change by default
 
     VolumeAdjuster(){
         input = null;

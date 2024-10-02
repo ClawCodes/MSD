@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.sound.sampled.LineUnavailableException;
-import java.time.chrono.MinguoChronology;
 
 class MixerTest {
     @Test
