@@ -7,8 +7,16 @@ import javax.sound.sampled.LineUnavailableException;
 
 class VFSineWaveTest {
     @Test
-    void testLinearRamp() throws LineUnavailableException {
+    void testVFSineWave() throws LineUnavailableException {
         VFSineWave VFWave = new VFSineWave();
+        VFWave.getClip().playClip();
+    }
+
+    @Test
+    void testVFSineWaveNonDefaultLinearRamp() throws LineUnavailableException {
+
+        VFSineWave VFWave = new VFSineWave();
+        VFWave.setInput(new LinearRamp(500, 100000));
         VFWave.getClip().playClip();
     }
 }

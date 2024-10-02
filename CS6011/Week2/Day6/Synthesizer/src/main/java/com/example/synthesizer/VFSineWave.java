@@ -1,7 +1,5 @@
 package com.example.synthesizer;
 
-import javax.sound.sampled.AudioFormat;
-
 public class VFSineWave implements AudioComponent{
     private AudioComponent input = new LinearRamp();
     private short maxValue = Short.MAX_VALUE / 2;
@@ -25,5 +23,9 @@ public class VFSineWave implements AudioComponent{
     @Override
     public void connectInput(AudioComponent component) {
         input = component;
+    }
+
+    void setInput(AudioComponent input) {
+        this.input = input;
     }
 }
