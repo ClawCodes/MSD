@@ -15,10 +15,6 @@ public class SineWave implements AudioComponent {
         this.maxValue = Short.MAX_VALUE / 2;
     };
 
-    SineWave(double frequency, short maxValue) {
-        this.frequency = frequency;
-        this.maxValue = maxValue;
-    };
 
     @Override
     public AudioClip getClip() {

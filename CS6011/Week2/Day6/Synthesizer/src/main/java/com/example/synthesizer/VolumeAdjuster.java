@@ -12,7 +12,7 @@ public class VolumeAdjuster implements AudioComponent{
         this.input = input;
     }
 
-    VolumeAdjuster(AudioComponent input, int scale){
+    VolumeAdjuster(AudioComponent input, double scale){
         this.input = input;
         this.scale = scale;
     }

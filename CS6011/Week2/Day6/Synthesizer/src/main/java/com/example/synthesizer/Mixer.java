@@ -31,4 +31,8 @@ public class Mixer implements AudioComponent {
                     " A Mixer can only accept %s connections.", maxConnections));
         }
     }
+
+    public void remove(AudioComponent component) {
+        components.remove(component);
+    }
 }

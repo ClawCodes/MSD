@@ -57,12 +57,4 @@ class AudioClipTest {
         Assertions.assertEquals(3, one.getSample(0));
         Assertions.assertEquals(5, one.getSample(1));
     }
-
-    @Test
-    public void testAll(){
-        this.testGetData();
-        this.testGetSample();
-        this.testSetData();
-        System.out.println("All tests passed!");
-    }
 }

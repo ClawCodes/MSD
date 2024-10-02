@@ -11,6 +11,11 @@ class VolumeAdjusterTest {
         SineWave wave = new SineWave();
         VolumeAdjuster adjuster = new VolumeAdjuster();
         adjuster.connectInput(wave);
-        adjuster.getClip().playClip();
+
+        Assertions.assertEquals(0, wave.getClip().getSample(0));
+        Assertions.assertEquals(0, adjuster.getClip().getSample(0));
+
+        Assertions.assertEquals(-1026, wave.getClip().getSample(AudioClip.sampleRate - 1));
+        Assertions.assertEquals(-513, adjuster.getClip().getSample(AudioClip.sampleRate - 1));
     }
 }
