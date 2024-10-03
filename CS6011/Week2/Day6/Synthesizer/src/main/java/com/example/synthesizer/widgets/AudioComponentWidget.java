@@ -4,6 +4,7 @@ import com.example.synthesizer.AudioComponent;
 import com.example.synthesizer.SynthesizeApplication;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -52,6 +53,20 @@ public class AudioComponentWidget extends Pane {
         // TODO: Add left side for upstream connection
         this.setLayoutX(50);
         this.setLayoutY(100);
+
+        makeDraggable();
+    }
+
+    private void makeDraggable() {
+        this.setOnMousePressed(mouseEvent -> {
+            startX_ = mouseEvent.getSceneX() - this.getTranslateX();
+            startY_ = mouseEvent.getSceneX() - this.getTranslateY();
+        });
+
+        this.setOnMouseDragged(mouseEvent -> {
+            this.setTranslateX(mouseEvent.getSceneX() - startX_);
+            this.setTranslateY(mouseEvent.getSceneY() - startY_);
+        });
     }
 
     private void destroyWidget() {
@@ -73,4 +88,7 @@ public class AudioComponentWidget extends Pane {
 
     private String name_;
     private Label nameLabel_;
+
+    private double startX_;
+    private double startY_;
 }

@@ -32,38 +32,6 @@ import java.util.MissingFormatArgumentException;
 
 public class SynthesizeApplication extends Application {
 
-    private double startX;
-    private double startY;
-
-    // TODO: REMOVE
-    private void makeDraggable(Node node) {
-        node.setOnMousePressed(mouseEvent -> {
-            startX = mouseEvent.getSceneX() - node.getTranslateX();
-            startY = mouseEvent.getSceneX() - node.getTranslateY();
-        });
-
-        node.setOnMouseDragged(mouseEvent -> {
-            node.setTranslateX(mouseEvent.getSceneX() - startX);
-            node.setTranslateY(mouseEvent.getSceneY() - startY);
-        });
-    }
-
-    // TODO: REMOVE
-    private void createComponentButton(AnchorPane pane) {
-        HBox box = new HBox();
-        box.setStyle("-fx-background-color: #b5a69b;");
-
-
-        Label label = new Label("Sine Wave");
-        label.setStyle("-fx-text-fill: white;");
-
-        box.getChildren().addAll(label);
-
-        pane.getChildren().add(box);
-
-        makeDraggable(box);
-    }
-
     // TODO: Update to play the speaker widget
     private void play() {
         Mixer mixer = new Mixer();
@@ -128,14 +96,9 @@ public class SynthesizeApplication extends Application {
         stopBtn.setOnAction(event -> {stopClip();});
         bottomPane.getChildren().add(stopBtn);
 
-        // TODO: decide if remove top
-        // Top
-//        Label topLabel = new Label("Super rad synth");
-
         root.setRight(rightPane);
         root.setCenter(mainCanvas_);
         root.setBottom(bottomPane);
-//        root.setTop(topLabel);
 
         return root;
     }
@@ -147,13 +110,13 @@ public class SynthesizeApplication extends Application {
         stage.setTitle("Rad Synth");
         stage.show();
     }
+    
+    public static void removeWidget(AudioComponentWidget widget){
+        allWidgets_.remove(widget);
+    }
 
     public static void main(String[] args) {
         launch();
-    }
-
-    public static void removeWidget(AudioComponentWidget widget){
-        allWidgets_.remove(widget);
     }
 
     private static ArrayList<AudioComponentWidget> allWidgets_ = new ArrayList<>();
