@@ -10,6 +10,7 @@ public class AudioListener implements LineListener {
     }
     @Override
     public void update(LineEvent event) {
+        System.out.println(event.toString());
         if (event.getType() == LineEvent.Type.STOP) {
             clip_.stop();
         }

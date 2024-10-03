@@ -4,11 +4,6 @@ import java.util.Arrays;
 import javax.sound.sampled.*;
 
 public class AudioClip {
-    private static final double duration = 2.0;
-    public static final int sampleRate = 44100;
-    private byte[] clip = new byte[sampleRate * (short)duration];
-    private static final int maxSampleIndex = sampleRate - 1;
-
     public AudioClip() {};
     public AudioClip(AudioClip clip) {
         this.clip = clip.getData();
@@ -66,19 +61,22 @@ public class AudioClip {
             systemClip.open(format16, clip, 0, clip.length);
 
             systemClip.start();
-            systemClip.loop(2);
+            systemClip.loop(Clip.LOOP_CONTINUOUSLY);
 
-            AudioListener listener = new AudioListener(systemClip);
+            systemClip_ = systemClip;
 
-//            while (systemClip.getFramePosition() < AudioClip.sampleRate || systemClip.isActive() || systemClip.isRunning()) {
-                // Do nothing while we wait for the note to play.
-//            }
-
-            systemClip.addLineListener(listener);
-
-            systemClip.close();
         } catch (LineUnavailableException e) {
             System.out.println("Error when trying to play clip: " + e.getMessage());
         }
     }
+
+    public void stopClip(){
+        systemClip_.close();
+    }
+
+    private static final double duration = 2.0;
+    public static final int sampleRate = 44100;
+    private byte[] clip = new byte[sampleRate * (short)duration];
+    private static final int maxSampleIndex = sampleRate - 1;
+    private Clip systemClip_;
 }

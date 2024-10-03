@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javax.sound.sampled.LineUnavailableException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.MissingFormatArgumentException;
 
 
 // TODO:
@@ -69,7 +70,16 @@ public class SynthesizeApplication extends Application {
         for (AudioComponentWidget component : allWidgets_){
             mixer.connectInput(component.getAudioComponent());
         }
-        mixer.getClip().playClip();
+        if (activeClip_ != null) {
+            activeClip_.stopClip();
+        }
+        activeClip_ = mixer.getClip();
+        activeClip_.playClip();
+    }
+
+    private void stopClip(){
+        activeClip_.stopClip();
+        activeClip_ = null;
     }
 
     private void createComponent(String name) {
@@ -109,9 +119,14 @@ public class SynthesizeApplication extends Application {
         // Bottom
         HBox bottomPane = new HBox();
         bottomPane.setAlignment(Pos.CENTER);
+
         Button playBtn = new Button("Play");
         playBtn.setOnAction(event -> {play();});
         bottomPane.getChildren().add(playBtn);
+
+        Button stopBtn = new Button("Stop");
+        stopBtn.setOnAction(event -> {stopClip();});
+        bottomPane.getChildren().add(stopBtn);
 
         // TODO: decide if remove top
         // Top
@@ -144,4 +159,5 @@ public class SynthesizeApplication extends Application {
     private static ArrayList<AudioComponentWidget> allWidgets_ = new ArrayList<>();
     private static AnchorPane mainCanvas_;
     private static Circle speaker_;
+    private AudioClip activeClip_;
 }
