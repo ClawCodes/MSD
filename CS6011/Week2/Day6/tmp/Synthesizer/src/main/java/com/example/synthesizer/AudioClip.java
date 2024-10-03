@@ -8,7 +8,7 @@ public class AudioClip {
     public static final int sampleRate = 44100;
     private byte[] clip = new byte[sampleRate * (short)duration];
     private static final int maxSampleIndex = sampleRate - 1;
-
+//../../../../../../../../Synthesizer/src/test/java/com/example/synthesizer/
     public AudioClip() {};
     public AudioClip(AudioClip clip) {
         this.clip = clip.getData();
@@ -59,26 +59,18 @@ public class AudioClip {
         return Arrays.copyOf(clip, clip.length);
     }
 
-    public void playClip() {
-        try {
-            Clip systemClip = AudioSystem.getClip();
-            AudioFormat format16 = new AudioFormat(44100, 16, 1, true, false);
-            systemClip.open(format16, clip, 0, clip.length);
+    public void playClip() throws LineUnavailableException {
+        Clip systemClip = AudioSystem.getClip();
+        AudioFormat format16 = new AudioFormat( 44100, 16, 1, true, false );
+        systemClip.open( format16, clip, 0, clip.length );
 
-            systemClip.start();
-            systemClip.loop(2);
+        systemClip.start();
+        systemClip.loop(2);
 
-            AudioListener listener = new AudioListener(systemClip);
-
-//            while (systemClip.getFramePosition() < AudioClip.sampleRate || systemClip.isActive() || systemClip.isRunning()) {
-                // Do nothing while we wait for the note to play.
-//            }
-
-            systemClip.addLineListener(listener);
-
-            systemClip.close();
-        } catch (LineUnavailableException e) {
-            System.out.println("Error when trying to play clip: " + e.getMessage());
+        while( systemClip.getFramePosition() < AudioClip.sampleRate || systemClip.isActive() || systemClip.isRunning() ){
+            // Do nothing while we wait for the note to play.
         }
+
+        systemClip.close();
     }
 }
