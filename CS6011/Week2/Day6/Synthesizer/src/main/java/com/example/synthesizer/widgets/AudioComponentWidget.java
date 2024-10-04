@@ -4,11 +4,8 @@ import com.example.synthesizer.AudioComponent;
 import com.example.synthesizer.SynthesizeApplication;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -29,26 +26,25 @@ public class AudioComponentWidget extends Pane {
         this.getChildren().add(baseLayout_);
 
         // Right side
-        VBox rightSide = new VBox();
-        rightSide.setAlignment(Pos.CENTER);
-        rightSide.setPadding(new Insets(3));
-        rightSide.setSpacing(5);
+        rightSide_ = new VBox();
+        rightSide_.setAlignment(Pos.CENTER);
+        rightSide_.setPadding(new Insets(3));
+        rightSide_.setSpacing(5);
 
         Button close = new Button("x");
         close.setOnAction(e -> destroyWidget());
         Circle circle = new Circle(10);
         circle.setFill(Color.BLUE);
-        rightSide.getChildren().addAll(close, circle);
+        rightSide_.getChildren().addAll(close, circle);
 
 
         // Left side
-        VBox leftSide = new VBox();
+        leftSide_ = new VBox();
         Label label = new Label(name_);
         label.setAlignment(Pos.CENTER);
-        Slider slider = new Slider();
-        leftSide.getChildren().addAll(label, slider);
+        leftSide_.getChildren().addAll(label);
 
-        baseLayout_.getChildren().addAll(leftSide, rightSide);
+        baseLayout_.getChildren().addAll(leftSide_, rightSide_);
 
         // TODO: Add left side for upstream connection
         this.setLayoutX(50);
@@ -78,17 +74,19 @@ public class AudioComponentWidget extends Pane {
         return audioComponent_;
     }
 
-    private AnchorPane parent_;
-    private HBox baseLayout_;
-    private AudioComponent audioComponent_;
+    protected AnchorPane parent_;
+    protected HBox baseLayout_;
+    protected VBox rightSide_;
+    protected VBox leftSide_;
+    protected AudioComponent audioComponent_;
 
     // TODO: fill once you draw lines
     private AudioComponentWidget childConnection;
     private AudioComponentWidget parentConnection;
 
-    private String name_;
-    private Label nameLabel_;
+    protected String name_;
+    protected Label nameLabel_;
 
-    private double startX_;
-    private double startY_;
+    protected double startX_;
+    protected double startY_;
 }

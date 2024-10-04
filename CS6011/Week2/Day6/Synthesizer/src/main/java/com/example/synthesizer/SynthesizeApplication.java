@@ -1,14 +1,13 @@
 package com.example.synthesizer;
 
 import com.example.synthesizer.widgets.AudioComponentWidget;
+import com.example.synthesizer.widgets.SineWaveWidget;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -17,15 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.LineUnavailableException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.MissingFormatArgumentException;
 
 
 // TODO:
 // Create Base layout
 // Create play, sineWave, mixer, volumeAdjuster component buttons with actions of creating the widget
+// Create way to feed line scroll input to update wave
 // Create Speaker widget which is a mixer object accepting any connections
 // Connect play button to speaker object to play the sound
 // Update playClip to use a listener object
@@ -51,14 +48,15 @@ public class SynthesizeApplication extends Application {
     }
 
     private void createComponent(String name) {
-        AudioComponent component;
-        if (name.equals("SineWave")){
-            component = new SineWave();
-        } else{
-            // TODO: update if-else to include other component types
-            component = new SineWave();
-        }
-        AudioComponentWidget widget = new AudioComponentWidget(component, mainCanvas_, name);
+//        AudioComponent component;
+//        if (name.equals("SineWave")){
+//            component = new SineWave();
+//        } else{
+//            // TODO: update if-else to include other component types
+//            component = new SineWave();
+//        }
+//        AudioComponentWidget widget = new AudioComponentWidget(component, mainCanvas_, name);
+        AudioComponentWidget widget = new SineWaveWidget(mainCanvas_, name);
         allWidgets_.add(widget);
         mainCanvas_.getChildren().add(widget);
     }
@@ -110,7 +108,7 @@ public class SynthesizeApplication extends Application {
         stage.setTitle("Rad Synth");
         stage.show();
     }
-    
+
     public static void removeWidget(AudioComponentWidget widget){
         allWidgets_.remove(widget);
     }
