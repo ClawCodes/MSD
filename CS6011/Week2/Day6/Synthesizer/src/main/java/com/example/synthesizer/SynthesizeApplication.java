@@ -108,9 +108,8 @@ public class SynthesizeApplication extends Application {
         mainCanvas_ = new AnchorPane();
         mainCanvas_.setStyle("-fx-background-color: black;");
 
-        speaker_ = new Circle();
-        speaker_.setFill(Color.BLACK);
-        mainCanvas_.getChildren().add(speaker_);
+        Speaker speakerWidget = new Speaker(mainCanvas_);
+        mainCanvas_.getChildren().add(speakerWidget);
 
         // Bottom
         HBox bottomPane = new HBox();
@@ -141,6 +140,7 @@ public class SynthesizeApplication extends Application {
 
     public static void removeWidget(AudioComponentWidget widget){
         allWidgets_.remove(widget);
+        mainCanvas_.getChildren().remove(widget);
     }
 
     public static void main(String[] args) {
@@ -149,6 +149,6 @@ public class SynthesizeApplication extends Application {
 
     private static ArrayList<AudioComponentWidget> allWidgets_ = new ArrayList<>();
     private static AnchorPane mainCanvas_;
-    private static Circle speaker_;
+    private static Speaker speaker_;
     private AudioClip activeClip_;
 }

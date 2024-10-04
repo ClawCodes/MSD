@@ -55,15 +55,10 @@ public class AudioComponentWidget extends Pane {
 
         baseLayout_.getChildren().addAll(farLeftSide_, leftSide_, rightSide_);
 
-        // TODO: Add left side for upstream connection
         this.setLayoutX(50);
-        this.setLayoutY(100);
+        this.setLayoutX(100);
 
         makeDraggable();
-    }
-
-    protected void addUpstreamInput(){
-
     }
 
     protected void setSlider(int min, int max, String memberMethod, Class paramType){
@@ -111,7 +106,6 @@ public class AudioComponentWidget extends Pane {
     private AudioComponentWidget parentConnection;
 
     protected String name_;
-    protected Label nameLabel_;
 
     protected double startX_;
     protected double startY_;

@@ -12,7 +12,7 @@ public interface AudioComponent {
 
     boolean isPlayable();
 
-    default void setWithMethod(String method, Double value, Class paramType) {
+    default void setWithMethod(String method, Double value, Class<?> paramType) {
         try {
             Object valueToPass = value;
             if (paramType == Integer.class) {
