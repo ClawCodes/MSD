@@ -1,18 +1,21 @@
 package com.example.synthesizer;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public interface AudioComponent{
+public interface AudioComponent {
     AudioClip getClip();
+
     boolean hasInput();
+
     void connectInput(AudioComponent clip);
-    default void setByName(String memberVariable, Object value){
+
+    default void setWithMethod(String method, Object value, Class paramType) {
         try {
-            Field field = this.getClass().getDeclaredField(memberVariable);
-            field.setAccessible(true);
-            field.set(this, value);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Could not set field: " + memberVariable);
+            Method methodObj = this.getClass().getMethod(method, paramType);
+            methodObj.invoke(this, value);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            System.out.println(("Could not set value using: " + method + "\n" + e.getMessage()));
         }
     }
 }

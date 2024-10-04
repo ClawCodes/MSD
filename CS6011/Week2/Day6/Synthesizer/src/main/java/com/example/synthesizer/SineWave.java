@@ -15,7 +15,7 @@ public class SineWave implements AudioComponent {
         this.maxValue = Short.MAX_VALUE / 2;
     };
 
-    public void setFrequency(double frequency) {
+    public void setFrequency(Double frequency) {
         this.frequency = frequency;
     }
 

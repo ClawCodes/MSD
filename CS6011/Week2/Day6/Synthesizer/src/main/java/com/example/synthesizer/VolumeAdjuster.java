@@ -4,20 +4,14 @@ public class VolumeAdjuster implements AudioComponent{
     AudioComponent input;
     double scale = 1; // Set default to 1 so the input doesn't change by default
 
-    VolumeAdjuster(){
+    public VolumeAdjuster(){
         input = null;
-    }
-
-    VolumeAdjuster(AudioComponent input){
-        this.input = input;
     }
 
     VolumeAdjuster(AudioComponent input, double scale){
         this.input = input;
         this.scale = scale;
     }
-
-    void setScale(double scale){this.scale = scale;}
 
     @Override
     public AudioClip getClip() {

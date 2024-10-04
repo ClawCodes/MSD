@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -37,7 +38,6 @@ public class AudioComponentWidget extends Pane {
         circle.setFill(Color.BLUE);
         rightSide_.getChildren().addAll(close, circle);
 
-
         // Left side
         leftSide_ = new VBox();
         Label label = new Label(name_);
@@ -51,6 +51,18 @@ public class AudioComponentWidget extends Pane {
         this.setLayoutY(100);
 
         makeDraggable();
+    }
+
+    protected void setSlider(int min, int max, String memberVar, Class paramType){
+        Slider slider = new Slider();
+        slider.setMin(min);
+        slider.setMax(max);
+        slider.setOnMouseDragged(e -> setWithComponentMethod(e, memberVar, slider, paramType));
+        leftSide_.getChildren().add(slider);
+    }
+
+    protected void setWithComponentMethod(javafx.scene.input.MouseEvent e, String method, Slider slider, Class paramType) {
+        audioComponent_.setWithMethod(method, slider.getValue(), Double.class);
     }
 
     private void makeDraggable() {
