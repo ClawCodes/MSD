@@ -23,6 +23,11 @@ public class Mixer implements AudioComponent {
     }
 
     @Override
+    public boolean isPlayable() {
+        return hasInput();
+    }
+
+    @Override
     public void connectInput(AudioComponent clip) {
         if (components.size() < maxConnections) {
             components.add(clip);

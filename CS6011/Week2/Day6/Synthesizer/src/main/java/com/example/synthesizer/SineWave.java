@@ -41,6 +41,12 @@ public class SineWave implements AudioComponent {
     }
 
     @Override
+    public boolean isPlayable() {
+        // Will always produce a default clip
+        return true;
+    }
+
+    @Override
     public void connectInput(AudioComponent component) {
         input = component;
     }

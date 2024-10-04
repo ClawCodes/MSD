@@ -34,6 +34,12 @@ public class LinearRamp implements AudioComponent {
     }
 
     @Override
+    public boolean isPlayable() {
+        // Will always produce a default clip
+        return true;
+    }
+
+    @Override
     public void connectInput(AudioComponent component) {
         this.input = component;
     }

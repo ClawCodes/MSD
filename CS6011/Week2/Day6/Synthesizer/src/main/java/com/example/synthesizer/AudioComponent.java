@@ -10,6 +10,8 @@ public interface AudioComponent {
 
     void connectInput(AudioComponent clip);
 
+    boolean isPlayable();
+
     default void setWithMethod(String method, Object value, Class paramType) {
         try {
             Method methodObj = this.getClass().getMethod(method, paramType);

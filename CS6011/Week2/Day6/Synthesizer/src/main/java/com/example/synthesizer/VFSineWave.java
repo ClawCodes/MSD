@@ -21,6 +21,11 @@ public class VFSineWave implements AudioComponent{
     }
 
     @Override
+    public boolean isPlayable() {
+        return hasInput();
+    }
+
+    @Override
     public void connectInput(AudioComponent component) {
         input = component;
     }

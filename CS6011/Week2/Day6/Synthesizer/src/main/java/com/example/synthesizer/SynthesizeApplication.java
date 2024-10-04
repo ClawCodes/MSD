@@ -2,6 +2,7 @@ package com.example.synthesizer;
 
 import com.example.synthesizer.widgets.AudioComponentWidget;
 import com.example.synthesizer.widgets.SineWaveWidget;
+import com.example.synthesizer.widgets.VolumeAdjusterWidget;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,28 +19,27 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-
-// TODO:
-// Create Base layout
-// Create play, sineWave, mixer, volumeAdjuster component buttons with actions of creating the widget
-// Create way to feed line scroll input to update wave
-// Create Speaker widget which is a mixer object accepting any connections
-// Connect play button to speaker object to play the sound
-// Update playClip to use a listener object
-
 public class SynthesizeApplication extends Application {
 
     // TODO: Update to play the speaker widget
     private void play() {
         Mixer mixer = new Mixer();
         for (AudioComponentWidget component : allWidgets_){
+            if (!component.getAudioComponent().isPlayable()){
+                continue;
+            }
             mixer.connectInput(component.getAudioComponent());
         }
         if (activeClip_ != null) {
             activeClip_.stopClip();
         }
-        activeClip_ = mixer.getClip();
-        activeClip_.playClip();
+
+        if (!mixer.isPlayable()){
+            System.out.println("WARNING: No on screen elements are currently playable.");
+        } else {
+            activeClip_ = mixer.getClip();
+            activeClip_.playClip();
+        }
     }
 
     private void stopClip(){
@@ -48,15 +48,18 @@ public class SynthesizeApplication extends Application {
     }
 
     private void createComponent(String name) {
-//        AudioComponent component;
-//        if (name.equals("SineWave")){
-//            component = new SineWave();
-//        } else{
-//            // TODO: update if-else to include other component types
-//            component = new SineWave();
-//        }
-//        AudioComponentWidget widget = new AudioComponentWidget(component, mainCanvas_, name);
-        AudioComponentWidget widget = new SineWaveWidget(mainCanvas_, name);
+        AudioComponentWidget widget = null;
+
+        if (name.equals("SineWave"))
+            widget = new SineWaveWidget(mainCanvas_, name);
+        else if (name.equals("VolumeAdjuster")) {
+            widget = new VolumeAdjusterWidget(mainCanvas_, name);
+        }
+
+        if (widget == null) {
+            System.out.println("Could not find requested wiget: " + name);
+        }
+
         allWidgets_.add(widget);
         mainCanvas_.getChildren().add(widget);
     }
@@ -69,10 +72,15 @@ public class SynthesizeApplication extends Application {
         VBox rightPane = new VBox();
         rightPane.setPadding(new Insets(4));
         rightPane.setStyle("-fx-background-color: black;");
+
         // Create and add components to right pane
-        Button sineWaveBtn = new Button("Sine Wave");
+        Button sineWaveBtn = new Button(SineWave.class.getSimpleName());
         rightPane.getChildren().add(sineWaveBtn);
-        sineWaveBtn.setOnAction(event -> {createComponent("SineWave");});
+        sineWaveBtn.setOnAction(event -> {createComponent(SineWave.class.getSimpleName());});
+
+        Button volAdjusterBtn = new Button(VolumeAdjuster.class.getSimpleName());
+        rightPane.getChildren().add(volAdjusterBtn);
+        volAdjusterBtn.setOnAction(event -> {createComponent(VolumeAdjuster.class.getSimpleName());});
 
         // Center
         mainCanvas_ = new AnchorPane();
