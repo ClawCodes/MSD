@@ -5,13 +5,21 @@ public class LinearRamp implements AudioComponent {
     private int start;
     private int stop;
 
-    LinearRamp(){
+    public LinearRamp(){
         this.start = 50;
         this.stop = 2000;
     }
 
     LinearRamp(int start, int stop) {
         this.start = start;
+        this.stop = stop;
+    }
+
+    public void setStart(Integer start) {
+        this.start = start;
+    }
+
+    public void setStop(Integer stop) {
         this.stop = stop;
     }
 

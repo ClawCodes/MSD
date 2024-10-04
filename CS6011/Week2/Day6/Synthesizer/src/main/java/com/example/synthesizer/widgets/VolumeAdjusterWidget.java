@@ -6,6 +6,6 @@ import javafx.scene.layout.AnchorPane;
 public class VolumeAdjusterWidget extends AudioComponentWidget {
     public VolumeAdjusterWidget(AnchorPane pane, String name) {
         super(new VolumeAdjuster(), pane, name);
-        setSlider(0, 100, "scale", Integer.class);
+        setSlider(0, 100, "setScale", Double.class);
     }
 }

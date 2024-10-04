@@ -13,6 +13,10 @@ public class VolumeAdjuster implements AudioComponent{
         this.scale = scale;
     }
 
+    public void setScale(Double scale){
+        this.scale = scale;
+    }
+
     @Override
     public AudioClip getClip() {
         AudioClip inputclip = input.getClip();

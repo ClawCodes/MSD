@@ -12,10 +12,16 @@ public interface AudioComponent {
 
     boolean isPlayable();
 
-    default void setWithMethod(String method, Object value, Class paramType) {
+    default void setWithMethod(String method, Double value, Class paramType) {
         try {
+            Object valueToPass = value;
+            if (paramType == Integer.class) {
+                valueToPass = value.intValue();
+            } else if (paramType == Short.class) {
+                valueToPass = value.shortValue();
+            }
             Method methodObj = this.getClass().getMethod(method, paramType);
-            methodObj.invoke(this, value);
+            methodObj.invoke(this, paramType.cast(valueToPass));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             System.out.println(("Could not set value using: " + method + "\n" + e.getMessage()));
         }

@@ -24,13 +24,12 @@ public class VFSineWave implements AudioComponent{
     public boolean isPlayable() {
         return hasInput();
     }
-
     @Override
     public void connectInput(AudioComponent component) {
         input = component;
     }
 
-    void setInput(AudioComponent input) {
-        this.input = input;
+    public void setMaxValue(Short maxValue) {
+        this.maxValue = maxValue;
     }
 }

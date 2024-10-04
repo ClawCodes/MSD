@@ -1,8 +1,6 @@
 package com.example.synthesizer;
 
-import com.example.synthesizer.widgets.AudioComponentWidget;
-import com.example.synthesizer.widgets.SineWaveWidget;
-import com.example.synthesizer.widgets.VolumeAdjusterWidget;
+import com.example.synthesizer.widgets.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,6 +52,12 @@ public class SynthesizeApplication extends Application {
             widget = new SineWaveWidget(mainCanvas_, name);
         else if (name.equals("VolumeAdjuster")) {
             widget = new VolumeAdjusterWidget(mainCanvas_, name);
+        } else if (name.equals("LinearRamp")) {
+            widget = new LinearRampWidget(mainCanvas_, name);
+        } else if (name.equals("Mixer")) {
+            widget = new MixerWidget(mainCanvas_, name);
+        } else if (name.equals("VFSineWave")) {
+            widget = new VFSineWaveWidget(mainCanvas_, name);
         }
 
         if (widget == null) {
@@ -73,14 +77,32 @@ public class SynthesizeApplication extends Application {
         rightPane.setPadding(new Insets(4));
         rightPane.setStyle("-fx-background-color: black;");
 
+        // TODO: Create function
         // Create and add components to right pane
+        // SineWave
         Button sineWaveBtn = new Button(SineWave.class.getSimpleName());
         rightPane.getChildren().add(sineWaveBtn);
         sineWaveBtn.setOnAction(event -> {createComponent(SineWave.class.getSimpleName());});
 
+        // VolumeAdjuster
         Button volAdjusterBtn = new Button(VolumeAdjuster.class.getSimpleName());
         rightPane.getChildren().add(volAdjusterBtn);
         volAdjusterBtn.setOnAction(event -> {createComponent(VolumeAdjuster.class.getSimpleName());});
+
+        // LinearRamp
+        Button LinearRampBtn = new Button(LinearRamp.class.getSimpleName());
+        rightPane.getChildren().add(LinearRampBtn);
+        LinearRampBtn.setOnAction(event -> {createComponent(LinearRamp.class.getSimpleName());});
+
+        // Mixer
+        Button MixerBtn = new Button(Mixer.class.getSimpleName());
+        rightPane.getChildren().add(MixerBtn);
+        MixerBtn.setOnAction(event -> {createComponent(Mixer.class.getSimpleName());});
+        
+        // VFSineWave 
+        Button VFSineWaveBtn = new Button(VFSineWave.class.getSimpleName());
+        rightPane.getChildren().add(VFSineWaveBtn);
+        VFSineWaveBtn.setOnAction(event -> {createComponent(VFSineWave.class.getSimpleName());});
 
         // Center
         mainCanvas_ = new AnchorPane();

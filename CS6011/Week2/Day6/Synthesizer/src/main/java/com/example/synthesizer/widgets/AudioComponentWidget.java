@@ -38,13 +38,22 @@ public class AudioComponentWidget extends Pane {
         circle.setFill(Color.BLUE);
         rightSide_.getChildren().addAll(close, circle);
 
+        VBox farLeftSide_ = new VBox();
+        farLeftSide_.setAlignment(Pos.CENTER);
+        farLeftSide_.setPadding(new Insets(3));
+        farLeftSide_.setSpacing(5);
+
+        Circle upstreamInput = new Circle(10);
+        upstreamInput.setFill(Color.BLUE);
+        farLeftSide_.getChildren().add(upstreamInput);
+
         // Left side
         leftSide_ = new VBox();
         Label label = new Label(name_);
         label.setAlignment(Pos.CENTER);
         leftSide_.getChildren().addAll(label);
 
-        baseLayout_.getChildren().addAll(leftSide_, rightSide_);
+        baseLayout_.getChildren().addAll(farLeftSide_, leftSide_, rightSide_);
 
         // TODO: Add left side for upstream connection
         this.setLayoutX(50);
@@ -53,16 +62,21 @@ public class AudioComponentWidget extends Pane {
         makeDraggable();
     }
 
-    protected void setSlider(int min, int max, String memberVar, Class paramType){
+    protected void addUpstreamInput(){
+
+    }
+
+    protected void setSlider(int min, int max, String memberMethod, Class paramType){
         Slider slider = new Slider();
         slider.setMin(min);
         slider.setMax(max);
-        slider.setOnMouseDragged(e -> setWithComponentMethod(e, memberVar, slider, paramType));
+        slider.setOnMouseDragged(e -> setWithComponentMethod(e, memberMethod, slider, paramType));
         leftSide_.getChildren().add(slider);
     }
 
-    protected void setWithComponentMethod(javafx.scene.input.MouseEvent e, String method, Slider slider, Class paramType) {
-        audioComponent_.setWithMethod(method, slider.getValue(), Double.class);
+    protected void setWithComponentMethod(javafx.scene.input.MouseEvent e, String method, Slider slider, Class paramType)
+    {
+        audioComponent_.setWithMethod(method, slider.getValue(), paramType);
     }
 
     private void makeDraggable() {
