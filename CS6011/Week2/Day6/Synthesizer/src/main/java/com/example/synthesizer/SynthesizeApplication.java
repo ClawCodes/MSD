@@ -4,6 +4,7 @@ import com.example.synthesizer.widgets.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,10 +13,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SynthesizeApplication extends Application {
 
@@ -64,8 +69,70 @@ public class SynthesizeApplication extends Application {
             System.out.println("Could not find requested wiget: " + name);
         }
 
-        allWidgets_.add(widget);
+        allWidgets_.addFirst(widget); // Build the widget array in reverse, so the elements on top can be found first
         mainCanvas_.getChildren().add(widget);
+    }
+
+    private void resizeLine(MouseEvent mouseEvent){
+        if (currentLine_ != null) {
+            currentLine_.setEndX(mouseEvent.getSceneX());
+            currentLine_.setEndY(mouseEvent.getSceneY());
+        }
+    }
+
+    private void updateCurrentLine(double x, double y){
+        LineWidget line = new LineWidget(x, y, x, y, mainCanvas_);
+        line.setStroke(Color.BLUEVIOLET);
+        line.setStrokeWidth(5);
+        currentLine_ = line;
+    }
+
+    private void createLine(MouseEvent mouseEvent) {
+        var x = mouseEvent.getSceneX();
+        var y = mouseEvent.getSceneY();
+
+        for (AudioComponentWidget widget : allWidgets_){
+            if (widget.IOContains(x, y)) {
+                updateCurrentLine(x, y);
+                return;
+            }
+        }
+    }
+
+    private void handleLine(MouseEvent mouseEvent){
+        if (currentLine_ == null) {
+            return;
+        }
+
+        AudioComponentWidget input = null;
+        AudioComponentWidget output = null;
+
+        double startX = currentLine_.getStartX();
+        double startY = currentLine_.getStartY();
+        double endX = currentLine_.getEndX();
+        double endY = currentLine_.getEndY();
+
+        for (var widget : allWidgets_){
+            if ((input == null) && widget.inputContains(startX, startY)){
+                input = widget;
+            }
+            if ((output == null) && widget.outputContains(endX, endY)){
+                output = widget;
+            }
+        }
+
+        System.out.println(input);
+        System.out.println(output);
+        if (input == null | output == null) {
+            mainCanvas_.getChildren().remove(currentLine_);
+            return;
+        }
+
+        // TODO: Check if the found components already have inputs and outputs and adjust accordingly
+
+        // Persist line and update widget connections
+//        lines_.put(currentLine_, new Pair<>(input, output));
+        output.getAudioComponent().connectInput(input.getAudioComponent());
     }
 
     private Parent createContent() {
@@ -107,6 +174,9 @@ public class SynthesizeApplication extends Application {
         // Center
         mainCanvas_ = new AnchorPane();
         mainCanvas_.setStyle("-fx-background-color: black;");
+        mainCanvas_.setOnMousePressed(this::createLine);
+        mainCanvas_.setOnMouseDragged(this::resizeLine);
+        mainCanvas_.setOnMouseReleased(mouseEvent -> {this.handleLine(mouseEvent);});
 
         Speaker speakerWidget = new Speaker(mainCanvas_);
         mainCanvas_.getChildren().add(speakerWidget);
@@ -134,7 +204,7 @@ public class SynthesizeApplication extends Application {
     public void start(Stage stage) {
         Scene scene = new Scene(createContent(), 800, 800);
         stage.setScene(scene);
-        stage.setTitle("Rad Synth");
+        stage.setTitle("Synth Lord");
         stage.show();
     }
 
@@ -151,4 +221,6 @@ public class SynthesizeApplication extends Application {
     private static AnchorPane mainCanvas_;
     private static Speaker speaker_;
     private AudioClip activeClip_;
+//    private static Map<Line, Pair<AudioComponentWidget, AudioComponentWidget>> lines_= new HashMap<>();
+    private static LineWidget currentLine_;
 }
