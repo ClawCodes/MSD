@@ -8,7 +8,9 @@ public interface AudioComponent {
 
     boolean hasInput();
 
-    void connectInput(AudioComponent clip);
+    void connectInput(AudioComponent component);
+
+    void removeInput(AudioComponent component);
 
     boolean isPlayable();
 

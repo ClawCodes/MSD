@@ -12,6 +12,10 @@ public class VFSineWave implements AudioComponent{
             phase += (2 * Math.PI * outClip.getSample(i) / AudioClip.sampleRate);
             outClip.setSample(i, (short)(maxValue * Math.sin( phase )));
         }
+
+        if (hasInput())
+            outClip.combine(input.getClip());
+
         return outClip;
     }
 
@@ -29,7 +33,9 @@ public class VFSineWave implements AudioComponent{
         input = component;
     }
 
-    public void setMaxValue(Short maxValue) {
-        this.maxValue = maxValue;
+    @Override
+    public void removeInput(AudioComponent component) {
+        if (this.input == component)
+            input = null;
     }
 }

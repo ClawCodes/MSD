@@ -23,29 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SynthesizeApplication extends Application {
-
-    // TODO: Update to play the speaker widget
     private void play() {
-        Mixer mixer = new Mixer();
-        for (AudioComponentWidget component : allWidgets_){
-            if (!component.getAudioComponent().isPlayable()){
-                continue;
-            }
-            mixer.connectInput(component.getAudioComponent());
-        }
         if (activeClip_ != null) {
             activeClip_.stopClip();
         }
 
-        if (!mixer.isPlayable()){
-            System.out.println("WARNING: No on screen elements are currently playable.");
-        } else {
-            activeClip_ = mixer.getClip();
+        if (speaker_.getAudioComponent().isPlayable()) {
+            activeClip_ = speaker_.getAudioComponent().getClip();
             activeClip_.playClip();
         }
     }
 
-    private void stopClip(){
+    private void stopClip() {
         activeClip_.stopClip();
         activeClip_ = null;
     }
@@ -66,21 +55,21 @@ public class SynthesizeApplication extends Application {
         }
 
         if (widget == null) {
-            System.out.println("Could not find requested wiget: " + name);
+            System.out.println("Could not find requested widget: " + name);
         }
 
         allWidgets_.addFirst(widget); // Build the widget array in reverse, so the elements on top can be found first
         mainCanvas_.getChildren().add(widget);
     }
 
-    private void resizeLine(MouseEvent mouseEvent){
+    private void resizeLine(MouseEvent mouseEvent) {
         if (currentLine_ != null) {
             currentLine_.setEndX(mouseEvent.getSceneX());
             currentLine_.setEndY(mouseEvent.getSceneY());
         }
     }
 
-    private void updateCurrentLine(double x, double y){
+    private void updateCurrentLine(double x, double y) {
         LineWidget line = new LineWidget(x, y, x, y, mainCanvas_);
         line.setStroke(Color.BLUEVIOLET);
         line.setStrokeWidth(5);
@@ -91,7 +80,7 @@ public class SynthesizeApplication extends Application {
         var x = mouseEvent.getSceneX();
         var y = mouseEvent.getSceneY();
 
-        for (AudioComponentWidget widget : allWidgets_){
+        for (AudioComponentWidget widget : allWidgets_) {
             if (widget.IOContains(x, y)) {
                 updateCurrentLine(x, y);
                 return;
@@ -99,7 +88,7 @@ public class SynthesizeApplication extends Application {
         }
     }
 
-    private void handleLine(MouseEvent mouseEvent){
+    private void handleLine(MouseEvent mouseEvent) {
         if (currentLine_ == null) {
             return;
         }
@@ -112,27 +101,33 @@ public class SynthesizeApplication extends Application {
         double endX = currentLine_.getEndX();
         double endY = currentLine_.getEndY();
 
-        for (var widget : allWidgets_){
-            if ((input == null) && widget.inputContains(startX, startY)){
+        for (var widget : allWidgets_) {
+            if ((input == null) && (widget.inputContains(startX, startY) | widget.inputContains(endX, endY))) {
                 input = widget;
             }
-            if ((output == null) && widget.outputContains(endX, endY)){
+            if ((output == null) && (widget.outputContains(endX, endY) | widget.outputContains(startX, startY))) {
                 output = widget;
             }
         }
 
-        System.out.println(input);
-        System.out.println(output);
         if (input == null | output == null) {
             mainCanvas_.getChildren().remove(currentLine_);
             return;
         }
 
         // TODO: Check if the found components already have inputs and outputs and adjust accordingly
+        // Also check if attempting to connect to self
+        // Add line to both components
+        // Add both components to line widget
 
         // Persist line and update widget connections
-//        lines_.put(currentLine_, new Pair<>(input, output));
-        output.getAudioComponent().connectInput(input.getAudioComponent());
+        currentLine_.setInputWidget(input);
+        currentLine_.setOutputWidget(output);
+        currentLine_.connectComponents();
+
+        System.out.println(speaker_.getAudioComponent().hasInput());
+        lines_.add(currentLine_);
+        currentLine_ = null;
     }
 
     private Parent createContent() {
@@ -149,48 +144,65 @@ public class SynthesizeApplication extends Application {
         // SineWave
         Button sineWaveBtn = new Button(SineWave.class.getSimpleName());
         rightPane.getChildren().add(sineWaveBtn);
-        sineWaveBtn.setOnAction(event -> {createComponent(SineWave.class.getSimpleName());});
+        sineWaveBtn.setOnAction(event -> {
+            createComponent(SineWave.class.getSimpleName());
+        });
 
         // VolumeAdjuster
         Button volAdjusterBtn = new Button(VolumeAdjuster.class.getSimpleName());
         rightPane.getChildren().add(volAdjusterBtn);
-        volAdjusterBtn.setOnAction(event -> {createComponent(VolumeAdjuster.class.getSimpleName());});
+        volAdjusterBtn.setOnAction(event -> {
+            createComponent(VolumeAdjuster.class.getSimpleName());
+        });
 
         // LinearRamp
         Button LinearRampBtn = new Button(LinearRamp.class.getSimpleName());
         rightPane.getChildren().add(LinearRampBtn);
-        LinearRampBtn.setOnAction(event -> {createComponent(LinearRamp.class.getSimpleName());});
+        LinearRampBtn.setOnAction(event -> {
+            createComponent(LinearRamp.class.getSimpleName());
+        });
 
         // Mixer
         Button MixerBtn = new Button(Mixer.class.getSimpleName());
         rightPane.getChildren().add(MixerBtn);
-        MixerBtn.setOnAction(event -> {createComponent(Mixer.class.getSimpleName());});
-        
+        MixerBtn.setOnAction(event -> {
+            createComponent(Mixer.class.getSimpleName());
+        });
+
         // VFSineWave 
         Button VFSineWaveBtn = new Button(VFSineWave.class.getSimpleName());
         rightPane.getChildren().add(VFSineWaveBtn);
-        VFSineWaveBtn.setOnAction(event -> {createComponent(VFSineWave.class.getSimpleName());});
+        VFSineWaveBtn.setOnAction(event -> {
+            createComponent(VFSineWave.class.getSimpleName());
+        });
 
         // Center
         mainCanvas_ = new AnchorPane();
         mainCanvas_.setStyle("-fx-background-color: black;");
         mainCanvas_.setOnMousePressed(this::createLine);
         mainCanvas_.setOnMouseDragged(this::resizeLine);
-        mainCanvas_.setOnMouseReleased(mouseEvent -> {this.handleLine(mouseEvent);});
+        mainCanvas_.setOnMouseReleased(mouseEvent -> {
+            this.handleLine(mouseEvent);
+        });
 
-        Speaker speakerWidget = new Speaker(mainCanvas_);
-        mainCanvas_.getChildren().add(speakerWidget);
+        speaker_ = new Speaker(mainCanvas_);
+        allWidgets_.add(speaker_);
+        mainCanvas_.getChildren().add(speaker_);
 
         // Bottom
         HBox bottomPane = new HBox();
         bottomPane.setAlignment(Pos.CENTER);
 
         Button playBtn = new Button("Play");
-        playBtn.setOnAction(event -> {play();});
+        playBtn.setOnAction(event -> {
+            play();
+        });
         bottomPane.getChildren().add(playBtn);
 
         Button stopBtn = new Button("Stop");
-        stopBtn.setOnAction(event -> {stopClip();});
+        stopBtn.setOnAction(event -> {
+            stopClip();
+        });
         bottomPane.getChildren().add(stopBtn);
 
         root.setRight(rightPane);
@@ -208,7 +220,7 @@ public class SynthesizeApplication extends Application {
         stage.show();
     }
 
-    public static void removeWidget(AudioComponentWidget widget){
+    public static void removeWidget(AudioComponentWidget widget) {
         allWidgets_.remove(widget);
         mainCanvas_.getChildren().remove(widget);
     }
@@ -221,6 +233,6 @@ public class SynthesizeApplication extends Application {
     private static AnchorPane mainCanvas_;
     private static Speaker speaker_;
     private AudioClip activeClip_;
-//    private static Map<Line, Pair<AudioComponentWidget, AudioComponentWidget>> lines_= new HashMap<>();
+    private static ArrayList<LineWidget> lines_ = new ArrayList<>();
     private static LineWidget currentLine_;
 }

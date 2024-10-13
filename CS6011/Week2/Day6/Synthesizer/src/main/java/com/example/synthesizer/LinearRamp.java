@@ -51,4 +51,10 @@ public class LinearRamp implements AudioComponent {
     public void connectInput(AudioComponent component) {
         this.input = component;
     }
+
+    @Override
+    public void removeInput(AudioComponent component) {
+        if (this.input == component)
+            this.input = null;
+    }
 }

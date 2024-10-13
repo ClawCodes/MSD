@@ -1,33 +1,43 @@
 package com.example.synthesizer.widgets;
 
-import com.example.synthesizer.AudioComponent;
-import com.example.synthesizer.Mixer;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class Speaker extends Pane {
+public class Speaker extends MixerWidget {
     public Speaker(AnchorPane pane) {
-        parent_ = pane;
+        super(pane, "speaker");
+        baseLayout_.getChildren().remove(leftSide_);
+        baseLayout_.getChildren().remove(rightSide_);
+        baseLayout_.getChildren().remove(center_);
 
         this.setLayoutX(600);
         this.setLayoutY(400);
 
-        baseLayout_ = new HBox();
-        baseLayout_.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-border-width: 3;");
-        this.getChildren().add(baseLayout_);
-
         Circle circle = new Circle(10);
         circle.setFill(Color.BLUE);
         baseLayout_.getChildren().add(circle);
+        makeUndraggable();
     }
 
-    public AudioComponent getAudioComponent() {
-        return audioComponent_;
+    private void makeUndraggable(){
+        this.setOnMousePressed(mouseEvent -> {});
+
+        this.setOnMouseDragged(mouseEvent -> {});
     }
-    AudioComponent audioComponent_ = new Mixer();
-    HBox baseLayout_;
-    AnchorPane parent_;
+
+    public boolean inputContains(double x, double y){
+        // Get input widget circle
+        Node input = baseLayout_.getChildren().getFirst();
+        return input.contains(input.sceneToLocal(x, y));
+    }
+
+    public boolean outputContains(double x, double y){
+        return false;
+    }
+
+    public boolean IOContains(double x, double y){
+        return inputContains(x, y) | outputContains(x, y);
+    }
 }

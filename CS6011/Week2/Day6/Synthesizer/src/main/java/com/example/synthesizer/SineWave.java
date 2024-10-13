@@ -50,4 +50,10 @@ public class SineWave implements AudioComponent {
     public void connectInput(AudioComponent component) {
         input = component;
     }
+
+    @Override
+    public void removeInput(AudioComponent component) {
+        if (this.input == component)
+            input = null;
+    }
 }

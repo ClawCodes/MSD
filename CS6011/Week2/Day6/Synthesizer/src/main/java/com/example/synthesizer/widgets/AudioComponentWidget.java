@@ -3,7 +3,6 @@ package com.example.synthesizer.widgets;
 import com.example.synthesizer.AudioComponent;
 import com.example.synthesizer.SynthesizeApplication;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,8 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.transform.Transform;
 
 public class AudioComponentWidget extends Pane {
 
@@ -113,6 +110,7 @@ public class AudioComponentWidget extends Pane {
     private void destroyWidget() {
         parent_.getChildren().remove(this);
         SynthesizeApplication.removeWidget(this);
+        // TODO: Add handling of line removal
     }
 
     public AudioComponent getAudioComponent() {
@@ -122,12 +120,21 @@ public class AudioComponentWidget extends Pane {
     // TODO: Adjust input and output lines based on drag movement from widget drag
     private void adjustLines(){}
 
-    public Line getInputLine(){
-        return inputLine;
+    public void removeInputLine(){
+        audioComponent_.removeInput(inputLine_.getOutputWidget().audioComponent_);
+        inputLine_ = null;
     }
 
-    public Line getOutputLine(){
-        return outputLine;
+    public void removeOutputLine(){
+        outputLine_ = null;
+    }
+
+    public void setOutputLine(LineWidget outputLine){
+        outputLine_ = outputLine;
+    }
+
+    public void setInputLine(LineWidget inputLine){
+        inputLine_ = inputLine;
     }
 
     protected AnchorPane parent_;
@@ -139,9 +146,8 @@ public class AudioComponentWidget extends Pane {
 
     protected String name_;
 
-    // TODO: Keep?
-    protected Line inputLine;
-    protected Line outputLine;
+    protected LineWidget inputLine_;
+    protected LineWidget outputLine_;
 
     // Member variables for widget dragging
     protected double startX_;

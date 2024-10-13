@@ -37,7 +37,8 @@ public class Mixer implements AudioComponent {
         }
     }
 
-    public void remove(AudioComponent component) {
+    @Override
+    public void removeInput(AudioComponent component) {
         components.remove(component);
     }
 }
