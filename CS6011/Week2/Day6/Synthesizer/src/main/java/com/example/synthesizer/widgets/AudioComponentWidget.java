@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.input.MouseEvent;
 
 public class AudioComponentWidget extends Pane {
 
@@ -91,6 +92,15 @@ public class AudioComponentWidget extends Pane {
         audioComponent_.setWithMethod(method, slider.getValue(), paramType);
     }
 
+    private void adjustLines(){
+        if (outputLine_ != null){
+           outputLine_.moveLine();
+        }
+        if (inputLine_ != null){
+            inputLine_.moveLine();
+        }
+    }
+
     private void makeDraggable() {
         this.setOnMousePressed(mouseEvent -> {
             pressedX_ = mouseEvent.getSceneX();
@@ -101,8 +111,11 @@ public class AudioComponentWidget extends Pane {
 
         this.setOnMouseDragged(mouseEvent -> {
             if (!this.IOContains(pressedX_, pressedY_)) {
-                this.setTranslateX(mouseEvent.getSceneX() - startX_);
-                this.setTranslateY(mouseEvent.getSceneY() - startY_);
+                double offsetX = mouseEvent.getSceneX() - startX_;
+                double offsetY = mouseEvent.getSceneY() - startY_;
+                this.setTranslateX(offsetX);
+                this.setTranslateY(offsetY);
+                adjustLines();
             }
         });
     }
@@ -110,23 +123,29 @@ public class AudioComponentWidget extends Pane {
     private void destroyWidget() {
         parent_.getChildren().remove(this);
         SynthesizeApplication.removeWidget(this);
-        // TODO: Add handling of line removal
+        if (outputLine_ != null){
+            outputLine_.remove();
+        }
+        if(inputLine_ != null){
+            inputLine_.remove();
+        }
     }
 
     public AudioComponent getAudioComponent() {
         return audioComponent_;
     }
 
-    // TODO: Adjust input and output lines based on drag movement from widget drag
-    private void adjustLines(){}
-
-    public void removeInputLine(){
-        audioComponent_.removeInput(inputLine_.getOutputWidget().audioComponent_);
-        inputLine_ = null;
+    public void removeInputLine(LineWidget line){
+        if (inputLine_ == line) {
+            audioComponent_.removeInput(inputLine_.getOutputWidget().audioComponent_);
+            inputLine_ = null;
+        }
     }
 
-    public void removeOutputLine(){
-        outputLine_ = null;
+    public void removeOutputLine(LineWidget line){
+        if (outputLine_ == line) {
+            outputLine_ = null;
+        }
     }
 
     public void setOutputLine(LineWidget outputLine){

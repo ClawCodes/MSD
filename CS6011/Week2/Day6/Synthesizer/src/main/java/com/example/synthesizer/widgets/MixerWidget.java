@@ -14,7 +14,9 @@ public class MixerWidget extends AudioComponentWidget {
         inputLines_.add(inputLine);
     }
 
-    // TODO: Add remove line
+    public void removeInputLine(LineWidget line){
+        inputLines_.remove(line);
+    }
 
     public ArrayList<LineWidget> inputLines_ = new ArrayList<>();
 }

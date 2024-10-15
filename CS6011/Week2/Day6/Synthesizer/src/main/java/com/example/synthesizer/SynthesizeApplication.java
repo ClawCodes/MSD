@@ -35,8 +35,10 @@ public class SynthesizeApplication extends Application {
     }
 
     private void stopClip() {
-        activeClip_.stopClip();
-        activeClip_ = null;
+        if (activeClip_ != null) {
+            activeClip_.stopClip();
+            activeClip_ = null;
+        }
     }
 
     private void createComponent(String name) {
@@ -101,12 +103,31 @@ public class SynthesizeApplication extends Application {
         double endX = currentLine_.getEndX();
         double endY = currentLine_.getEndY();
 
+//        for (var widget : allWidgets_) {
+//            if ((input == null) && (widget.inputContains(startX, startY) | widget.inputContains(endX, endY))) {
+//                input = widget;
+//            }
+//            if ((output == null) && (widget.outputContains(endX, endY) | widget.outputContains(startX, startY))) {
+//                output = widget;
+//            }
+//        }
+
         for (var widget : allWidgets_) {
-            if ((input == null) && (widget.inputContains(startX, startY) | widget.inputContains(endX, endY))) {
-                input = widget;
+            if (input == null) {
+                if (widget.inputContains(startX, startY)) {
+                    input = widget;
+                    currentLine_.setStartsFromOutput(false);
+                } else if (widget.inputContains(endX, endY)) {
+                    input = widget;
+                }
             }
-            if ((output == null) && (widget.outputContains(endX, endY) | widget.outputContains(startX, startY))) {
-                output = widget;
+            if (output == null) {
+                if (widget.outputContains(startX, startY)) {
+                    output = widget;
+                } else if (widget.outputContains(endX, endY)) {
+                    output = widget;
+                    currentLine_.setStartsFromOutput(false);
+                }
             }
         }
 

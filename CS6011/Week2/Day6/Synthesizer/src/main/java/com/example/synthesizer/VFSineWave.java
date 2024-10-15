@@ -19,6 +19,10 @@ public class VFSineWave implements AudioComponent{
         return outClip;
     }
 
+    public void setMaxValue(Short maxValue) {
+        this.maxValue = maxValue;
+    }
+
     @Override
     public boolean hasInput() {
         return !(input == null);

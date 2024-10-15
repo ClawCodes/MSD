@@ -1,5 +1,7 @@
 package com.example.synthesizer.widgets;
 
+import javafx.geometry.Point2D;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
@@ -10,15 +12,12 @@ public class LineWidget extends Line {
         parent_.getChildren().add(this);
     }
 
-    public void deleteLine(){
-        // TODO:
-        // Remove outputWidget input connection and reference to this line
-        // Remove inputWidget's reference to this line
-        // Remove this line from the anchor pane
+    public void remove(){
+        outputWidget_.removeOutputLine(this);
+        inputWidget_.removeInputLine(this);
         parent_.getChildren().remove(this);
     }
 
-    // TODO: needs to take mixers into account as it is a multi input widget
     public void setInputWidget(AudioComponentWidget widget){
         inputWidget_ = widget;
         inputWidget_.setInputLine(this);
@@ -37,6 +36,35 @@ public class LineWidget extends Line {
         inputWidget_.getAudioComponent().connectInput(outputWidget_.getAudioComponent());
     }
 
+    public void setStartsFromOutput(boolean value){
+        startsFromOutput_ = value;
+    }
+
+    public boolean startsFromOutput(){
+        return startsFromOutput_;
+    }
+
+    public void moveLine(){
+        // FIXME: not shifting correctly
+        double inputTranslateX = inputWidget_.getTranslateX();
+        double inputTranslateY = inputWidget_.getTranslateY();
+        double outputTranslateX = outputWidget_.getTranslateX();
+        double outputTranslateY = outputWidget_.getTranslateY();
+
+        if (startsFromOutput()){
+            this.setStartX(this.getStartX() - outputTranslateX);
+            this.setStartY(this.getStartY() - outputTranslateY);
+            this.setEndX(this.getEndX() - inputTranslateX);
+            this.setEndY(this.getEndY() - inputTranslateY);
+        } else{
+            this.setStartX(this.getStartX() - inputTranslateX);
+            this.setStartY(this.getStartY() - inputTranslateY);
+            this.setEndX(this.getEndX() - inputTranslateX);
+            this.setEndY(this.getEndY() - inputTranslateY);
+        }
+    }
+
+    private boolean startsFromOutput_ = true;
     private AudioComponentWidget inputWidget_;
     private AudioComponentWidget outputWidget_;
     private AnchorPane parent_;
