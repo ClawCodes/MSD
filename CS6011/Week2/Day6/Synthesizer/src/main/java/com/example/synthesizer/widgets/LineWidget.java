@@ -1,7 +1,5 @@
 package com.example.synthesizer.widgets;
 
-import javafx.geometry.Point2D;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
@@ -40,10 +38,6 @@ public class LineWidget extends Line {
         startsFromOutput_ = value;
     }
 
-    public boolean startsFromOutput(){
-        return startsFromOutput_;
-    }
-
     public void moveLine(){
         // FIXME: not shifting correctly
         double inputTranslateX = inputWidget_.getTranslateX();
@@ -51,7 +45,7 @@ public class LineWidget extends Line {
         double outputTranslateX = outputWidget_.getTranslateX();
         double outputTranslateY = outputWidget_.getTranslateY();
 
-        if (startsFromOutput()){
+        if (startsFromOutput_){
             this.setStartX(this.getStartX() - outputTranslateX);
             this.setStartY(this.getStartY() - outputTranslateY);
             this.setEndX(this.getEndX() - inputTranslateX);
