@@ -57,4 +57,3 @@ body.appendChild(lineBreak)
 let image = document.createElement("img");
 image.src="cat.jpeg";
 body.appendChild(image)
-

@@ -1,7 +1,6 @@
 package com.example.synthesizer.widgets;
 
 import com.example.synthesizer.Mixer;
-import com.example.synthesizer.SynthesizeApplication;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;

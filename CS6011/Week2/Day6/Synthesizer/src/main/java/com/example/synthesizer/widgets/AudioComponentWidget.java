@@ -62,23 +62,23 @@ public class AudioComponentWidget extends Pane {
         makeDraggable();
     }
 
-    public boolean inputContains(double x, double y){
+    public boolean inputContains(double x, double y) {
         // Get input widget circle
         Node input = leftSide_.getChildren().getFirst();
         return input.contains(input.sceneToLocal(x, y));
     }
 
-    public boolean outputContains(double x, double y){
+    public boolean outputContains(double x, double y) {
         // Get output widget circle
         Node output = rightSide_.getChildren().get(1);
         return output.contains(output.sceneToLocal(x, y));
     }
 
-    public boolean IOContains(double x, double y){
+    public boolean IOContains(double x, double y) {
         return inputContains(x, y) | outputContains(x, y);
     }
 
-    protected void setSlider(int min, int max, String memberMethod, Class<?> paramType){
+    protected void setSlider(int min, int max, String memberMethod, Class<?> paramType) {
         Slider slider = new Slider();
         slider.setMin(min);
         slider.setMax(max);
@@ -86,16 +86,23 @@ public class AudioComponentWidget extends Pane {
         center_.getChildren().add(slider);
     }
 
-    protected void setWithComponentMethod(javafx.scene.input.MouseEvent e, String method, Slider slider, Class<?> paramType)
-    {
+    protected void setWithComponentMethod(javafx.scene.input.MouseEvent e, String method, Slider slider, Class<?> paramType) {
         audioComponent_.setWithMethod(method, slider.getValue(), paramType);
     }
 
-    private void adjustLines(){
-        if (outputLine_ != null){
-           outputLine_.moveLine();
+    public Node getOutputCircle(){
+        return rightSide_.getChildren().get(1);
+    }
+
+    public Node getInputCircle(){
+        return leftSide_.getChildren().getFirst();
+    }
+
+    private void adjustLines() {
+        if (outputLine_ != null) {
+            outputLine_.moveLine();
         }
-        if (inputLine_ != null){
+        if (inputLine_ != null) {
             inputLine_.moveLine();
         }
     }
@@ -110,20 +117,18 @@ public class AudioComponentWidget extends Pane {
 
         this.setOnMouseDragged(mouseEvent -> {
             if (!this.IOContains(pressedX_, pressedY_)) {
-                double offsetX = mouseEvent.getSceneX() - startX_;
-                double offsetY = mouseEvent.getSceneY() - startY_;
-                this.setTranslateX(offsetX);
-                this.setTranslateY(offsetY);
+                this.setTranslateX(mouseEvent.getSceneX() - startX_);
+                this.setTranslateY(mouseEvent.getSceneY() - startY_);
                 adjustLines();
             }
         });
     }
 
     private void destroyWidget() {
-        if (outputLine_ != null){
+        if (outputLine_ != null) {
             outputLine_.remove();
         }
-        if(inputLine_ != null){
+        if (inputLine_ != null) {
             inputLine_.remove();
         }
         parent_.getChildren().remove(this);
@@ -134,24 +139,24 @@ public class AudioComponentWidget extends Pane {
         return audioComponent_;
     }
 
-    public void removeInputLine(LineWidget line){
+    public void removeInputLine(LineWidget line) {
         if (inputLine_ == line) {
             audioComponent_.removeInput(inputLine_.getOutputWidget().audioComponent_);
             inputLine_ = null;
         }
     }
 
-    public void removeOutputLine(LineWidget line){
+    public void removeOutputLine(LineWidget line) {
         if (outputLine_ == line) {
             outputLine_ = null;
         }
     }
 
-    public void setOutputLine(LineWidget outputLine){
+    public void setOutputLine(LineWidget outputLine) {
         outputLine_ = outputLine;
     }
 
-    public void setInputLine(LineWidget inputLine){
+    public void setInputLine(LineWidget inputLine) {
         inputLine_ = inputLine;
     }
 

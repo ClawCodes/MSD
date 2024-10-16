@@ -1,5 +1,7 @@
 package com.example.synthesizer.widgets;
 
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
@@ -39,23 +41,19 @@ public class LineWidget extends Line {
     }
 
     public void moveLine(){
-        // FIXME: not shifting correctly
-        double inputTranslateX = inputWidget_.getTranslateX();
-        double inputTranslateY = inputWidget_.getTranslateY();
-        double outputTranslateX = outputWidget_.getTranslateX();
-        double outputTranslateY = outputWidget_.getTranslateY();
-
+        Node startJack;
+        Node endJack;
         if (startsFromOutput_){
-            this.setStartX(this.getStartX() - outputTranslateX);
-            this.setStartY(this.getStartY() - outputTranslateY);
-            this.setEndX(this.getEndX() - inputTranslateX);
-            this.setEndY(this.getEndY() - inputTranslateY);
+            startJack = outputWidget_.getOutputCircle();
+            endJack = inputWidget_.getInputCircle();
         } else{
-            this.setStartX(this.getStartX() - inputTranslateX);
-            this.setStartY(this.getStartY() - inputTranslateY);
-            this.setEndX(this.getEndX() - inputTranslateX);
-            this.setEndY(this.getEndY() - inputTranslateY);
+            endJack = outputWidget_.getOutputCircle();
+            startJack = inputWidget_.getInputCircle();
         }
+        this.setStartX(startJack.getLocalToSceneTransform().getTx());
+        this.setStartY(startJack.getLocalToSceneTransform().getTy());
+        this.setEndX(endJack.getLocalToSceneTransform().getTx());
+        this.setEndY(endJack.getLocalToSceneTransform().getTy());
     }
 
     private boolean startsFromOutput_ = true;
