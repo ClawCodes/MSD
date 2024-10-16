@@ -1,8 +1,10 @@
-function findMinLocation(arr, compareTo){
+"use strict";
+
+function findMinLocation(arr, compareTo) {
     let previous = arr[0];
     let minIdx = 0;
     for (let i = 1; i < arr.length; i++) {
-        if (compareTo(arr[i], previous)){
+        if (compareTo(arr[i], previous)) {
             previous = arr[i];
             minIdx = i;
         }
@@ -10,8 +12,10 @@ function findMinLocation(arr, compareTo){
     return minIdx;
 }
 
-function selectionSort(arr, compareTo = (a, b) => {return a < b}){
-    for (let i = 0; i < arr.length ; i++) {
+function selectionSort(arr, compareTo = (a, b) => {
+    return a < b
+}) {
+    for (let i = 0; i < arr.length; i++) {
         // Add i as we are passing a smaller slice of the array each iteration
         let minIdx = findMinLocation(arr.slice(i, arr.length), compareTo) + i;
         let temp = arr[minIdx];
@@ -21,17 +25,17 @@ function selectionSort(arr, compareTo = (a, b) => {return a < b}){
     return arr;
 }
 
-class Person{
-    constructor(first, last){
+class Person {
+    constructor(first, last) {
         this.first = first;
         this.last = last
     }
 }
 
-function personComparator(person1, person2){
-    if (person1.last === person2.last){
+function personComparator(person1, person2) {
+    if (person1.last === person2.last) {
         return person1.first < person2.first;
-    } else{
+    } else {
         return person1.last < person2.last
     }
 }
