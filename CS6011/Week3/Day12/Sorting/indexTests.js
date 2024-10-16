@@ -54,8 +54,8 @@ console.assert(compareArrays(expectedMixedArr, sortedMixedArr));
 
 
 // Test comparison functions
-let decending = (a, b) => {return a > b};
-let sortedDescIntArr = selectionSort(intArr, decending);
+let descending = (a, b) => {return a > b};
+let sortedDescIntArr = selectionSort(intArr, descending);
 let expectedDescIntArr = Array(5,4,3,2,1)
 console.assert(compareArrays(expectedDescIntArr, sortedDescIntArr));
 
