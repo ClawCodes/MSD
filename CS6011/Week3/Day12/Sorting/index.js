@@ -12,6 +12,7 @@ function findMinLocation(arr, compareTo){
 
 function selectionSort(arr, compareTo = (a, b) => {return a < b}){
     for (let i = 0; i < arr.length ; i++) {
+        // Add i as we are passing a smaller slice of the array each iteration
         let minIdx = findMinLocation(arr.slice(i, arr.length), compareTo) + i;
         let temp = arr[minIdx];
         arr[minIdx] = arr[i];
