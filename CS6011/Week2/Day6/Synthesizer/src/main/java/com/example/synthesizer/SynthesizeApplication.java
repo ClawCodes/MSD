@@ -98,15 +98,6 @@ public class SynthesizeApplication extends Application {
         double endX = currentLine_.getEndX();
         double endY = currentLine_.getEndY();
 
-//        for (var widget : allWidgets_) {
-//            if ((input == null) && (widget.inputContains(startX, startY) | widget.inputContains(endX, endY))) {
-//                input = widget;
-//            }
-//            if ((output == null) && (widget.outputContains(endX, endY) | widget.outputContains(startX, startY))) {
-//                output = widget;
-//            }
-//        }
-
         for (var widget : allWidgets_) {
             if (input == null) {
                 if (widget.inputContains(startX, startY)) {
@@ -133,15 +124,11 @@ public class SynthesizeApplication extends Application {
 
         // TODO: Check if the found components already have inputs and outputs and adjust accordingly
         // Also check if attempting to connect to self
-        // Add line to both components
-        // Add both components to line widget
 
         // Persist line and update widget connections
         currentLine_.setInputWidget(input);
         currentLine_.setOutputWidget(output);
         currentLine_.connectComponents();
-
-        System.out.println(speaker_.getAudioComponent().hasInput());
         lines_.add(currentLine_);
         currentLine_ = null;
     }
@@ -197,9 +184,7 @@ public class SynthesizeApplication extends Application {
         mainCanvas_.setStyle("-fx-background-color: black;");
         mainCanvas_.setOnMousePressed(this::createLine);
         mainCanvas_.setOnMouseDragged(this::resizeLine);
-        mainCanvas_.setOnMouseReleased(mouseEvent -> {
-            this.handleLine(mouseEvent);
-        });
+        mainCanvas_.setOnMouseReleased(this::handleLine);
 
         speaker_ = new Speaker(mainCanvas_);
         allWidgets_.add(speaker_);

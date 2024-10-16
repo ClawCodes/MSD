@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class AudioComponentWidget extends Pane {
+public abstract class AudioComponentWidget extends Pane {
 
     public AudioComponentWidget(AudioComponent audioComponent, AnchorPane pane, String name) {
         audioComponent_ = audioComponent;
@@ -98,7 +98,7 @@ public class AudioComponentWidget extends Pane {
         return leftSide_.getChildren().getFirst();
     }
 
-    private void adjustLines() {
+    public void adjustLines() {
         if (outputLine_ != null) {
             outputLine_.moveLine();
         }
@@ -107,7 +107,7 @@ public class AudioComponentWidget extends Pane {
         }
     }
 
-    private void makeDraggable() {
+    public void makeDraggable() {
         this.setOnMousePressed(mouseEvent -> {
             pressedX_ = mouseEvent.getSceneX();
             pressedY_ = mouseEvent.getSceneY();
@@ -124,7 +124,7 @@ public class AudioComponentWidget extends Pane {
         });
     }
 
-    private void destroyWidget() {
+    public void destroyWidget() {
         if (outputLine_ != null) {
             outputLine_.remove();
         }

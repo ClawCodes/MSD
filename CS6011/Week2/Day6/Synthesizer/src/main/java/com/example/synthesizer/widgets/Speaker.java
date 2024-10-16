@@ -21,6 +21,16 @@ public class Speaker extends MixerWidget {
         makeUndraggable();
     }
 
+    @Override
+    public Node getInputCircle() {
+        return baseLayout_.getChildren().getFirst();
+    }
+
+    @Override
+    public Node getOutputCircle() {
+        return this.getInputCircle();
+    }
+
     private void makeUndraggable(){
         this.setOnMousePressed(mouseEvent -> {});
 
