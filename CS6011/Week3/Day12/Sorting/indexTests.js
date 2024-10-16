@@ -1,4 +1,4 @@
-const { selectionSort } = require("./index.js");
+const { selectionSort, Person, personComparator } = require("./index.js");
 
 // Tests
 function compareArrays(arr1, arr2) {
@@ -51,3 +51,22 @@ let mixedArr = Array("btest", 1, 2.3, true, "Atest");
 let sortedMixedArr = selectionSort(mixedArr);
 let expectedMixedArr = Array("Atest", 1, true, 2.3, "btest");
 console.assert(compareArrays(expectedMixedArr, sortedMixedArr));
+
+
+// Test comparison functions
+let decending = (a, b) => {return a > b};
+let sortedDescIntArr = selectionSort(intArr, decending);
+let expectedDescIntArr = Array(5,4,3,2,1)
+console.assert(compareArrays(expectedDescIntArr, sortedDescIntArr));
+
+let cl = new Person("Chris", "Lawton");
+let bs = new Person("Ben", "Smith");
+let do_ = new Person("Dan", "Ozman");
+let aj = new Person("Alex", "Johnson");
+let el = new Person("Eric", "Lawton");
+
+let people = Array(cl, bs, do_, aj, el);
+let sortedPeople = selectionSort(people, personComparator);
+let expectedPeople = Array(aj, cl, el, do_, bs);
+console.assert(compareArrays(expectedPeople, sortedPeople));
+
