@@ -1,8 +1,8 @@
 "use strict";
 
-function findMinLocation(arr, compareTo) {
-    let minIdx = 0;
-    for (let i = 1; i < arr.length; i++) {
+function findMinLocation(arr, index, compareTo) {
+    let minIdx = index;
+    for (let i = index; i < arr.length; i++) {
         if (compareTo(arr[i], arr[minIdx])) {
             minIdx = i;
         }
@@ -14,8 +14,7 @@ function selectionSort(arr, compareTo = (a, b) => {
     return a < b
 }) {
     for (let i = 0; i < arr.length; i++) {
-        // Add i as we are passing a smaller slice of the array each iteration
-        let minIdx = findMinLocation(arr.slice(i, arr.length), compareTo) + i;
+        let minIdx = findMinLocation(arr, i, compareTo);
         let temp = arr[minIdx];
         arr[minIdx] = arr[i];
         arr[i] = temp;
