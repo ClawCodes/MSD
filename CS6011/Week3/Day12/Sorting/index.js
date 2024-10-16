@@ -1,11 +1,9 @@
 "use strict";
 
 function findMinLocation(arr, compareTo) {
-    let previous = arr[0];
     let minIdx = 0;
     for (let i = 1; i < arr.length; i++) {
-        if (compareTo(arr[i], previous)) {
-            previous = arr[i];
+        if (compareTo(arr[i], arr[minIdx])) {
             minIdx = i;
         }
     }
