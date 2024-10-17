@@ -5,7 +5,6 @@ header.textContent = "Multiplication Table";
 header.style.textAlign = "center";
 body.appendChild(header);
 
-// TODO: Can this be included in the Table class? this changes when referenced in an EventListener
 let highlightedCell = null;
 
 class Table {
@@ -33,8 +32,8 @@ class Table {
         cell.style.height = "50px";
         cell.style.borderStyle = "solid";
 
-        cell.addEventListener("mouseover", this.hoverHighlight.bind(this));
-        cell.addEventListener("mouseout", this.resetBackground.bind(this));
+        cell.addEventListener("mouseover", this.hoverHighlight);
+        cell.addEventListener("mouseout", this.resetBackground);
 
         return cell;
     }
