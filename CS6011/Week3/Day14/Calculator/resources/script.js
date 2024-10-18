@@ -32,17 +32,19 @@ submit.addEventListener('click', function(){
     let yValue = Number(y.value);
 
     if(!(isNaN(xValue) ||  isNaN(yValue))) {
-        // fetch("HTTP://localhost:8080/calculate?" + x.value + "&y=" + y.value)
-        //     .then(response => {
-        //         if(!response.ok){
-        //             console.log("There was an error");
-        //         }
-        //         console.log(response.text);
-        //         return response.text()
-        //     }).then(data =>{
-        //     alert(data);
-        //     result.textContent = "Result = " + data;
-        // });
+        // Query string approach
+        fetch("HTTP://localhost:8080/calculate?" + x.value + "&y=" + y.value)
+            .then(response => {
+                if(!response.ok){
+                    console.log("There was an error");
+                }
+                console.log(response.text);
+                return response.text()
+            }).then(data =>{
+            alert(data);
+            result.textContent = "Result = " + data;
+        });
+        // Web socket approach
         if (isConnected){
             console.log(xValue + " " + yValue);
             ws.send(xValue + " " + yValue);
@@ -50,6 +52,7 @@ submit.addEventListener('click', function(){
     }
 });
 
+// AJAX approach
 // submit.addEventListener('click', function(){
 //     let ajaxRequest = new XMLHttpRequest();
 //     let xValue = Number(x.value);
