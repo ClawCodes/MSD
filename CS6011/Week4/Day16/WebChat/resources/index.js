@@ -38,6 +38,7 @@ function createLogEntry(message, user) {
     messageContainer.appendChild(messageMeta);
 
     chatLog.appendChild(messageContainer);
+    chatLog.scrollTop = chatLog.scrollHeight;
 }
 
 function submitChatMessage(event) {

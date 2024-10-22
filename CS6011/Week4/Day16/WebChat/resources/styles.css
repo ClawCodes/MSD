@@ -8,6 +8,9 @@
     border: 2px solid black; /* Add a border to make it appear as a box */
     box-sizing: border-box; /* Include padding and border in the element's total width */
     margin: 20px auto;    /* Center the box horizontally */
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #chat-form {
