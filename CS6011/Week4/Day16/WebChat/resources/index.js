@@ -12,9 +12,6 @@ let chatLog = document.getElementById("chat-log");
 let ws = new WebSocket("ws://localhost:8080");
 let isConnected = false;
 
-// Items for rooms
-let localChatLog = Array();
-
 function createLogEntry(message, user) {
     let messageContainer = document.createElement("div");
     messageContainer.className = "message-container";
@@ -27,15 +24,17 @@ function createLogEntry(message, user) {
     messageDiv.appendChild(messageBlock);
 
     // TODO: meta info not showing
-    let messageMeta = document.createElement("div");
-    messageMeta.className = "message-meta";
-    let messageUser = document.createElement("span");
-    messageUser.innerHTML = user;
-    let messageDtm = document.createElement("span");
-    messageDtm.innerHTML = new Date().toLocaleTimeString();
+    // let messageMeta = document.createElement("div");
+    // messageMeta.className = "message-meta";
+    // let messageUser = document.createElement("span");
+    // messageUser.className = user;
+    // messageMeta.appendChild(messageUser);
+    // let messageDtm = document.createElement("span");
+    // messageDtm.innerHTML = new Date().toLocaleTimeString();
+    // messageDtm.appendChild(messageDtm);
 
     messageContainer.appendChild(messageBlock);
-    messageContainer.appendChild(messageMeta);
+    // messageContainer.appendChild(messageMeta);
 
     chatLog.appendChild(messageContainer);
     chatLog.scrollTop = chatLog.scrollHeight;

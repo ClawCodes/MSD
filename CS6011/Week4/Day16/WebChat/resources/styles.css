@@ -11,8 +11,17 @@
     padding: 10px;
     overflow-y: auto;
     overflow-x: hidden;
+    display: block;
 }
 
 #chat-form {
     text-align: center;
+}
+
+.message-container {
+    /*width: 25%;*/
+    border: 1px solid black;
+    text-align: left;
+    border-radius: 15px;
+    background-color: lightblue;
 }
