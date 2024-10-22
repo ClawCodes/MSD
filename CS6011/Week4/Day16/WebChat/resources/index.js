@@ -1,4 +1,5 @@
 let join = document.getElementById('join');
+let leave = document.getElementById('leave');
 let userObj = document.getElementById('user-entry');
 let roomObj = document.getElementById('room-entry');
 
@@ -12,6 +13,8 @@ let chatLog = document.getElementById("chat-log");
 let ws = new WebSocket("ws://localhost:8080");
 let isConnected = false;
 
+let userName;
+
 function createLogEntry(message, user) {
     let messageContainer = document.createElement("div");
     messageContainer.className = "message-container";
@@ -24,17 +27,17 @@ function createLogEntry(message, user) {
     messageDiv.appendChild(messageBlock);
 
     // TODO: meta info not showing
-    // let messageMeta = document.createElement("div");
-    // messageMeta.className = "message-meta";
-    // let messageUser = document.createElement("span");
-    // messageUser.className = user;
-    // messageMeta.appendChild(messageUser);
-    // let messageDtm = document.createElement("span");
-    // messageDtm.innerHTML = new Date().toLocaleTimeString();
-    // messageDtm.appendChild(messageDtm);
+    let messageMeta = document.createElement("div");
+    messageMeta.className = "message-meta";
+    let messageUser = document.createElement("span");
+    messageUser.innerHTML = user + " ";
+    messageMeta.appendChild(messageUser);
+    let messageDtm = document.createElement("span");
+    messageDtm.innerHTML = new Date().toLocaleTimeString();
+    messageMeta.appendChild(messageDtm);
 
     messageContainer.appendChild(messageBlock);
-    // messageContainer.appendChild(messageMeta);
+    messageContainer.appendChild(messageMeta);
 
     chatLog.appendChild(messageContainer);
     chatLog.scrollTop = chatLog.scrollHeight;
@@ -55,16 +58,10 @@ ws.onopen = function () {
 ws.onmessage = function (messageEvent) {
     let message = JSON.parse(messageEvent.data);
     if (message.type === "join") {
-        // createRoom(message.room);
         chatPage.style.display = "block";
         homePage.style.display = "none";
         document.getElementById("room").innerHTML = message.room;
         chatForm.addEventListener("submit", submitChatMessage);
-    }
-    if (message.type === "leave") {
-        chatPage.style.display = "none";
-        // // TODO: remove chat log
-        homePage.style.display = "block";
     }
     if (message.type === "message") {
         createLogEntry(message.message, message.user);
@@ -84,7 +81,7 @@ function validateUserInput(value) {
 }
 
 function getUsernameAndPassword() {
-    let userName = userObj.value;
+    userName = userObj.value;
     let room = roomObj.value;
 
     if (!(validateUserInput(userName) && validateUserInput(room))) {
@@ -93,5 +90,12 @@ function getUsernameAndPassword() {
         ws.send(`join ${userName} ${room}`);
     }
 }
+
+function leaveChatRoom(){
+    chatPage.style.display = "none";
+    homePage.style.display = "block";
+}
+
+leave.addEventListener('click', leaveChatRoom);
 
 join.addEventListener('click', getUsernameAndPassword);
