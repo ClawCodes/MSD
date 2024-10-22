@@ -1,7 +1,6 @@
 package com.example.synthesizer.widgets;
 
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
