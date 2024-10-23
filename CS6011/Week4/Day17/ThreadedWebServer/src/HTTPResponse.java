@@ -25,7 +25,6 @@ public class HTTPResponse {
         if (fileName.equals("/"))
             fileName = "/index.html";
 
-        System.out.println("READING: " + fileName);
         return Files.readAllBytes(Paths.get("resources" + fileName));
     }
 
@@ -49,7 +48,6 @@ public class HTTPResponse {
             byte[] contentBytes = readFile(resourceName);
             String contentType = determineContentType(resourceName);
             String responseHeader = create202(contentType, contentBytes.length);
-            System.out.println(responseHeader);
             // Concat header and file contents into single byte array
             ByteArrayOutputStream response = new ByteArrayOutputStream();
             response.write(responseHeader.getBytes());
@@ -66,11 +64,15 @@ public class HTTPResponse {
         int retry = 0;
         while (retry < 3) {
             try {
-                OutputStream outStream = socket.getOutputStream();
-                outStream.write(response);
-                outStream.flush();
+                // Loop for viewing thread slowdown across clients
+                for (int i = 0; i < response.length; i++) {
+                    OutputStream outStream = socket.getOutputStream();
+                    outStream.write(response);
+                    outStream.flush();
+                    Thread.sleep(1000);
+                }
                 socket.close();
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 retry++;
             }
         }

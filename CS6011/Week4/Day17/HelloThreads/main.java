@@ -20,13 +20,23 @@ public class main {
                     for (int i = start; i < end; i++) {
                         answer += i;
                     }
-                    System.out.println("EXPECTED: " + expected);
-                    System.out.println("ACTUAL: " + answer);
                 }
             });
             threads.add(newThread);
             newThread.start();
         }
+        // Don't let main thread continue until all the child threads complete
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.out.println("Error during thread join.");
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("ACTUAL: " + answer);
+        System.out.println("EXPECTED: " + expected);
     }
 
     public static void sayHello(){
@@ -40,7 +50,7 @@ public class main {
     }
 
     public static void main(String[] args) {
-        sayHello();
+//        sayHello();
         // What happens above?
         // The threads run in a psuedo-random order. They are not executed in serial
         // The same thread does NOT print the first and/or last hello. The OS determines the order or execution.
