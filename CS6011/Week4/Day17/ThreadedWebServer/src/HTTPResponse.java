@@ -64,15 +64,12 @@ public class HTTPResponse {
         int retry = 0;
         while (retry < 3) {
             try {
-                // Loop for viewing thread slowdown across clients
-                for (int i = 0; i < response.length; i++) {
-                    OutputStream outStream = socket.getOutputStream();
-                    outStream.write(response);
-                    outStream.flush();
-                    Thread.sleep(1000);
-                }
+                OutputStream outStream = socket.getOutputStream();
+                outStream.write(response);
+                outStream.flush();
                 socket.close();
-            } catch (IOException | InterruptedException e) {
+                break;
+            } catch (IOException e) {
                 retry++;
             }
         }

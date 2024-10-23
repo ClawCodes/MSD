@@ -14,7 +14,7 @@ public class Server {
         }
     }
 
-    public void handleCommunication(Socket socket) {
+    public void connectionHandler(Socket socket) {
         byte[] response;
         HTTPRequest requestHandler = new HTTPRequest();
         HTTPResponse responseHandler = new HTTPResponse();
@@ -32,12 +32,7 @@ public class Server {
 
             try {
                 Socket socket = serverSocket.accept();
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleCommunication(socket);
-                    }
-                });
+                Thread thread = new Thread(new ConnectionHandler(socket));
                 thread.start();
             } catch (IOException e) {
                 System.out.println("Unable to establish port connection.");
