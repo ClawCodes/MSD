@@ -9,11 +9,13 @@ public class ConnectionHandler implements Runnable {
     @Override
     public void run() {
         byte[] response;
-        HTTPRequest requestHandler = new HTTPRequest();
         HTTPResponse responseHandler = new HTTPResponse();
         try {
-            String fileName = requestHandler.getResourceName(socket_);
+            HTTPRequest requestHandler = new HTTPRequest(socket_.getInputStream());
+            String fileName = requestHandler.getResource();
+            System.out.println(fileName);
             response = responseHandler.fetchResource(fileName);
+            socket_.getOutputStream().write(response);
         } catch (IOException e) {
             response = responseHandler.create404().getBytes();
         }
