@@ -19,7 +19,6 @@ public class HTTPRequest {
                 }
 
                 String[] splitLine = requestLine.split(": ");
-                System.out.println(requestLine);
                 if (splitLine.length != 2) // Assumes not header
                     continue;
                 headers_.put(splitLine[0], splitLine[1]);
@@ -42,15 +41,15 @@ public class HTTPRequest {
         resource_ = splitLine[1];
     }
 
-    String getResource() {
+    public String getResource() {
         return resource_;
     }
 
-    boolean hasHeader(String header){
+    public boolean hasHeader(String header){
         return headers_.containsKey(header);
     }
 
-    String getHeaderValue(String header){
+    public String getHeaderValue(String header){
         return headers_.get(header);
     }
 
