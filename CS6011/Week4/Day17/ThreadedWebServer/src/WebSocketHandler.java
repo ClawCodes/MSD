@@ -1,13 +1,11 @@
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
+
+import static java.lang.Math.pow;
 
 public class WebSocketHandler extends MessageHandler {
-    // TODO:
-    // Parse WS message
-    // Crete WS message
-    // Keep socket alive
     WebSocketHandler(Socket socket) {
         super(socket);
     }
@@ -31,6 +29,7 @@ public class WebSocketHandler extends MessageHandler {
             long len = header[1] & 0x7F;
 
             if (len == 126) {
+                // TODO: determine if this is right. The frame says unsigned 16 bit int, but shorts are signed.
                 len = inputStream.readShort();
             }
 
@@ -57,12 +56,41 @@ public class WebSocketHandler extends MessageHandler {
         }
     }
 
+    public static byte[] createFrame(String payload) throws IOException {
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+        byte FIN_Opcode = (byte)0x81;
+        outStream.write(FIN_Opcode);
+
+        // TODO: only returns int. Should I ever expected longer text as the frame allows?
+        // Java strings can only hold the same amount of chars as Integer.MAX_VALUE
+        int payLen = payload.length();
+
+        if (payLen <= 125){
+            outStream.write((byte)payLen);
+        } else if (payLen <= pow(2, 16) - 1) {
+            outStream.write((byte)126);
+            outStream.write((short)payLen);
+        } else {
+            outStream.write((byte)127);
+            outStream.write(0); // Write zero first to fill 64 bit extended length
+            outStream.write(payLen); // remaining 32 bits
+        }
+
+        outStream.write(payload.getBytes());
+
+        return outStream.toByteArray();
+    }
+
     public void keepAlive() throws IOException {
         DataInputStream inStream = new DataInputStream(socket_.getInputStream());
         while (true) {
             if (inStream.available() > 0) {
                 String message = readFrame(inStream);
 
+                // TODO: REMOVE DEBUG STATEMENTS
+                System.out.println(message);
+                sendResponse(createFrame("{\"Hello\": \"from server\"}"));
             }
 
         }

@@ -1,8 +1,14 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static java.lang.Math.pow;
 
 class WebSocketHandlerTest {
     @Test
@@ -75,6 +81,19 @@ class WebSocketHandlerTest {
         String actual = WebSocketHandler.readFrame(inStream);
 
         Assertions.assertEquals("This is a test!", actual);
+    }
 
+    @ParameterizedTest
+    @ValueSource(ints = {5, 10, 220}) // TODO: Fix 220 not parsing
+    public void testCreateFrame(int payloadLength) throws IOException {
+        char[] chars = new char[payloadLength];
+        Arrays.fill(chars, (char) 'a');
+        String payload = new String(chars);
+
+        byte[] inputFrame = WebSocketHandler.createFrame(payload);
+        DataInputStream s = new DataInputStream(new ByteArrayInputStream(inputFrame));
+        String actual = WebSocketHandler.readFrame(s);
+
+        Assertions.assertEquals(payload, actual);
     }
 }
