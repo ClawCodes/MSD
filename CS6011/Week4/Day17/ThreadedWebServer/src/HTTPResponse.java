@@ -1,24 +1,42 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class HTTPResponse {
-    final String HTTPTemplate = """
+    static final String HTTPTemplate = """
             HTTP/1.1 %s %s
             Content-Type: %s
             Connection: close
             Content-Length: %d\r\n
             """;
 
-    String create202(String contentType, int contentLength) {
-        return String.format(this.HTTPTemplate, "200", "OK", contentType, contentLength);
+    static final String WSTemplate = """
+            HTTP/1.1 101 Switching Protocols
+            Upgrade: websocket
+            Connection: Upgrade
+            Sec-WebSocket-Accept: %s\r\n
+            """;
+
+    static String create202(String contentType, int contentLength) {
+        return String.format(HTTPTemplate, "200", "OK", contentType, contentLength);
     }
 
-    String create404() {
-        return String.format(this.HTTPTemplate, "404", "Not Found", "plain", "Request could not be processed.".length());
+    static String create404() {
+        String body = "Request could not be processed.";
+        String base = String.format(HTTPTemplate, "404", "Not Found", "plain", body.length());
+        return (base + body);
+    }
+
+    public static String createWebSocketResponse(String clientKey) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        String secret = Base64.getEncoder().encodeToString(md.digest((clientKey +
+                "258EAFA5-E914-47DA-95CA-C5AB0DC85B11").getBytes()));
+
+        return String.format(WSTemplate, secret);
     }
 
     public static byte[] readFile(String fileName) throws IOException {
@@ -28,7 +46,7 @@ public class HTTPResponse {
         return Files.readAllBytes(Paths.get("resources" + fileName));
     }
 
-    public String determineContentType(String resourceName) {
+    public static String determineContentType(String resourceName) {
         if (resourceName.endsWith(".html") || resourceName.equals("/"))
             return "text/html";
         if (resourceName.endsWith(".css"))
@@ -43,36 +61,14 @@ public class HTTPResponse {
         return "text/plain";
     }
 
-    public byte[] fetchResource(String resourceName) {
-        try {
+    public static byte[] fetchResource(String resourceName) throws IOException {
             byte[] contentBytes = readFile(resourceName);
             String contentType = determineContentType(resourceName);
             String responseHeader = create202(contentType, contentBytes.length);
-            System.out.println(responseHeader);
             // Concat header and file contents into single byte array
             ByteArrayOutputStream response = new ByteArrayOutputStream();
             response.write(responseHeader.getBytes());
             response.write(contentBytes);
             return response.toByteArray();
-        } catch (IOException e) {
-            String response = create404();
-            e.printStackTrace(); // Print so, local server logs the error and doesn't fail
-            return response.getBytes();
-        }
-    }
-
-    void sendResponse(Socket socket, byte[] response) {
-        int retry = 0;
-        while (retry < 3) {
-            try {
-                OutputStream outStream = socket.getOutputStream();
-                outStream.write(response);
-                outStream.flush();
-                socket.close();
-                break;
-            } catch (IOException e) {
-                retry++;
-            }
-        }
     }
 }

@@ -49,9 +49,10 @@ function submitChatMessage(event) {
     chatForm.reset();
 }
 
-ws.onopen = function () {
+ws.onopen = function (event) {
     isConnected = true;
     console.log("Connection established");
+    console.log(event);
 };
 
 
