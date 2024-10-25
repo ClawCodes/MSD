@@ -25,7 +25,8 @@ public class WebSocketHandler extends MessageHandler {
             if (opcode == 0x8) {
                 throw new Exception("connection closed");
             }
-            boolean masked = (header[1] & 0x80) != 0; // TODO: determine if needed
+
+            boolean masked = (header[1] & 0x80) != 0;
 
             long len = header[1] & 0x7F;
 
@@ -37,11 +38,16 @@ public class WebSocketHandler extends MessageHandler {
                 len = inputStream.readInt();
             }
 
-            byte[] mask = inputStream.readNBytes(4);
+            byte[] mask = new byte[4];
+            if (masked){
+                mask = inputStream.readNBytes(4);
+            }
             byte[] message = inputStream.readNBytes((int) len);
 
-            for (int i = 0; i < len; i++) {
-                message[i] ^= mask[i % 4];
+            if (masked) {
+                for (int i = 0; i < len; i++) {
+                    message[i] ^= mask[i % 4];
+                }
             }
 
             return new String(message);
@@ -56,7 +62,7 @@ public class WebSocketHandler extends MessageHandler {
         while (true) {
             if (inStream.available() > 0) {
                 String message = readFrame(inStream);
-                System.out.println(message);
+
             }
 
         }
