@@ -2,16 +2,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.spec.InvalidParameterSpecException;
 
 import static java.lang.Math.pow;
 
 public class WebSocketHandler extends MessageHandler {
     WebSocketHandler(Socket socket) {
         super(socket);
-    }
-
-    // TODO: implement pong response
-    public void pong() {
     }
 
     public static String readFrame(DataInputStream inputStream) {
@@ -82,17 +79,64 @@ public class WebSocketHandler extends MessageHandler {
         return outStream.toByteArray();
     }
 
+    public void sendPayload(String payload) {
+        try {
+            sendResponse(createFrame(payload));
+        } catch (IOException e) {
+            System.out.println("Failed to send payload.");
+            e.printStackTrace();
+        }
+    }
+
     public void keepAlive() throws IOException {
         DataInputStream inStream = new DataInputStream(socket_.getInputStream());
-        while (true) {
+        boolean connected = true;
+        while (connected) {
             if (inStream.available() > 0) {
                 String message = readFrame(inStream);
+                String[] splitMsg = message.split(" ", 1);
 
-                // TODO: REMOVE DEBUG STATEMENTS
-                System.out.println(message);
-                sendResponse(createFrame("{\"Hello\": \"from server\"}"));
+                switch (splitMsg[0]) { // splitMsg[0] is the type of message
+                    case "join":
+                        String[] userAndRoom = splitMsg[1].split(" ");
+                        setRoom(userAndRoom[0]);
+                        try {
+                            setUser(userAndRoom[1]);
+                            Message jsonMessage = new Message("join", userName_, room_);
+                            sendPayload(jsonMessage.toString());
+                        } catch (InvalidParameterSpecException e) {
+                            e.printStackTrace(); // TODO: send message to client that userName is already set?
+                        }
+                        break;
+                    case "leave":
+                        // TODO: send close op code and break loop
+                        connected = false;
+                    case "message":
+                        Message jsonMessage = new Message("message", userName_, room_, splitMsg[1]);
+                        RoomManager.sendMessage(room_, jsonMessage.toString(), userName_);
+                        break;
+                }
             }
 
         }
     }
+
+    public void setUser(String name) throws InvalidParameterSpecException {
+        if (userName_ != null | userName_ != name){
+            throw new InvalidParameterSpecException("The connection's user name has already been set!");
+        }
+        userName_ = name;
+    }
+
+    public void setRoom(String room){
+        room_ = room;
+        RoomManager.addRoom(room, this);
+    }
+
+    public String getUser(){
+        return userName_;
+    }
+
+    String room_;
+    String userName_;
 }

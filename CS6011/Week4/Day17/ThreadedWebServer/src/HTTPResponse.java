@@ -62,13 +62,14 @@ public class HTTPResponse {
     }
 
     public static byte[] fetchResource(String resourceName) throws IOException {
-            byte[] contentBytes = readFile(resourceName);
-            String contentType = determineContentType(resourceName);
-            String responseHeader = create202(contentType, contentBytes.length);
-            // Concat header and file contents into single byte array
-            ByteArrayOutputStream response = new ByteArrayOutputStream();
-            response.write(responseHeader.getBytes());
-            response.write(contentBytes);
-            return response.toByteArray();
+        byte[] contentBytes = readFile(resourceName);
+        String contentType = determineContentType(resourceName);
+        String responseHeader = create202(contentType, contentBytes.length);
+        System.out.println(responseHeader);
+        // Concat header and file contents into single byte array
+        ByteArrayOutputStream response = new ByteArrayOutputStream();
+        response.write(responseHeader.getBytes());
+        response.write(contentBytes);
+        return response.toByteArray();
     }
 }

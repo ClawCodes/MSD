@@ -8,8 +8,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static java.lang.Math.pow;
-
 class WebSocketHandlerTest {
     @Test
     public void testreadFrameBaseLengthMasked() {
