@@ -2,6 +2,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidParameterException;
 import java.security.spec.InvalidParameterSpecException;
 
 import static java.lang.Math.pow;
@@ -53,10 +54,15 @@ public class WebSocketHandler extends MessageHandler {
         }
     }
 
-    public static byte[] createFrame(String payload) throws IOException {
+    public static byte[] createFrame(String payload, int opcode) throws IOException {
+        if (opcode > 8) {
+            throw new InvalidParameterException("Opcodes must fall in the range 0-8.");
+        }
+
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
-        byte FIN_Opcode = (byte)0x81;
+//        byte FIN_Opcode = (byte)0x81;
+        byte FIN_Opcode = (byte) ((byte)0x80 | opcode);
         outStream.write(FIN_Opcode);
 
         // TODO: only returns int. Should I ever expected longer text as the frame allows?
@@ -79,13 +85,21 @@ public class WebSocketHandler extends MessageHandler {
         return outStream.toByteArray();
     }
 
-    public void sendPayload(String payload) {
+    public void sendPayload(String payload, int opcode) {
         try {
-            sendResponse(createFrame(payload));
+            sendResponse(createFrame(payload, opcode));
         } catch (IOException e) {
             System.out.println("Failed to send payload.");
             e.printStackTrace();
         }
+    }
+
+    public void sendText(String text) {
+        sendPayload(text, 1);
+    }
+
+    public void closeConnection(String message){
+        sendPayload(message, 8);
     }
 
     public void keepAlive() throws IOException {
@@ -94,8 +108,8 @@ public class WebSocketHandler extends MessageHandler {
         while (connected) {
             if (inStream.available() > 0) {
                 String message = readFrame(inStream);
-                String[] splitMsg = message.split(" ", 1);
-
+                String[] splitMsg = message.split(" ", 2);
+                System.out.println(splitMsg[0]);
                 switch (splitMsg[0]) { // splitMsg[0] is the type of message
                     case "join":
                         String[] userAndRoom = splitMsg[1].split(" ");
@@ -103,13 +117,13 @@ public class WebSocketHandler extends MessageHandler {
                         try {
                             setUser(userAndRoom[1]);
                             Message jsonMessage = new Message("join", userName_, room_);
-                            sendPayload(jsonMessage.toString());
+                            sendText(jsonMessage.toString());
                         } catch (InvalidParameterSpecException e) {
                             e.printStackTrace(); // TODO: send message to client that userName is already set?
                         }
                         break;
                     case "leave":
-                        // TODO: send close op code and break loop
+                        closeConnection("Closing connection from client request.");
                         connected = false;
                     case "message":
                         Message jsonMessage = new Message("message", userName_, room_, splitMsg[1]);
