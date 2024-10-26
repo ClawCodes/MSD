@@ -2,10 +2,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.security.InvalidParameterException;
 import java.security.spec.InvalidParameterSpecException;
 
 import static java.lang.Math.pow;
+
 
 public class WebSocketHandler extends MessageHandler {
     WebSocketHandler(Socket socket) {
@@ -36,7 +36,7 @@ public class WebSocketHandler extends MessageHandler {
             }
 
             byte[] mask = new byte[4];
-            if (masked){
+            if (masked) {
                 mask = inputStream.readNBytes(4);
             }
             byte[] message = inputStream.readNBytes((int) len);
@@ -54,28 +54,25 @@ public class WebSocketHandler extends MessageHandler {
         }
     }
 
-    public static byte[] createFrame(String payload, int opcode) throws IOException {
-        if (opcode > 8) {
-            throw new InvalidParameterException("Opcodes must fall in the range 0-8.");
-        }
-
+    public static byte[] createFrame(String payload, OpCode opcode) throws IOException {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
 //        byte FIN_Opcode = (byte)0x81;
-        byte FIN_Opcode = (byte) ((byte)0x80 | opcode);
+        byte FIN_Opcode = (byte) (0x80 | opcode.getValue());
+        System.out.println(FIN_Opcode);
         outStream.write(FIN_Opcode);
 
         // TODO: only returns int. Should I ever expected longer text as the frame allows?
         // Java strings can only hold the same amount of chars as Integer.MAX_VALUE
         int payLen = payload.length();
 
-        if (payLen <= 125){
-            outStream.write((byte)payLen);
+        if (payLen <= 125) {
+            outStream.write((byte) payLen);
         } else if (payLen <= pow(2, 16) - 1) {
-            outStream.write((byte)126);
-            outStream.write((short)payLen);
+            outStream.write((byte) 126);
+            outStream.write((short) payLen);
         } else {
-            outStream.write((byte)127);
+            outStream.write((byte) 127);
             outStream.write(0); // Write zero first to fill 64 bit extended length
             outStream.write(payLen); // remaining 32 bits
         }
@@ -85,7 +82,7 @@ public class WebSocketHandler extends MessageHandler {
         return outStream.toByteArray();
     }
 
-    public void sendPayload(String payload, int opcode) {
+    public void sendPayload(String payload, OpCode opcode) {
         try {
             sendResponse(createFrame(payload, opcode));
         } catch (IOException e) {
@@ -95,11 +92,11 @@ public class WebSocketHandler extends MessageHandler {
     }
 
     public void sendText(String text) {
-        sendPayload(text, 1);
+        sendPayload(text, OpCode.TEXT);
     }
 
-    public void closeConnection(String message){
-        sendPayload(message, 8);
+    public void closeConnection(String message) {
+        sendPayload(message, OpCode.CLOSE);
     }
 
     public void keepAlive() throws IOException {
@@ -136,21 +133,22 @@ public class WebSocketHandler extends MessageHandler {
     }
 
     public void setUser(String name) throws InvalidParameterSpecException {
-        if (userName_ != null | userName_ != name){
+        if (userName_ == null) {
+            userName_ = name;
+        } else {
             throw new InvalidParameterSpecException("The connection's user name has already been set!");
         }
-        userName_ = name;
     }
 
-    public void setRoom(String room){
+    public void setRoom(String room) {
         room_ = room;
         RoomManager.addRoom(room, this);
     }
 
-    public String getUser(){
+    public String getUser() {
         return userName_;
     }
 
     String room_;
-    String userName_;
+    String userName_ = null;
 }

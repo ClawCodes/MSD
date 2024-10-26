@@ -88,7 +88,7 @@ class WebSocketHandlerTest {
         Arrays.fill(chars, (char) 'a');
         String payload = new String(chars);
 
-        byte[] inputFrame = WebSocketHandler.createFrame(payload, 1);
+        byte[] inputFrame = WebSocketHandler.createFrame(payload, OpCode.TEXT);
         DataInputStream s = new DataInputStream(new ByteArrayInputStream(inputFrame));
         String actual = WebSocketHandler.readFrame(s);
 
