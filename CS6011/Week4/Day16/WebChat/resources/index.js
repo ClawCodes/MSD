@@ -57,7 +57,6 @@ ws.onopen = function (event) {
 
 
 ws.onmessage = function (messageEvent) {
-    console.log(messageEvent.data);
     let message = JSON.parse(messageEvent.data);
     if (message.type === "join") {
         chatPage.style.display = "block";
@@ -66,6 +65,7 @@ ws.onmessage = function (messageEvent) {
         chatForm.addEventListener("submit", submitChatMessage);
     }
     if (message.type === "message") {
+        console.log(message);
         createLogEntry(message.message, message.user);
     }
 };
