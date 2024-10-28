@@ -27,7 +27,6 @@ public class WebSocketHandler extends MessageHandler {
             long len = header[1] & 0x7F;
 
             if (len == 126) {
-                // TODO: determine if this is right. The frame says unsigned 16 bit int, but shorts are signed.
                 len = inputStream.readShort();
             }
 
@@ -57,9 +56,8 @@ public class WebSocketHandler extends MessageHandler {
     public static byte[] createFrame(String payload, OpCode opcode) throws IOException {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
-//        byte FIN_Opcode = (byte)0x81;
         byte FIN_Opcode = (byte) (0x80 | opcode.getValue());
-        System.out.println(FIN_Opcode);
+//        System.out.println(String.format("%02X ", FIN_Opcode)); // TODO: ensure opcodes manipulated correctly
         outStream.write(FIN_Opcode);
 
         // TODO: only returns int. Should I ever expected longer text as the frame allows?
@@ -106,17 +104,16 @@ public class WebSocketHandler extends MessageHandler {
             if (inStream.available() > 0) {
                 String message = readFrame(inStream);
                 String[] splitMsg = message.split(" ", 2);
-                System.out.println(splitMsg[0]);
                 switch (splitMsg[0]) { // splitMsg[0] is the type of message
                     case "join":
                         String[] userAndRoom = splitMsg[1].split(" ");
-                        setRoom(userAndRoom[0]);
+                        setRoom(userAndRoom[1]);
                         try {
-                            setUser(userAndRoom[1]);
+                            setUser(userAndRoom[0]);
                             Message jsonMessage = new Message("join", userName_, room_);
                             sendText(jsonMessage.toString());
                         } catch (InvalidParameterSpecException e) {
-                            e.printStackTrace(); // TODO: send message to client that userName is already set?
+                            e.printStackTrace(); // TODO: send message to client that userName is already set? user alert and update on client side
                         }
                         break;
                     case "leave":
@@ -124,7 +121,7 @@ public class WebSocketHandler extends MessageHandler {
                         connected = false;
                     case "message":
                         Message jsonMessage = new Message("message", userName_, room_, splitMsg[1]);
-                        RoomManager.sendMessage(room_, jsonMessage.toString(), userName_);
+                        RoomManager.sendMessage(room_, jsonMessage.toString());
                         break;
                 }
             }

@@ -20,7 +20,6 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 Thread thread = new Thread(new ConnectionHandler(socket));
                 thread.start();
-//                thread.join(); // TODO: determine if this is needed after the websocket is closed
             } catch (IOException e) {
                 System.out.println("Unable to establish port connection.");
             }
