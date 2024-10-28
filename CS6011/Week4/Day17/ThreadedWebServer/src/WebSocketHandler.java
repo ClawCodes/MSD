@@ -57,7 +57,6 @@ public class WebSocketHandler extends MessageHandler {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
         byte FIN_Opcode = (byte) (0x80 | opcode.getValue());
-//        System.out.println(String.format("%02X ", FIN_Opcode)); // TODO: ensure opcodes manipulated correctly
         outStream.write(FIN_Opcode);
 
         // TODO: only returns int. Should I ever expected longer text as the frame allows?

@@ -98,6 +98,8 @@ function getUsernameAndPassword() {
 function leaveChatRoom(){
     chatPage.style.display = "none";
     homePage.style.display = "block";
+    // Window refresh
+    window.location.reload(); // TODO: confirm proper handeling
 }
 
 leave.addEventListener('click', leaveChatRoom);
