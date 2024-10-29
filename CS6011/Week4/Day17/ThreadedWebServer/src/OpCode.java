@@ -1,3 +1,6 @@
+/**
+ * Enum containing opCodes to use when creating a web socket frame
+ */
 public enum OpCode{
     CONTINUATION(0),
     TEXT(1),

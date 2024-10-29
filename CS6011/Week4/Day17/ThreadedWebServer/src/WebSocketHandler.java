@@ -7,11 +7,25 @@ import java.security.spec.InvalidParameterSpecException;
 import static java.lang.Math.pow;
 
 
+/**
+ * Class which manages the creation, maintenance, and communication of a web socket
+ */
 public class WebSocketHandler extends MessageHandler {
+    /**
+     * Constructor
+     * @param socket the socket used to communicate to a given client
+     */
     WebSocketHandler(Socket socket) {
         super(socket);
     }
 
+    /**
+     * Read a web socket message that is received from a client
+     *
+     * @param inputStream The inputStream to read the message from
+     * @return The web socket message as a string
+     * @throws Exception
+     */
     public static String readFrame(DataInputStream inputStream) throws Exception {
             byte[] header = inputStream.readNBytes(2);
 
@@ -48,6 +62,13 @@ public class WebSocketHandler extends MessageHandler {
             return new String(message);
     }
 
+    /**
+     * Create a web socket message to send to a clinet
+     * @param payload The message content
+     * @param opcode The opcode to include in the constructed frame
+     * @return The web socket from to send to the client as an array of bytes
+     * @throws IOException
+     */
     public static byte[] createFrame(String payload, OpCode opcode) throws IOException {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
@@ -74,6 +95,13 @@ public class WebSocketHandler extends MessageHandler {
         return outStream.toByteArray();
     }
 
+
+    /**
+     * Send a message to a client via a web socket message
+     * This method converts the payload into a web socket frame and sends the message to the client.
+     * @param payload The message to send
+     * @param opcode The opcode to add to the frame
+     */
     public void sendPayload(String payload, OpCode opcode) {
         try {
             sendResponse(createFrame(payload, opcode));
@@ -83,14 +111,27 @@ public class WebSocketHandler extends MessageHandler {
         }
     }
 
+    /**
+     * Send a websocket message containing text to a client
+     * @param text the message to send to the client
+     */
     public void sendText(String text) {
         sendPayload(text, OpCode.TEXT);
     }
 
+    /**
+     * Close the web socket with the client by sending a frame with the close opcode
+     * @param message message to include in the close request
+     */
     public void closeConnection(String message) {
         sendPayload(message, OpCode.CLOSE);
     }
 
+    /**
+     * Keep the Web socket connection a live and handle client-server communication.
+     * This method handles room creation, message sending between clients, and client connections.
+     * @throws IOException
+     */
     public void keepAlive() throws IOException {
         DataInputStream inStream = new DataInputStream(socket_.getInputStream());
         boolean connected = true;
