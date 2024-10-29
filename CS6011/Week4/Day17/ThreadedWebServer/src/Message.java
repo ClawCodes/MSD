@@ -4,6 +4,8 @@ import com.google.gson.Gson;
  * Class representing a standard JSON message to send back to clients connected with the server
  */
 public class Message {
+    // NOTE: some IDEs might show these member variables are not used, however,
+    // they are in the gson library in toString.
     private String type;
     private String user;
     private String room;
