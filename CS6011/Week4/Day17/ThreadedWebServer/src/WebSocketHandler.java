@@ -12,8 +12,7 @@ public class WebSocketHandler extends MessageHandler {
         super(socket);
     }
 
-    public static String readFrame(DataInputStream inputStream) {
-        try {
+    public static String readFrame(DataInputStream inputStream) throws Exception {
             byte[] header = inputStream.readNBytes(2);
 
             boolean fin = (header[0] & 0x80) > 0; // This should always be zero for us
@@ -47,10 +46,6 @@ public class WebSocketHandler extends MessageHandler {
             }
 
             return new String(message);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static byte[] createFrame(String payload, OpCode opcode) throws IOException {
@@ -101,7 +96,13 @@ public class WebSocketHandler extends MessageHandler {
         boolean connected = true;
         while (connected) {
             if (inStream.available() > 0) {
-                String message = readFrame(inStream);
+                String message;
+                try {
+                    message = readFrame(inStream);
+                } catch (Exception e){
+                    System.out.println("Failed to read frame.");
+                    continue;
+                }
                 String[] splitMsg = message.split(" ", 2);
                 switch (splitMsg[0]) { // splitMsg[0] is the type of message
                     case "join":

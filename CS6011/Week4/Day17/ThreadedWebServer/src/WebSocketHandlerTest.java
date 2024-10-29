@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 class WebSocketHandlerTest {
     @Test
-    public void testreadFrameBaseLengthMasked() {
+    public void testreadFrameBaseLengthMasked() throws Exception {
         // ASCII Hello: 0x48 0x65 0x6C 0x6C 0x6F
         // Mask key: 0x37FA213D
         byte[] inputFrame = new byte[] {
@@ -28,7 +28,7 @@ class WebSocketHandlerTest {
     }
 
     @Test
-    public void testreadFrameBaseLengthUnMasked() {
+    public void testreadFrameBaseLengthUnMasked() throws Exception {
         // ASCII Hello: 0x48 0x65 0x6C 0x6C 0x6F
         // Mask key: 0x37FA213D
         byte[] inputFrame = new byte[] {
@@ -45,7 +45,7 @@ class WebSocketHandlerTest {
     }
 
     @Test
-    public void testreadFrameSentence() {
+    public void testreadFrameSentence() throws Exception {
         byte[] inputFrame = new byte[] {
                 (byte)0x81, // FIN: 1, Opcode 0x1
                 (byte)0x8F, // Masked with payload of length 15 (i.e. "This is a test!")
@@ -64,7 +64,7 @@ class WebSocketHandlerTest {
 
     }
     @Test
-    public void testreadFrameSentenceUnMasked() {
+    public void testreadFrameSentenceUnMasked() throws Exception {
         byte[] inputFrame = new byte[] {
                 (byte)0x81, // FIN: 1, Opcode 0x1
                 (byte)0x0F, // Unasked with payload of length 15 (i.e. "This is a test!")
@@ -83,7 +83,7 @@ class WebSocketHandlerTest {
 
     @ParameterizedTest
     @ValueSource(ints = {5, 10}) // TODO: Fix 220 not parsing
-    public void testCreateFrame(int payloadLength) throws IOException {
+    public void testCreateFrame(int payloadLength) throws Exception {
         char[] chars = new char[payloadLength];
         Arrays.fill(chars, (char) 'a');
         String payload = new String(chars);

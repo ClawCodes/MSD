@@ -3,7 +3,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Class representing a client HTTP request
+ * This class contains a given requests' headers and their respective value along with the
+ * requests' method and requested resource
+ *
+ */
 public class HTTPRequest {
+    /**
+     * Constructor:
+     * Reads and parses an HTTP request from a socket input stream.
+     * @param inputStream socket InputStream to read the request from
+     */
     HTTPRequest(InputStream inputStream) {
         try {
             Scanner scanner = new Scanner(inputStream);
@@ -30,6 +41,11 @@ public class HTTPRequest {
         }
     }
 
+    /**
+     * Parse the first line of an HTTP request and store the HTTP method and the requested resource name
+     * @param line first line of HTTP response (e.g. GET /index.html HTTP/1.1)
+     * @throws IllegalArgumentException
+     */
     private void parseFirstLine(String line) throws IllegalArgumentException{
         String[] splitLine = line.split(" ");
 
@@ -45,10 +61,20 @@ public class HTTPRequest {
         return resource_;
     }
 
+    /**
+     * Check if a given header is contained in the parsed HTTP request
+     * @param header header string to check for
+     * @return true if header exists, otherwise false.
+     */
     public boolean hasHeader(String header){
         return headers_.containsKey(header);
     }
 
+    /**
+     * Get the value of a header contained in the HTTP request
+     * @param header header to fetch the value of
+     * @return the value of the header
+     */
     public String getHeaderValue(String header){
         return headers_.get(header);
     }
