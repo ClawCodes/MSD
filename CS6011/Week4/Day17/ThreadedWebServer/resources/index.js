@@ -26,7 +26,6 @@ function createLogEntry(message, user) {
     messageBlock.innerHTML = message;
     messageDiv.appendChild(messageBlock);
 
-    // TODO: meta info not showing
     let messageMeta = document.createElement("div");
     messageMeta.className = "message-meta";
     let messageUser = document.createElement("span");

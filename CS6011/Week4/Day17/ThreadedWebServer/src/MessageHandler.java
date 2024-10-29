@@ -2,7 +2,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Class providing functionality to send a message to a connected client with an open socket
+ */
 public class MessageHandler {
+    /**
+     * Constructor
+     * @param socket The respective client's socket
+     */
     MessageHandler(Socket socket) {
         socket_ = socket;
     }
@@ -15,6 +22,10 @@ public class MessageHandler {
         }
     }
 
+    /**
+     * Send a message to a client
+     * @param response message to send to client using the provided socket
+     */
     void sendResponse(byte[] response) {
         int retry = 0;
         while (retry < 3) {
