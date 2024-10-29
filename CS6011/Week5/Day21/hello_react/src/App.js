@@ -10,8 +10,8 @@ function App() {
 
   function addItem(textAreaRef){
     // Used to be
-    // items.push(textAreaRef.current.value); 
-    // setItems(items);
+    // items.push(textAreaRef.current.value);
+    // setItems(items); // Why did this update on delete?
     setItems([...items, textAreaRef.current.value]);
   };
 
