@@ -65,7 +65,6 @@ public class HTTPResponse {
         byte[] contentBytes = readFile(resourceName);
         String contentType = determineContentType(resourceName);
         String responseHeader = create202(contentType, contentBytes.length);
-        System.out.println(responseHeader);
         // Concat header and file contents into single byte array
         ByteArrayOutputStream response = new ByteArrayOutputStream();
         response.write(responseHeader.getBytes());

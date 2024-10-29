@@ -112,12 +112,13 @@ public class WebSocketHandler extends MessageHandler {
                             Message jsonMessage = new Message("join", userName_, room_);
                             sendText(jsonMessage.toString());
                         } catch (InvalidParameterSpecException e) {
-                            e.printStackTrace(); // TODO: send message to client that userName is already set? user alert and update on client side
+                            e.printStackTrace();
                         }
                         break;
                     case "leave":
                         closeConnection("Closing connection from client request.");
                         connected = false;
+                        break;
                     case "message":
                         Message jsonMessage = new Message("message", userName_, room_, splitMsg[1]);
                         RoomManager.sendMessage(room_, jsonMessage.toString());
@@ -139,10 +140,6 @@ public class WebSocketHandler extends MessageHandler {
     public void setRoom(String room) {
         room_ = room;
         RoomManager.addRoom(room, this);
-    }
-
-    public String getUser() {
-        return userName_;
     }
 
     String room_;

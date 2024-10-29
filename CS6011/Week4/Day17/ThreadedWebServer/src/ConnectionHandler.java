@@ -14,7 +14,6 @@ public class ConnectionHandler extends MessageHandler implements Runnable {
             HTTPRequest requestHandler = new HTTPRequest(socket_.getInputStream());
             if (requestHandler.hasHeader("Sec-WebSocket-Key")) {
                 String clientKey = requestHandler.getHeaderValue("Sec-WebSocket-Key");
-                System.out.println(clientKey);
                 sendResponse(HTTPResponse.createWebSocketResponse(clientKey).getBytes());
                 WebSocketHandler wsHandler = new WebSocketHandler(socket_);
                 wsHandler.keepAlive();
