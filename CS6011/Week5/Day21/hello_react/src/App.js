@@ -9,8 +9,10 @@ function App() {
   const [items, setItems] = useState(["item1", "item2"]);
 
   function addItem(textAreaRef){
-    items.push(textAreaRef.current.value)
-    setItems(items);
+    // Used to be
+    // items.push(textAreaRef.current.value); 
+    // setItems(items);
+    setItems([...items, textAreaRef.current.value]);
   };
 
   function deleteItem(index) {
