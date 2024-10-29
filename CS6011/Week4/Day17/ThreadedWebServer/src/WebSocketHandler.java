@@ -63,7 +63,7 @@ public class WebSocketHandler extends MessageHandler {
     }
 
     /**
-     * Create a web socket message to send to a clinet
+     * Create a web socket message to send to a client
      * @param payload The message content
      * @param opcode The opcode to include in the constructed frame
      * @return The web socket from to send to the client as an array of bytes
@@ -75,8 +75,7 @@ public class WebSocketHandler extends MessageHandler {
         byte FIN_Opcode = (byte) (0x80 | opcode.getValue());
         outStream.write(FIN_Opcode);
 
-        // TODO: only returns int. Should I ever expected longer text as the frame allows?
-        // Java strings can only hold the same amount of chars as Integer.MAX_VALUE
+        // NOTE: Java strings can only hold the same amount of chars as Integer.MAX_VALUE (i.e. 32 bits)
         int payLen = payload.length();
 
         if (payLen <= 125) {

@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 
 class WebSocketHandlerTest {
@@ -30,11 +29,10 @@ class WebSocketHandlerTest {
     @Test
     public void testreadFrameBaseLengthUnMasked() throws Exception {
         // ASCII Hello: 0x48 0x65 0x6C 0x6C 0x6F
-        // Mask key: 0x37FA213D
         byte[] inputFrame = new byte[] {
                 (byte)0x81, // FIN: 1, Opcode 0x1
                 (byte)0x05, // Unasked with payload of length 5 (i.e. "Hello")
-                (byte)0x48, (byte)0x65, (byte)0x6C, (byte)0x6C, (byte)0x6F // Masked payload
+                (byte)0x48, (byte)0x65, (byte)0x6C, (byte)0x6C, (byte)0x6F // Unmasked payload
         };
 
         DataInputStream inStream =  new DataInputStream(new ByteArrayInputStream(inputFrame));
@@ -68,7 +66,6 @@ class WebSocketHandlerTest {
         byte[] inputFrame = new byte[] {
                 (byte)0x81, // FIN: 1, Opcode 0x1
                 (byte)0x0F, // Unasked with payload of length 15 (i.e. "This is a test!")
-                // Masked sentence ("This is a test!")
                 (byte)0x54, (byte)0x68, (byte)0x69, (byte)0x73, (byte)0x20,
                 (byte)0x69, (byte)0x73, (byte)0x20, (byte)0x61, (byte)0x20,
                 (byte)0x74, (byte)0x65, (byte)0x73, (byte)0x74, (byte)0x21
@@ -82,7 +79,7 @@ class WebSocketHandlerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {5, 10}) // TODO: Fix 220 not parsing
+    @ValueSource(ints = {5, 10, 220}) // FIXME: 220 not parsing
     public void testCreateFrame(int payloadLength) throws Exception {
         char[] chars = new char[payloadLength];
         Arrays.fill(chars, (char) 'a');
