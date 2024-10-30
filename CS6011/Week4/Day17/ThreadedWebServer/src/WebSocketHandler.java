@@ -139,6 +139,7 @@ public class WebSocketHandler extends MessageHandler {
                 String message;
                 try {
                     message = readFrame(inStream);
+                    System.out.println("RECIEVED: " + message);
                 } catch (Exception e){
                     System.out.println("Failed to read frame.");
                     continue;
@@ -161,6 +162,7 @@ public class WebSocketHandler extends MessageHandler {
                         connected = false;
                         break;
                     case "message":
+                        System.out.println("Managing message for: " + userName_ + " in " + room_);
                         Message jsonMessage = new Message("message", userName_, room_, splitMsg[1]);
                         RoomManager.sendMessage(room_, jsonMessage.toString());
                         break;
