@@ -10,7 +10,7 @@ let formMessage = document.getElementById("chat-message");
 let chatLog = document.getElementById("chat-log");
 
 // Establish websocket
-let ws = new WebSocket("ws://localhost:8080");
+let ws = new WebSocket("ws://localhost:8088");
 let isConnected = false;
 
 let userName;

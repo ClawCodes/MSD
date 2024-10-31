@@ -17,7 +17,7 @@ function App() {
   const connection = useRef(null);
   
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket("ws://localhost:8088");
     
     ws.addEventListener("open", (event) =>{
       console.log("Connection established");

@@ -11,6 +11,7 @@ function App() {
   const chatRoom = useRef(""); // to store the room name persistently
   const connection = useRef(null);
 
+
   useEffect(() => {
     const ws = new WebSocket("ws://10.0.2.2:8088");
 
