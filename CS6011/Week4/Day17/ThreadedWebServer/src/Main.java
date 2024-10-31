@@ -7,7 +7,7 @@ public class Main {
      * Start server and access on port 8080/index.html
      */
     public static void main(String[] args) throws IOException {
-        Server server = new Server(8080);
+        Server server = new Server(8088);
         server.start();
     }
 }
