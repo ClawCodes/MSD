@@ -11,7 +11,7 @@
    4. The unimplemented test is returning `0` which happens to be what the `allArrayElementsEqual` expects the output to be
 
 4. Why are we failing the third test? How should our method be modified to correct this?
-   5. We are failing the third test because we are not looking at the absolute value, so the smallest diff we find is -8 due to the negative number and not the absolute diff which should be 4.
+   5. We are failing the third test because we are not looking at the absolute value of the difference, so the smallest diff we find is -8 due to the comparison being <previous element> - <following element>. When we reach -8, the previous element is -8 and the following element is 0.
 
 5. What is the appropriate call to assertEquals for your new test (test 4)?
    6. My new test is asserting the smallest diff is found between the starting two elements in the array. Since the starting element is `0` and the following element is `1`, then I expect the output to be `1` resulting in the testing body to be `assertEquals(1, DiffUtil.findSmallestDiff(arr4)`.

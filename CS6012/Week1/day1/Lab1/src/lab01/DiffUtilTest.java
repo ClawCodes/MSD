@@ -20,6 +20,7 @@ class TestFindSmallestDiff {
         arr3 = new int[] { 52, 4, -8, 0, -17 };
         arr4 = new int[] {0, 1, 4, 10, 20}; // smallest diff at the start
         arr5 = new int[] {4, 10, 20, 0, 1}; // smallest diff at the end
+        arr5 = new int[] {0, 10, 20, 4, 1}; // smallest diff at the end
     }
 
     @AfterEach
@@ -47,5 +48,44 @@ class TestFindSmallestDiff {
     }
 
     @Test
-    public void smallestDiffWthStartAndEndElements() {}
+    public void smallestDiffAtStartingElements() {assertEquals(1, DiffUtil.findSmallestDiff(arr4));}
+
+    @Test
+    public void smallestDiffAtEndingElements() {assertEquals(1, DiffUtil.findSmallestDiff(arr5));}
+
+    @Test
+    public void smallestElementsBetweenStartAndEndElements() {
+        int[] arrUnderTest = new int[] { 0, 6, 10, 90, 1 };
+        assertEquals(1, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
+
+    @Test
+    public void repeatedSmallestDiff() {
+        int[] arrUnderTest = new int[] { 0, 1, 0, 1, 0, 1 };
+        assertEquals(0, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
+
+    @Test
+    public void ascendingOrder() {
+        int[] arrUnderTest = new int[] { 0, 1, 2, 3, 4, 5 };
+        assertEquals(1, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
+
+    @Test
+    public void descendingOrder() {
+        int[] arrUnderTest = new int[] { 5, 4, 3, 2, 1, 0};
+        assertEquals(1, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
+
+    @Test
+    public void allNegative() {
+        int[] arrUnderTest = new int[] { -5, -4, -3, -2, -1, -0};
+        assertEquals(1, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
+
+    @Test
+    public void singleElement() {
+        int[] arrUnderTest = new int[] {0};
+        assertEquals(-1, DiffUtil.findSmallestDiff(arrUnderTest));
+    }
 }
