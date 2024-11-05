@@ -20,3 +20,4 @@
    7. My new test is asserting the smallest diff is found between the ending two elements in the array. Since the ending element is `1` and the second to last element is `1`, then I expect the output to be `1` resulting in the testing body to be `assertEquals(1, DiffUtil.findSmallestDiff(arr4)`.
 
 7. Briefly describe your unit tests for Assignment 1.
+   8. 
