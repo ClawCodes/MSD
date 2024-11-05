@@ -90,10 +90,12 @@ public class GrayscaleImage {
      * @throws IllegalArgumentException if x, y are not within the image width/height
      */
     public double getPixel(int x, int y) throws IllegalArgumentException{
-        if (x < 0 || x >= imageData.length || y < 0 || y >= imageData[0].length) {
+        // TODO: determine if negative indexes should be supported. Doc string and testGetPixelThrowsOnNegativeX test are contradictory.
+        if (x < 0 || x >= imageData[0].length || y < 0 || y >= imageData.length) {
             throw new IllegalArgumentException("Pixel out of bounds");
         }
-       return imageData[y][x];
+
+       return  imageData[y][x];
     }
 
     /**
@@ -147,6 +149,12 @@ public class GrayscaleImage {
      * @return a GrayScale image with pixel data uniformly rescaled so that its averageBrightness() is 127
      */
     public GrayscaleImage normalized(){
+        double avgBrightness = averageBrightness();
+        // If the average is zero then return a copy of this image as the "scaled" from will still be 0
+        if (avgBrightness == 0){
+            return new GrayscaleImage(imageData);
+        }
+
         double scale = 127 / averageBrightness();
 
         double[][] scaledArr = new double[imageData.length][imageData[0].length];
@@ -171,7 +179,7 @@ public class GrayscaleImage {
 
         for (int i = 0; i < imageData.length; i++) {
             for (int j = 0; j < imageData[0].length; j++) {
-                reversedArr[i][j] = imageData[i][imageData.length - 1 - j];
+                reversedArr[i][j] = imageData[i][imageData[0].length - 1 - j];
             }
         }
 
@@ -184,8 +192,8 @@ public class GrayscaleImage {
      * The original image should be unmodified
      * @param startRow zero-based index of this image's row to begin cropping
      * @param startCol zero-based index of this image's column to begin cropping
-     * @param width non-zero based width of the desired cropped image
-     * @param height non-zero based height of the desired cropped image
+     * @param width non-zero-based width of the desired cropped image
+     * @param height non-zero-based height of the desired cropped image
      * @return A new GrayscaleImage containing the sub-image in the specified rectangle
      * @throws IllegalArgumentException if the specified rectangle goes outside the bounds of the original image
      */
@@ -234,5 +242,15 @@ public class GrayscaleImage {
         }
     }
 
+    public double[][] getData(){
+        return imageData;
+    }
 
+    public int width(){
+        return imageData[0].length;
+    }
+
+    public int height(){
+        return imageData.length;
+    }
 }
