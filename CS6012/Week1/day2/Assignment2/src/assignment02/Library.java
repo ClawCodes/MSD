@@ -40,7 +40,7 @@ public class Library<Type> {
    *          -- list of library books to be added
    */
   public void addAll(ArrayList<LibraryBook<Type>> list) {
-    library.addAll((Collection<? extends LibraryBook<Type>>) list);
+    library.addAll(list);
   }
 
   /**
@@ -106,7 +106,7 @@ public class Library<Type> {
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
       if (book.getIsbn() == isbn) {
-        return (Type) book.getHolder(); // can return null when book is not checked out
+        return book.getHolder(); // can return null when book is not checked out
       }
     }
     return null;
