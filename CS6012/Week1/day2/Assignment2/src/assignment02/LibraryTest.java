@@ -241,4 +241,13 @@ class LibraryTest {
 //        assertTrue(lib.checkin(patron2));
 //
 //    }
+
+    @Test
+    public void getInventoryListReturnsCopy() {
+        // TODO: START HERE
+        Library<String> lib = new Library<>();
+        lib.add(0000000000001L, "A1", "B1");
+        lib.add(0000000000002L, "A2", "B2");
+        lib.add(0000000000003L, "A3", "B3");
+    }
 }
