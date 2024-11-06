@@ -24,7 +24,7 @@ class LibraryTest {
     @Test
     public void testNonEmpty() {
 
-        var lib = new Library();
+        var lib = new Library<String>();
         // test a small library
         lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
         lib.add(9780330351690L, "Jon Krakauer", "Into the Wild");
@@ -36,7 +36,7 @@ class LibraryTest {
         var booksCheckedOut = lib.lookup("Jane Doe");
         assertEquals(booksCheckedOut.size(), 1);
         assertEquals(booksCheckedOut.get(0),new Book(9780330351690L, "Jon Krakauer", "Into the Wild"));
-        assertEquals(booksCheckedOut.get(0).getHolder(), "Jane Doe");
+        assertEquals( (booksCheckedOut.get(0)).getHolder(), "Jane Doe");
         assertEquals(booksCheckedOut.get(0).getDueDate(),new GregorianCalendar(2008, 1, 1));
         res = lib.checkin(9780330351690L);
         assertTrue(res);
@@ -47,10 +47,10 @@ class LibraryTest {
     @Test
     public void testLargeLibrary(){
         // test a medium library
-        var lib = new Library();
+        var lib = new Library<String>();
         lib.addAll("Mushroom_Publishing.txt");
 
-        ArrayList<LibraryBook> allBooks = lib.getAllbooks();
+        ArrayList<LibraryBook<String>> allBooks = lib.getAllbooks();
         assertEquals(23, allBooks.size());
 
         long firstISBN = 9781843190004L;
@@ -61,7 +61,7 @@ class LibraryTest {
         assertEquals(lastISBN, allBooks.getLast().getIsbn());
         assertNull(lib.lookup(lastISBN));
 
-        for (LibraryBook book : allBooks) {
+        for (LibraryBook<String> book : allBooks) {
             assertFalse(book.isCheckoutOut());
             assertNull(book.getHolder());
             assertNull(book.getDueDate());
@@ -70,7 +70,7 @@ class LibraryTest {
         // Test checkout process
         String testHolder = "Test Holder";
 
-        ArrayList<LibraryBook> booksCheckedOut = lib.lookup(testHolder);
+        ArrayList<LibraryBook<String>> booksCheckedOut = lib.lookup(testHolder);
         assertTrue(booksCheckedOut.isEmpty());
 
         assertTrue(lib.checkout(firstISBN, testHolder, 1, 20, 2008));
@@ -83,16 +83,16 @@ class LibraryTest {
         // Test correct books were checkout out
         booksCheckedOut = lib.lookup(testHolder);
         assertEquals(booksCheckedOut.size(), 2);
-        assertEquals(booksCheckedOut.getFirst(), new LibraryBook(firstISBN, "Moyra Caldecott", "Weapons of the Wolfhound"));
+        assertEquals(booksCheckedOut.getFirst(), new LibraryBook<String>(firstISBN, "Moyra Caldecott", "Weapons of the Wolfhound"));
         assertEquals(booksCheckedOut.getFirst().getIsbn(), firstISBN);
         assertEquals(booksCheckedOut.getFirst().getHolder(), testHolder);
-        assertEquals(booksCheckedOut.getLast(), new LibraryBook(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
+        assertEquals(booksCheckedOut.getLast(), new LibraryBook<String>(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
         assertEquals(booksCheckedOut.getLast().getIsbn(), lastISBN);
         assertEquals(booksCheckedOut.getLast().getHolder(), testHolder);
 
         // Ensure only the above books were checked out
         int nCheckedOut = 0;
-        for (LibraryBook book : allBooks) {
+        for (LibraryBook<String> book : allBooks) {
             if (book.isCheckoutOut()) {
                 nCheckedOut++;
             }
@@ -104,7 +104,7 @@ class LibraryTest {
         // Ensure only one book was checked out and one remains checked in
         int numCheckedOut = 0;
         int nBooks = 0;
-        for (LibraryBook book : lib.getAllbooks()) {
+        for (LibraryBook<String> book : lib.getAllbooks()) {
             if (book.isCheckoutOut()) {
                 numCheckedOut++;
             }
@@ -113,17 +113,17 @@ class LibraryTest {
         assertEquals(1, numCheckedOut);
         assertEquals(23, nBooks);
         assertNull(lib.lookup(firstISBN));
-        var holdersBooks = lib.lookup(testHolder);
+        ArrayList<LibraryBook<String>> holdersBooks = lib.lookup(testHolder);
         assertEquals(1, holdersBooks.size());
         // Ensure only the lastISBN book remains
-        assertEquals(lastISBN, holdersBooks.get(0).getIsbn());
-        assertEquals(holdersBooks.getFirst(), new LibraryBook(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
+        assertEquals(lastISBN, holdersBooks.getFirst().getIsbn());
+        assertEquals(holdersBooks.getFirst(), new LibraryBook<String>(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
 
         // Checking last ISBN
         assertTrue(lib.checkin(lastISBN));
         numCheckedOut = 0;
         nBooks = 0;
-        for (LibraryBook book : lib.getAllbooks()) {
+        for (LibraryBook<String> book : lib.getAllbooks()) {
             if (book.isCheckoutOut()) {
                 numCheckedOut++;
             }
@@ -143,7 +143,7 @@ class LibraryTest {
 
         numCheckedOut = 0;
         nBooks = 0;
-        for (LibraryBook book : lib.getAllbooks()) {
+        for (LibraryBook<String> book : lib.getAllbooks()) {
             if (book.isCheckoutOut()) {
                 numCheckedOut++;
             }
@@ -153,16 +153,16 @@ class LibraryTest {
         assertEquals(23, nBooks);
         holdersBooks = lib.lookup(testHolder);
         assertEquals(4, holdersBooks.size());
-        assertEquals(holdersBooks.getFirst(), new LibraryBook(firstISBN, "Moyra Caldecott", "Weapons of the Wolfhound"));
-        assertEquals(holdersBooks.get(1), new LibraryBook(9781843190110L, "David Meade Betts", "Breaking the Gaze"));
-        assertEquals(holdersBooks.get(2), new LibraryBook(9781843190516L, "Daniel Wyatt", "The Fuehrermaster"));
-        assertEquals(holdersBooks.getLast(), new LibraryBook(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
+        assertEquals(holdersBooks.getFirst(), new LibraryBook<String>(firstISBN, "Moyra Caldecott", "Weapons of the Wolfhound"));
+        assertEquals(holdersBooks.get(1), new LibraryBook<String>(9781843190110L, "David Meade Betts", "Breaking the Gaze"));
+        assertEquals(holdersBooks.get(2), new LibraryBook<String>(9781843190516L, "Daniel Wyatt", "The Fuehrermaster"));
+        assertEquals(holdersBooks.getLast(), new LibraryBook<String>(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
 
         // Checkin by holder
         assertTrue(lib.checkin(testHolder));
         numCheckedOut = 0;
         nBooks = 0;
-        for (LibraryBook book : lib.getAllbooks()) {
+        for (LibraryBook<String> book : lib.getAllbooks()) {
             if (book.isCheckoutOut()) {
                 numCheckedOut++;
             }
@@ -179,7 +179,7 @@ class LibraryTest {
         // Ensure library remains intact
         numCheckedOut = 0;
         nBooks = 0;
-        for (LibraryBook book : lib.getAllbooks()) {
+        for (LibraryBook<String> book : lib.getAllbooks()) {
             if (book.isCheckoutOut()) {
                 numCheckedOut++;
             }
@@ -188,5 +188,4 @@ class LibraryTest {
         assertEquals(0, numCheckedOut);
         assertEquals(23, nBooks);
     }
-
 }
