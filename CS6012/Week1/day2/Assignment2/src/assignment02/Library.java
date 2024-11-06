@@ -102,7 +102,11 @@ public class Library {
    *          -- ISBN of the book to be looked up
    */
   public String lookup(long isbn) {
-    // FILL IN -- do not return null unless appropriate
+    for (LibraryBook book : library) {
+      if (book.getIsbn() == isbn) {
+        return book.getHolder(); // can return null when book is not checked out
+      }
+    }
     return null;
   }
 
@@ -115,8 +119,13 @@ public class Library {
    *          -- holder whose checked out books are returned
    */
   public ArrayList<LibraryBook> lookup(String holder) {
-    // FILL IN -- do not return null
-    return null;
+    ArrayList<LibraryBook> checkedOut = new ArrayList<>();
+    for (LibraryBook book : library) {
+      if (book.isCheckoutOut() && book.getHolder().equals(holder)) {
+        checkedOut.add(book);
+      }
+    }
+    return checkedOut;
   }
 
   /**
@@ -141,8 +150,17 @@ public class Library {
    * 
    */
   public boolean checkout(long isbn, String holder, int month, int day, int year) {
-    // FILL IN -- do not return false unless appropriate
-    return false;
+    for (LibraryBook book : library) {
+      if (book.getIsbn() == isbn) {
+        if (book.isCheckoutOut()) {
+          return false;
+        } else {
+          book.checkOut(holder, year, month, day);
+          return true;
+        }
+      }
+    }
+    return false; // isbn not found
   }
 
   /**
@@ -158,7 +176,16 @@ public class Library {
    *          -- ISBN of the library book to be checked in
    */
   public boolean checkin(long isbn) {
-    // FILL IN -- do not return false unless appropriate
+    for (LibraryBook book : library) {
+      if (book.getIsbn() == isbn) {
+        if (book.isCheckoutOut()) {
+          book.checkIn();
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
     return false;
   }
 
@@ -174,7 +201,17 @@ public class Library {
    *          -- holder of the library books to be checked in
    */
   public boolean checkin(String holder) {
-    // FILL IN -- do not return false unless appropriate
-    return false;
+    boolean hasBooks = false;
+    for (LibraryBook book : library) {
+      if (book.isCheckoutOut() && book.getHolder().equals(holder)) {
+        book.checkIn();
+        hasBooks = true;
+      }
+    }
+    return hasBooks;
+  }
+
+  public ArrayList<LibraryBook> getAllbooks(){
+    return library;
   }
 }

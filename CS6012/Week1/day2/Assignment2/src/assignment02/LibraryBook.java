@@ -26,14 +26,18 @@ public class LibraryBook extends Book {
         return holder;
     }
 
-    public void checkIn(String holder, int year, int month, int day){
+    public void checkOut(String holder, int year, int month, int day){
         setDueDate(year, month, day);
         setHolder(holder);
     }
 
-    public void checkOut(){
+    public void checkIn(){
         holder = null;
         dueDate = null;
+    }
+
+    public boolean isCheckoutOut(){
+        return holder != null;
     }
 
 }
