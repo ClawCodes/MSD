@@ -67,7 +67,7 @@ class LibraryTest {
         assertNull(lib.lookup(lastISBN));
 
         for (LibraryBook<String> book : allBooks) {
-            assertFalse(book.isCheckoutOut());
+            assertFalse(book.isCheckedOut());
             assertNull(book.getHolder());
             assertNull(book.getDueDate());
         }
@@ -98,7 +98,7 @@ class LibraryTest {
         // Ensure only the above books were checked out
         int nCheckedOut = 0;
         for (LibraryBook<String> book : allBooks) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 nCheckedOut++;
             }
         }
@@ -110,7 +110,7 @@ class LibraryTest {
         int numCheckedOut = 0;
         int nBooks = 0;
         for (LibraryBook<String> book : lib.getAllbooks()) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 numCheckedOut++;
             }
             nBooks++;
@@ -129,7 +129,7 @@ class LibraryTest {
         numCheckedOut = 0;
         nBooks = 0;
         for (LibraryBook<String> book : lib.getAllbooks()) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 numCheckedOut++;
             }
             nBooks++;
@@ -149,7 +149,7 @@ class LibraryTest {
         numCheckedOut = 0;
         nBooks = 0;
         for (LibraryBook<String> book : lib.getAllbooks()) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 numCheckedOut++;
             }
             nBooks++;
@@ -168,7 +168,7 @@ class LibraryTest {
         numCheckedOut = 0;
         nBooks = 0;
         for (LibraryBook<String> book : lib.getAllbooks()) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 numCheckedOut++;
             }
             nBooks++;
@@ -185,7 +185,7 @@ class LibraryTest {
         numCheckedOut = 0;
         nBooks = 0;
         for (LibraryBook<String> book : lib.getAllbooks()) {
-            if (book.isCheckoutOut()) {
+            if (book.isCheckedOut()) {
                 numCheckedOut++;
             }
             nBooks++;

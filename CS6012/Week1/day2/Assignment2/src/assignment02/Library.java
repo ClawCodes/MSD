@@ -125,7 +125,7 @@ public class Library<Type> {
     ArrayList<LibraryBook<Type>> checkedOut = new ArrayList<>();
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
-      if (book.isCheckoutOut() && book.getHolder().equals(holder)) {
+      if (book.isCheckedOut() && book.getHolder().equals(holder)) {
         checkedOut.add(book);
       }
     }
@@ -157,7 +157,7 @@ public class Library<Type> {
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
       if (book.getIsbn() == isbn) {
-        if (book.isCheckoutOut()) {
+        if (book.isCheckedOut()) {
           return false;
         } else {
           book.checkOut(holder, year, month, day);
@@ -184,7 +184,7 @@ public class Library<Type> {
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
       if (book.getIsbn() == isbn) {
-        if (book.isCheckoutOut()) {
+        if (book.isCheckedOut()) {
           book.checkIn();
           return true;
         } else {
@@ -210,7 +210,7 @@ public class Library<Type> {
     boolean hasBooks = false;
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
-      if (book.isCheckoutOut() && book.getHolder().equals(holder)) {
+      if (book.isCheckedOut() && book.getHolder().equals(holder)) {
         book.checkIn();
         hasBooks = true;
       }
@@ -258,7 +258,7 @@ public class Library<Type> {
     GregorianCalendar deadline = new GregorianCalendar(year, month, day);
     ArrayList<LibraryBook<Type>> pastDue = new ArrayList<>();
     for (LibraryBook<Type> book : library) {
-      if (book.isCheckoutOut() && book.getDueDate().compareTo(deadline) > 0) {
+      if (book.isCheckedOut() && book.getDueDate().compareTo(deadline) > 0) {
         pastDue.add(book);
       }
     }
