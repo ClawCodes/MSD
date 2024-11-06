@@ -1,9 +1,14 @@
 package assignment02;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.testng.internal.collections.Pair;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -241,6 +246,22 @@ class LibraryTest {
 //        assertTrue(lib.checkin(patron2));
 //
 //    }
+
+    private static Stream<Arguments> holderTypes() {
+        return Stream.of(
+                Arguments.of(String.class, "Test holder"),
+                Arguments.of(Integer.class, 1),
+                Arguments.of(Double.class, 1.5),
+                Arguments.of(Pair.class, new Pair<>("test", "holder"))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("holderTypes")
+    public void testDifferentHolderTypes(Object clazz, Object holder){
+        var lib = new Library<clazz>(); // TODO: how to accept different classes?
+    }
+
 
     @Test
     public void getInventoryListReturnsCopy() {
