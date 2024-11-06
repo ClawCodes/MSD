@@ -222,6 +222,10 @@ public class Library<Type> {
     return library;
   }
 
+  /**
+   * Get a copy of the existing library member variable
+   * @return copy of library
+   */
   private ArrayList<LibraryBook<Type>> getCopy(){
     ArrayList<LibraryBook<Type>> libraryCopy = new ArrayList<>();
     libraryCopy.addAll(library);
