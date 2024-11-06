@@ -14,7 +14,7 @@ public class TimingExperiment08 {
 
         // Now, run the test.
 
-        long timesToLoop = 10000 * 100;
+        long timesToLoop = 10000;
 
         startTime = System.nanoTime();
 

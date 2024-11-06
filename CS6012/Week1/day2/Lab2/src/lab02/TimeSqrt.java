@@ -1,20 +1,12 @@
 package lab02;
 
-import java.util.ArrayList;
-
 public class TimeSqrt {
-    public static void timeSqrt() {
-        ArrayList<Long> times = new ArrayList<>();
-        long lastTime = System.nanoTime();
+    public static void main() {
+        long start = System.nanoTime();
         for(int i = 1; i < 11; i++){
-            long currentTime = System.nanoTime();
             Math.sqrt(i);
-            times.add(currentTime - lastTime);
-            lastTime = currentTime;
         }
-
-        for (long time : times) {
-            System.out.print(time + " ");
-        }
+        long end = System.nanoTime();
+        System.out.println("Time elapsed (ns): " + (end - start));
     }
 }
