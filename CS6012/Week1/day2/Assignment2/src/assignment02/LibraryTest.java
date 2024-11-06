@@ -256,13 +256,13 @@ class LibraryTest {
 
     @ParameterizedTest
     @MethodSource("holderTypes")
-    public <T> void testDifferentHolderTypes(Class<?> cls, T holder){
+    public <T> void testDifferentHolderTypes(Class<T> cls, T holder){
         Library<T> lib = new Library<>();
         lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
         assertTrue(lib.checkout(9780374292799L, holder, 1, 1, 2008));
-        var checkedOut = lib.lookup(holder);
+        ArrayList<LibraryBook<T>> checkedOut = lib.lookup(holder);
         assertEquals(checkedOut.size(), 1);
-        assertEquals(checkedOut.getFirst().getHolder(), cls.cast(holder));
+        assertEquals(checkedOut.getFirst().getHolder(), cls.cast(holder)); // Ensure holder type remains the same
         assertTrue(lib.checkin(holder));
         checkedOut = lib.lookup(holder);
         assertEquals(checkedOut.size(), 0);
@@ -270,11 +270,111 @@ class LibraryTest {
 
 
     @Test
-    public void getInventoryListReturnsCopy() {
-        // TODO: START HERE
+    public void getInventoryListReturnsSortedCopy() {
         Library<String> lib = new Library<>();
+        // Added out of order of ISBN
         lib.add(0000000000001L, "A1", "B1");
-        lib.add(0000000000002L, "A2", "B2");
         lib.add(0000000000003L, "A3", "B3");
+        lib.add(0000000000002L, "A2", "B2");
+
+        ArrayList<LibraryBook<String>> sortedBooks = lib.getInventoryList();
+        assertEquals(3, sortedBooks.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), sortedBooks.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000002L, "A2", "B2"), sortedBooks.get(1));
+        assertEquals(new LibraryBook<String>(0000000000003L, "A3", "B3"), sortedBooks.getLast());
+    }
+
+    @Test
+    public void getInventoryListAllowsSameISBN() {
+        Library<String> lib = new Library<>();
+        // Added out of order of ISBN
+        lib.add(0000000000001L, "A1", "B1");
+        lib.add(0000000000001L, "A1", "B1");
+
+        ArrayList<LibraryBook<String>> sortedBooks = lib.getInventoryList();
+        assertEquals(2, sortedBooks.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), sortedBooks.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), sortedBooks.getLast());
+    }
+
+    @Test
+    public void getOrderByAuthorWithUniqueAuthors() {
+        Library<String> lib = new Library<>();
+        // Added out of order of ISBN
+        // Keep ISBNs and titles the same to ensure sorting is done by author name
+        lib.add(0000000000001L, "A1", "B");
+        lib.add(0000000000001L, "A3", "B");
+        lib.add(0000000000001L, "A2", "B");
+
+        ArrayList<LibraryBook<String>> sortedBooks = lib.getOrderedByAuthor();
+        assertEquals(3, sortedBooks.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B"), sortedBooks.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A2", "B"), sortedBooks.get(1));
+        assertEquals(new LibraryBook<String>(0000000000001L, "A3", "B"), sortedBooks.getLast());
+    }
+
+    @Test
+    public void getOrderByAuthorWithTieBreaker() {
+        Library<String> lib = new Library<>();
+        // Added out of order of ISBN
+        // Keep ISBNs and titles the same to ensure sorting is done by author name
+        lib.add(0000000000001L, "A1", "B");
+        lib.add(0000000000001L, "A1", "A");
+        lib.add(0000000000001L, "A2", "C");
+
+        ArrayList<LibraryBook<String>> sortedBooks = lib.getOrderedByAuthor();
+        assertEquals(3, sortedBooks.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "A"), sortedBooks.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B"), sortedBooks.get(1));
+        assertEquals(new LibraryBook<String>(0000000000001L, "A2", "C"), sortedBooks.getLast());
+    }
+
+    @Test
+    public void getOrderByAuthorWithSameBook() {
+        Library<String> lib = new Library<>();
+        // Added out of order of ISBN
+        // Keep ISBNs and titles the same to ensure sorting is done by author name
+        lib.add(0000000000001L, "A1", "B");
+        lib.add(0000000000001L, "A1", "B");
+        lib.add(0000000000001L, "A2", "B");
+
+        ArrayList<LibraryBook<String>> sortedBooks = lib.getOrderedByAuthor();
+        assertEquals(3, sortedBooks.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B"), sortedBooks.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B"), sortedBooks.get(1));
+        assertEquals(new LibraryBook<String>(0000000000001L, "A2", "B"), sortedBooks.getLast());
+    }
+
+    @Test
+    public void getOrderByDueDate() {
+        Library<String> lib = new Library<>();
+        // Added out of order of ISBN
+        lib.add(0000000000001L, "A1", "B1");
+        lib.add(0000000000003L, "A3", "B3");
+        lib.add(0000000000002L, "A2", "B2");
+        lib.add(0000000000000L, "A$", "B4"); // Add book that will not be checked out
+
+        assertTrue(lib.checkout(0000000000001L, "Holder name", 1, 1, 2008));
+        assertTrue(lib.checkout(0000000000003L, "Holder name", 1, 1, 2007));
+        assertTrue(lib.checkout(0000000000002L, "Holder name", 1, 1, 2006));
+
+        // No books should be overdue
+        ArrayList<LibraryBook<String>> overDue = lib.getOverdueList(1, 1, 2009);
+        assertEquals(0, overDue.size());
+
+        // ALL books should be overdue
+        overDue = lib.getOverdueList(1, 1, 2000);
+        assertEquals(3, overDue.size());
+
+        // One book should be overdue
+        overDue = lib.getOverdueList(2, 1, 2007);
+        assertEquals(1, overDue.size());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), overDue.getFirst());
+
+        // two books should be overdue
+        overDue = lib.getOverdueList(2, 1, 2006);
+        assertEquals(2, overDue.size());
+        assertEquals(new LibraryBook<String>(0000000000003L, "A3", "B3"), overDue.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), overDue.get(1));
     }
 }

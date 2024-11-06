@@ -223,7 +223,7 @@ public class Library<Type> {
   }
 
   private ArrayList<LibraryBook<Type>> getCopy(){
-    ArrayList<LibraryBook<Type>> libraryCopy = new ArrayList<LibraryBook<Type>>();
+    ArrayList<LibraryBook<Type>> libraryCopy = new ArrayList<>();
     libraryCopy.addAll(library);
     return libraryCopy;
   }
@@ -258,7 +258,7 @@ public class Library<Type> {
     GregorianCalendar deadline = new GregorianCalendar(year, month, day);
     ArrayList<LibraryBook<Type>> pastDue = new ArrayList<>();
     for (LibraryBook<Type> book : library) {
-      if (book.getDueDate().compareTo(deadline) > 0) {
+      if (book.isCheckoutOut() && book.getDueDate().compareTo(deadline) > 0) {
         pastDue.add(book);
       }
     }
