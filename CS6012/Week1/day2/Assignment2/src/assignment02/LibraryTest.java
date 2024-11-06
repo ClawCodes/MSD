@@ -217,35 +217,33 @@ class LibraryTest {
         assertEquals(booksCheckedOut1.get(1).getDueDate(),new GregorianCalendar(2008, 1, 1));
 
         assertTrue(lib.checkin(patron1));
-
     }
 
-//    @Test
-//    public void phoneNumberTest(){
-//        // test a library that uses phone numbers (PhoneNumber) to id patrons
-//        var lib = new Library<PhoneNumber>();
-//        lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
-//        lib.add(9780330351690L, "Jon Krakauer", "Into the Wild");
-//        lib.add(9780446580342L, "David Baldacci", "Simple Genius");
-//
-//        PhoneNumber patron2 = new PhoneNumber("801.555.1234");
-//
-//        assertTrue(lib.checkout(9780330351690L, patron2, 1, 1, 2008));
-//        assertTrue(lib.checkout(9780374292799L, patron2, 1, 1, 2008));
-//
-//        ArrayList<LibraryBook<PhoneNumber>> booksCheckedOut2 = lib.lookup(patron2);
-//
-//        assertEquals(booksCheckedOut2.size(), 2);
-//        assertTrue(booksCheckedOut2.contains(new Book(9780330351690L, "Jon Krakauer", "Into the Wild")));
-//        assertTrue(booksCheckedOut2.contains(new Book(9780374292799L, "Thomas L. Friedman", "The World is Flat")));
-//        assertEquals(booksCheckedOut2.get(0).getHolder(),patron2);
-//        assertEquals(booksCheckedOut2.get(0).getDueDate(),new GregorianCalendar(2008, 1, 1));
-//        assertEquals(booksCheckedOut2.get(1).getHolder(), patron2);
-//        assertEquals(booksCheckedOut2.get(1).getDueDate(), new GregorianCalendar(2008, 1, 1));
-//
-//        assertTrue(lib.checkin(patron2));
-//
-//    }
+    @Test
+    public void phoneNumberTest(){
+        // test a library that uses phone numbers (PhoneNumber) to id patrons
+        var lib = new Library<PhoneNumber>();
+        lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
+        lib.add(9780330351690L, "Jon Krakauer", "Into the Wild");
+        lib.add(9780446580342L, "David Baldacci", "Simple Genius");
+
+        PhoneNumber patron2 = new PhoneNumber("801.555.1234");
+
+        assertTrue(lib.checkout(9780330351690L, patron2, 1, 1, 2008));
+        assertTrue(lib.checkout(9780374292799L, patron2, 1, 1, 2008));
+
+        ArrayList<LibraryBook<PhoneNumber>> booksCheckedOut2 = lib.lookup(patron2);
+
+        assertEquals(booksCheckedOut2.size(), 2);
+        assertTrue(booksCheckedOut2.contains(new Book(9780330351690L, "Jon Krakauer", "Into the Wild")));
+        assertTrue(booksCheckedOut2.contains(new Book(9780374292799L, "Thomas L. Friedman", "The World is Flat")));
+        assertEquals(booksCheckedOut2.get(0).getHolder(),patron2);
+        assertEquals(booksCheckedOut2.get(0).getDueDate(),new GregorianCalendar(2008, 1, 1));
+        assertEquals(booksCheckedOut2.get(1).getHolder(), patron2);
+        assertEquals(booksCheckedOut2.get(1).getDueDate(), new GregorianCalendar(2008, 1, 1));
+
+        assertTrue(lib.checkin(patron2));
+    }
 
     private static Stream<Arguments> holderTypes() {
         return Stream.of(
@@ -258,8 +256,16 @@ class LibraryTest {
 
     @ParameterizedTest
     @MethodSource("holderTypes")
-    public void testDifferentHolderTypes(Object clazz, Object holder){
-        var lib = new Library<clazz>(); // TODO: how to accept different classes?
+    public <T> void testDifferentHolderTypes(Class<?> cls, T holder){
+        Library<T> lib = new Library<>();
+        lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
+        assertTrue(lib.checkout(9780374292799L, holder, 1, 1, 2008));
+        var checkedOut = lib.lookup(holder);
+        assertEquals(checkedOut.size(), 1);
+        assertEquals(checkedOut.getFirst().getHolder(), cls.cast(holder));
+        assertTrue(lib.checkin(holder));
+        checkedOut = lib.lookup(holder);
+        assertEquals(checkedOut.size(), 0);
     }
 
 

@@ -121,7 +121,7 @@ public class Library<Type> {
    * @param holder
    *          -- holder whose checked out books are returned
    */
-  public ArrayList<LibraryBook<Type>> lookup(String holder) {
+  public ArrayList<LibraryBook<Type>> lookup(Type holder) {
     ArrayList<LibraryBook<Type>> checkedOut = new ArrayList<>();
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
@@ -153,14 +153,14 @@ public class Library<Type> {
    *          -- year of the new due date of the library book
    *
    */
-  public boolean checkout(long isbn, String holder, int month, int day, int year) {
+  public boolean checkout(long isbn, Type holder, int month, int day, int year) {
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
       if (book.getIsbn() == isbn) {
         if (book.isCheckoutOut()) {
           return false;
         } else {
-          book.checkOut((Type)holder, year, month, day);
+          book.checkOut(holder, year, month, day);
           return true;
         }
       }
@@ -206,7 +206,7 @@ public class Library<Type> {
    * @param holder
    *          -- holder of the library books to be checked in
    */
-  public boolean checkin(String holder) {
+  public boolean checkin(Type holder) {
     boolean hasBooks = false;
     for (Object item : library) {
       LibraryBook<Type> book = (LibraryBook<Type>) item;
