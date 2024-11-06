@@ -359,22 +359,22 @@ class LibraryTest {
         assertTrue(lib.checkout(0000000000002L, "Holder name", 1, 1, 2006));
 
         // No books should be overdue
-        ArrayList<LibraryBook<String>> overDue = lib.getOverdueList(1, 1, 2009);
+        ArrayList<LibraryBook<String>> overDue = lib.getOverdueList(1, 1, 2005);
         assertEquals(0, overDue.size());
 
         // ALL books should be overdue
-        overDue = lib.getOverdueList(1, 1, 2000);
+        overDue = lib.getOverdueList(1, 1, 2009);
         assertEquals(3, overDue.size());
 
         // One book should be overdue
-        overDue = lib.getOverdueList(2, 1, 2007);
+        overDue = lib.getOverdueList(2, 1, 2006);
         assertEquals(1, overDue.size());
-        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), overDue.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000002L, "A2", "B2"), overDue.getFirst());
 
         // two books should be overdue
-        overDue = lib.getOverdueList(2, 1, 2006);
+        overDue = lib.getOverdueList(2, 1, 2007);
         assertEquals(2, overDue.size());
-        assertEquals(new LibraryBook<String>(0000000000003L, "A3", "B3"), overDue.getFirst());
-        assertEquals(new LibraryBook<String>(0000000000001L, "A1", "B1"), overDue.get(1));
+        assertEquals(new LibraryBook<String>(0000000000002L, "A2", "B2"), overDue.getFirst());
+        assertEquals(new LibraryBook<String>(0000000000003L, "A3", "B3"), overDue.getLast());
     }
 }

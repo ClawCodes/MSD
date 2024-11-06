@@ -262,11 +262,10 @@ public class Library<Type> {
     GregorianCalendar deadline = new GregorianCalendar(year, month, day);
     ArrayList<LibraryBook<Type>> pastDue = new ArrayList<>();
     for (LibraryBook<Type> book : library) {
-      if (book.isCheckedOut() && book.getDueDate().compareTo(deadline) > 0) {
+      if (book.isCheckedOut() && book.getDueDate().compareTo(deadline) < 0) {
         pastDue.add(book);
       }
     }
-
     sort(pastDue, new OrderByDueDate());
     return pastDue;
   }
