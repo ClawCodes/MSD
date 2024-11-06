@@ -151,14 +151,12 @@ class LibraryTest {
         }
         assertEquals(4, numCheckedOut);
         assertEquals(23, nBooks);
-        // Ensure correct book was checked out
         holdersBooks = lib.lookup(testHolder);
         assertEquals(4, holdersBooks.size());
-        // Ensure only the lastISBN book remains
-        assertEquals(firstISBN, holdersBooks.getFirst().getIsbn());
         assertEquals(holdersBooks.getFirst(), new LibraryBook(firstISBN, "Moyra Caldecott", "Weapons of the Wolfhound"));
         assertEquals(holdersBooks.get(1), new LibraryBook(9781843190110L, "David Meade Betts", "Breaking the Gaze"));
         assertEquals(holdersBooks.get(2), new LibraryBook(9781843190516L, "Daniel Wyatt", "The Fuehrermaster"));
+        assertEquals(holdersBooks.getLast(), new LibraryBook(lastISBN, "Alan Burt Akers", "Transit to Scorpio"));
 
         // Checkin by holder
         assertTrue(lib.checkin(testHolder));
