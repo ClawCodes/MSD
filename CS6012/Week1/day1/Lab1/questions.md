@@ -6,6 +6,8 @@
 
 2. Briefly describe what each of the three tests is checking.
    * `emptyArray` is checking that an empty array hits the first condition of the `findSmallestDiff` method which ensures a diff can be found in the array. This asserts that -1 will be returned.
+   * `allArrayElementsEqual` is checking that when all elements of the array are equal, then there will be no non-zero diff
+   * `smallRandomArrayElements` is checking that the smallest diff can be found amongst and unsorted random number array. Effectively finding the smallest diff across any elements in an array. In this case between 4 and 0.
 
 3. Why is our unimplemented findSmallestDiff method passing one of the tests?
    * The unimplemented test is returning `0` which happens to be what the `allArrayElementsEqual` expects the output to be
