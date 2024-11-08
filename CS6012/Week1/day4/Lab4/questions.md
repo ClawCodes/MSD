@@ -22,4 +22,4 @@
    * It splits the password string into the individual characters that are delimited by a space
 
 8. What is the correct password?
-   * 
+   * 1 4 9 16 25

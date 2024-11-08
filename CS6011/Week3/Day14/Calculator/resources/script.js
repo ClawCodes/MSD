@@ -24,8 +24,8 @@ ws.onclose = function(e){
     console.log("Connection closed")
 };
 
-submit.addEventListener('click', function(){
-});
+// submit.addEventListener('click', function(){
+// });
 
 submit.addEventListener('click', function(){
     let xValue = Number(x.value);
