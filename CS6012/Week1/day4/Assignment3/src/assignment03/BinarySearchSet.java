@@ -19,7 +19,7 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
         return comparator_;
     }
 
-    private int compare(E element1, E element2) {
+    public int compare(E element1, E element2) {
         if (comparator_ == null) {
             return ((Comparable<? super E>) element1).compareTo(element2);
         }
@@ -27,9 +27,16 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
     }
 
     private int binarySearch(E element) {
+        if (size() == 0){
+            return -1;
+        }
         int low = 0, high = items_.length - 1, mid;
         while (low <= high) {
             mid = (low + high) / 2;
+            if (items_[mid] == null){
+                high = mid - 1;
+                continue;
+            }
             if (compare(element, items_[mid]) == 0) {
                 return mid;
             } else if (compare(element, items_[mid]) < 0) {
@@ -75,15 +82,21 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
         if (binarySearch(element) >= 0) {
             return false; // element already exists
         }
+        int arrSize = size();
+        if (arrSize == 0) {
+            items_[0] = element;
+            return true;
+        }
         increaseCapacity();
         E temp = element;
-        for (int i = 0; i < size(); i++) {
-            if (compare(element, items_[i]) > 0) {
+        for (int i = 0; i < arrSize + 1; i++) {
+            if (items_[i] == null){
+                items_[i] = temp;
+                break;
+            }
+            if (compare(element, items_[i]) < 0) {
                 E current = items_[i];
                 items_[i] = temp;
-                if (current == null){
-                    break;
-                }
                 temp = current;
             }
         }
@@ -209,10 +222,18 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
 
     @Override
     public E[] toArray() {
-        E[] arr = (E[]) new Object[items_.length];
-        for (int i = 0; i < items_.length; i++) {
+        int newSize = size();
+        E[] arr = (E[]) new Object[newSize];
+        for (int i = 0; i < newSize; i++) {
             arr[i] = items_[i];
         }
         return arr;
+    }
+
+    public E get(int index) throws IndexOutOfBoundsException{
+        if (index > size() - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+        return items_[index];
     }
 }
