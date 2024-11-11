@@ -7,11 +7,12 @@ As a navigator I observed the driver's code in real time and actively caught syn
   * Advantages:
     * Having discussed the solution with the navigator earlier on, the implementation becomes smoother to implement
   * Disadvantages:
-    * If you make mistakes often 
+    * You can be at the whim of the navigator. If the navigator spots errors as you are programming, you can begin to feel a bit lost in the solution as you are focused on getting the syntax and logic correct. I found I could loose sight of the solution while being bogged down in implementation and error correction. 
 * Navigator:
   * Advantages:
     * The lack of active programming can release some mental energy to think about the solution more as it is evolving. This could potentially lead to catching errors earlier than the driver would.
   * Disadvantages:
+    * You don't have complete control over what is being implemented and must quickly describe the changes that need to happen instead of implementing them. Describing code changes can quickly balloon into a difficult to decipher response, so you must be mindful on how to describe the changes to the driver.
 
 ### Question 3 - How often did you and your partner switch roles? Did you switch often enough?
 We switched once so each person could implement a method and it's respective tests.
