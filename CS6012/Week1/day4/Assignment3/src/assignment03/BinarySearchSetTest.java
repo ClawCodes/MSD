@@ -300,4 +300,20 @@ class BinarySearchSetTest {
         assertEquals(4, arr[3]);
         assertEquals(5, arr[4]);
     }
+
+    @Test
+    public void binarySearchInsertPos(){
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        List<Integer> allElems = Arrays.asList(1, 2, 4, 5);
+        assertTrue(set.addAll(allElems));
+
+        var res = set.searchInsertPos(3);
+        assertEquals(2, res);
+
+        res = set.searchInsertPos(6);
+        assertEquals(4, res);
+
+        res = set.searchInsertPos(0);
+        assertEquals(0, res);
+    }
 }
