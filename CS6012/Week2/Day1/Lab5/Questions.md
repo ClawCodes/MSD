@@ -7,7 +7,7 @@ As a navigator I observed the driver's code in real time and actively caught syn
   * Advantages:
     * Having discussed the solution with the navigator earlier on, the implementation becomes smoother to implement
   * Disadvantages:
-    * You can be at the whim of the navigator. If the navigator spots errors as you are programming, you can begin to feel a bit lost in the solution as you are focused on getting the syntax and logic correct. I found I could loose sight of the solution while being bogged down in implementation and error correction. 
+    * You can be at the whim of the navigator. If the navigator spots errors as you are programming, you can begin to feel a bit lost in the solution as you are focused on getting the syntax and logic correct. I found I could lose sight of the solution while being bogged down in implementation and error correction. 
 * Navigator:
   * Advantages:
     * The lack of active programming can release some mental energy to think about the solution more as it is evolving. This could potentially lead to catching errors earlier than the driver would.
@@ -15,8 +15,9 @@ As a navigator I observed the driver's code in real time and actively caught syn
     * You don't have complete control over what is being implemented and must quickly describe the changes that need to happen instead of implementing them. Describing code changes can quickly balloon into a difficult to decipher response, so you must be mindful on how to describe the changes to the driver.
 
 ### Question 3 - How often did you and your partner switch roles? Did you switch often enough?
-We switched once so each person could implement a method and it's respective tests.
+We switched once so each person could implement a method, and it's respective tests.
 I think switching once was sufficient given the size of the assignment.
+It also allowed each partner to view the end-to-end processes (method creation and testing) from the perspective of a driver and navigator.
 
 ### Questions 4 - Which is your preferred role and why?
 I preferred the navigator role because I felt I was able to refine the solution real time. 
@@ -27,7 +28,7 @@ I felt I was able to create substantial impact this way.
 This is a bad test case, because the ordering is implicit and the expected output can be different depending on the ordering.
 For example, if the ordering is length of string, then the median would be one of `cat`, `dog`, or `ant`, not `bird`.
 If the ordering is the first character, then the median could be `bird` or `cat` depending on if your median method returns the upper or lower bound when finding the median of an even length set.
-Overall, the test is not explicit enough in what it is testing.
+Overall, the test is not explicit enough in what it is testing and does not prevent ambiguities.
 
 ### Question 6 - Explain how you could change the test to make it "valid" and explain how you could change the specification so that this is considered a "good" test
 I would change the test to be more explicit in what is being tested and ensure the test case is written in such a way that is unambiguous. 
