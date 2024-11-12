@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Timer extends assignment03.TimerTemplate {
     BinarySearchSet<Integer> setUnderTest = new BinarySearchSet<>();
-    int numUnderTest = 0;
+    Random random = new Random();
 
     /**
      * Create a timer
@@ -19,17 +19,17 @@ public class Timer extends assignment03.TimerTemplate {
     @Override
     protected void setup(int n) {
         setUnderTest.clear();
+        Random random = new Random();
         for (int i = 0; i < n; i++) {
-            setUnderTest.add(i);
+            setUnderTest.add(random.nextInt());
         }
 
         // Pick random number to find
-        Random random = new Random();
-        numUnderTest = random.nextInt(n + 1);
+//        numUnderTest = random.nextInt(n + 1);
 
         // testing for add
         // Remove the number so it can be added and removed in timing methods between iterations
-        setUnderTest.remove(numUnderTest);
+//        setUnderTest.remove(numUnderTest);
     }
 
     @Override
@@ -40,18 +40,22 @@ public class Timer extends assignment03.TimerTemplate {
 
         // add testing
         // Perform on copy of array so subsequent tests have the same input
-        BinarySearchSet<Integer> tempTest = new BinarySearchSet<>();
-        for (int element : setUnderTest) {
-            tempTest.add(element);
-        }
-        tempTest.add(numUnderTest);
+//        BinarySearchSet<Integer> tempTest = new BinarySearchSet<>();
+//        for (int element : setUnderTest) {
+//            tempTest.add(element);
+//        }
+        setUnderTest.remove(setUnderTest.last());
+        setUnderTest.add(random.nextInt());
     }
 
     @Override
     protected void compensationIteration(int n) {
-        BinarySearchSet<Integer> tempTest = new BinarySearchSet<>();
-        for (int element : setUnderTest) {
-            tempTest.add(element);
-        }
+//        BinarySearchSet<Integer> tempTest = new BinarySearchSet<>();
+//        for (int element : setUnderTest) {
+//            tempTest.add(element);
+//        }
+//        setUnderTest.remove(numUnderTest);
+        setUnderTest.remove(setUnderTest.last());
+        random.nextInt();
     }
 }

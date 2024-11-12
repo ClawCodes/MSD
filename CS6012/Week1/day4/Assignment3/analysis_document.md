@@ -20,4 +20,9 @@
 The growth rate in this plot does not match my prediction of `O(Log n)` above. 
 Rather, it looks more linear (`O(n)`).
 
-### Question 4 - 
+### Question 4 - Time analysis of `add`
+
+![Time plot](add.png)
+
+The growth rate in this plot also does not match my expectations.
+Ideally, the add method would follow `O(Log n)`, however, the graph is displaying a linear growth pattern, suggesting the time is `O(n)`.

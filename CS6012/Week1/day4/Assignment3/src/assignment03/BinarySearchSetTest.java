@@ -316,4 +316,12 @@ class BinarySearchSetTest {
         res = set.searchInsertPos(0);
         assertEquals(0, res);
     }
+
+
+    @Test
+    public void tmp(){
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        set.add(null);
+        assertEquals(0, set.size());
+    }
 }

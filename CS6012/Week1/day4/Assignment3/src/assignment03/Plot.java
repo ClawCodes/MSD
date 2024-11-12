@@ -45,14 +45,14 @@ public class Plot {
     }
 
     public static void main(String[] args) {
-        int numProblemSizes = 12;
+        int numProblemSizes = 10;
         int[] problemSizes = new int[numProblemSizes];
 
         for (int i = 0; i < problemSizes.length; i++) {
             problemSizes[i] = (int) Math.pow(2, i + 10);
         }
 
-        Timer timer = new Timer(problemSizes, 50);
+        Timer timer = new Timer(problemSizes, 100);
         results_ = timer.run();
         plotResults();
     }

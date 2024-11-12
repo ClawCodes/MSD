@@ -69,7 +69,7 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
                 high = mid - 1;
                 continue;
             }
-            if (compare(element, items_[mid]) == 0) {
+            if (element.equals(items_[mid])) {
                 return mid;
             } else if (compare(element, items_[mid]) < 0) {
                 high = mid - 1;
@@ -254,7 +254,7 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E> {
             if (size() == 0) {
                 throw new NoSuchElementException();
             }
-            return position < size() - 1;
+            return position < size();
         }
 
         @Override
