@@ -64,6 +64,9 @@ public class SinglyLinkedList<T> implements List<T> {
 
     @Override
     public T getFirst() throws NoSuchElementException {
+        if (first == null) {
+            throw new NoSuchElementException("List is empty");
+        }
         return first.data;
     }
 
