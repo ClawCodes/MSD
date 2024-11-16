@@ -281,4 +281,33 @@ class SinglyLinkedListTest {
         assertEquals(3, list.size()); // Size remains unchanged after next calls
         assertFalse(iterator.hasNext());
     }
+
+    @Test
+    void resversePopulatedList(){
+        SinglyLinkedList<Integer> list = new SinglyLinkedList<>();
+        list.insertFirst(1);
+        list.insertFirst(2);
+        list.insertFirst(3);
+        list.insertFirst(4);
+
+        assertEquals(4, list.size());
+        assertEquals(4, list.getFirst());
+        assertEquals(3, list.get(1));
+        assertEquals(2, list.get(2));
+        assertEquals(1, list.get(3));
+
+        list.reverse();
+        assertEquals(4, list.size());
+        assertEquals(1, list.getFirst());
+        assertEquals(2, list.get(1));
+        assertEquals(3, list.get(2));
+        assertEquals(4, list.get(3));
+    }
+
+    @Test
+    void reverseEmtpyList(){
+        SinglyLinkedList<Integer> list = new SinglyLinkedList<>();
+        list.reverse();
+        assertEquals(0, list.size());
+    }
 }

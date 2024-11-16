@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 public class SinglyLinkedList<T> implements List<T> {
     protected Node<T> first = null;
-    protected Node<T> last = null;
     int size = 0;
 
     SinglyLinkedList() {
@@ -209,5 +208,20 @@ public class SinglyLinkedList<T> implements List<T> {
     @Override
     public Iterator<T> iterator() {
         return new ThisIterator();
+    }
+
+    public void reverse(){
+        if (isEmpty()){
+            return;
+        }
+        SinglyLinkedList<T> reversed = new SinglyLinkedList<>();
+        int numElements = size();
+        for (int i = 0; i < numElements; i++) {
+            Node<T> temp = first;
+            this.deleteFirst();
+            reversed.insertFirst(temp.data);
+        }
+        this.first = reversed.first;
+        this.size = reversed.size;
     }
 }
