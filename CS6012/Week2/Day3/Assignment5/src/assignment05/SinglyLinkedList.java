@@ -210,18 +210,17 @@ public class SinglyLinkedList<T> implements List<T> {
         return new ThisIterator();
     }
 
-    public void reverse(){
+    public SinglyLinkedList<T> reverse(){
         if (isEmpty()){
-            return;
+            return this;
         }
         SinglyLinkedList<T> reversed = new SinglyLinkedList<>();
-        int numElements = size();
-        for (int i = 0; i < numElements; i++) {
-            Node<T> temp = first;
-            this.deleteFirst();
-            reversed.insertFirst(temp.data);
+        Node<T> current = first;
+        while(current.next != null){
+            reversed.insertFirst(current.data);
+            current = current.next;
         }
-        this.first = reversed.first;
-        this.size = reversed.size;
+        reversed.insertFirst(current.data);
+        return reversed;
     }
 }

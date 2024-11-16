@@ -1,7 +1,6 @@
 package assignment05;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class WebBrowser {
@@ -13,13 +12,11 @@ public class WebBrowser {
 
     public WebBrowser(SinglyLinkedList<URL> history) {
         if (!history.isEmpty()) {
-            current_ = history.getFirst();
-            history.deleteFirst();
-            history.reverse();
             if (!history.isEmpty()) {
-                for (URL url : history) {
+                for (URL url : history.reverse()) {
                     history_.push(url);
                 }
+                current_ = history_.pop();
             }
         }
     }
@@ -54,7 +51,14 @@ public class WebBrowser {
         }
     }
 
-//    public SinglyLinkedList<URL> history(){
-//        SinglyLinkedList<URL> orderedHistory = new SinglyLinkedList<>();
-//    }
+    public SinglyLinkedList<URL> history(){
+        SinglyLinkedList<URL> orderedHistory = new SinglyLinkedList<>();
+        orderedHistory.insertFirst(current_);
+        while(!history_.isEmpty()){
+            orderedHistory.insertFirst(history_.pop());
+        }
+        WebBrowser tmp = new WebBrowser(orderedHistory);
+        history_ = tmp.history_;
+        return orderedHistory.reverse();
+    }
 }

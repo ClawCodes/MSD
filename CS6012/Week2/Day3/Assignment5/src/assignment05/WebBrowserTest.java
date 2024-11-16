@@ -104,14 +104,14 @@ class WebBrowserTest {
     void backWithSufficientHistroyReturnsURLs(){
         WebBrowser webBrowser = new WebBrowser(history);
 
-        webBrowser.back();
+        assertEquals(utahEdu, webBrowser.back());
         assertEquals(1, webBrowser.fwdHistory_.size());
         assertEquals(googleDotCom, webBrowser.fwdHistory_.peek());
         assertEquals(utahEdu, webBrowser.current_);
         assertEquals(1, webBrowser.history_.size());
         assertEquals(gitHub, webBrowser.history_.peek());
 
-        webBrowser.back();
+        assertEquals(gitHub, webBrowser.back());
         assertEquals(2, webBrowser.fwdHistory_.size());
         assertEquals(utahEdu, webBrowser.fwdHistory_.pop());
         assertEquals(googleDotCom, webBrowser.fwdHistory_.pop());
@@ -144,7 +144,7 @@ class WebBrowserTest {
         assertEquals(utahEdu, webBrowser.history_.peek());
         assertEquals(googleDotCom, webBrowser.current_);
 
-        webBrowser.back();
+        assertEquals(utahEdu, webBrowser.back());
         // State 2
         assertEquals(1, webBrowser.fwdHistory_.size());
         assertEquals(googleDotCom, webBrowser.fwdHistory_.peek());
@@ -152,14 +152,14 @@ class WebBrowserTest {
         assertEquals(gitHub, webBrowser.history_.peek());
         assertEquals(utahEdu, webBrowser.current_);
 
-        webBrowser.back();
+        assertEquals(gitHub, webBrowser.back());
         // State 3
         assertEquals(2, webBrowser.fwdHistory_.size());
         assertEquals(utahEdu, webBrowser.fwdHistory_.peek());
         assertTrue(webBrowser.history_.isEmpty());
         assertEquals(gitHub, webBrowser.current_);
 
-        webBrowser.forward();
+        assertEquals(utahEdu, webBrowser.forward());
         // Back to state 2
         assertEquals(1, webBrowser.fwdHistory_.size());
         assertEquals(googleDotCom, webBrowser.fwdHistory_.peek());
@@ -167,7 +167,7 @@ class WebBrowserTest {
         assertEquals(gitHub, webBrowser.history_.peek());
         assertEquals(utahEdu, webBrowser.current_);
 
-        webBrowser.forward();
+        assertEquals(googleDotCom, webBrowser.forward());
         // Back to state 1
         assertTrue(webBrowser.fwdHistory_.isEmpty());
         assertEquals(2, webBrowser.history_.size());
@@ -183,7 +183,7 @@ class WebBrowserTest {
         assertEquals(utahEdu, webBrowser.history_.peek());
         assertEquals(googleDotCom, webBrowser.current_);
 
-        webBrowser.back();
+        assertEquals(utahEdu, webBrowser.back());
         assertEquals(1, webBrowser.fwdHistory_.size());
         assertEquals(googleDotCom, webBrowser.fwdHistory_.peek());
         assertEquals(1, webBrowser.history_.size());
@@ -196,5 +196,17 @@ class WebBrowserTest {
         assertEquals(2, webBrowser.history_.size());
         assertEquals(utahEdu, webBrowser.history_.peek());
         assertEquals(JavaDotCom, webBrowser.current_);
+    }
+
+    // TODO: ADD MORE TESTS
+    @Test
+    void historyWithNoFwdHistory(){
+        WebBrowser webBrowser = new WebBrowser(history);
+
+        SinglyLinkedList<URL> actual = webBrowser.history();
+        assertEquals(3, actual.size());
+        assertEquals(googleDotCom, actual.getFirst());
+        assertEquals(utahEdu, actual.get(1));
+        assertEquals(gitHub, actual.get(2));
     }
 }

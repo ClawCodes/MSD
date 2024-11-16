@@ -296,18 +296,18 @@ class SinglyLinkedListTest {
         assertEquals(2, list.get(2));
         assertEquals(1, list.get(3));
 
-        list.reverse();
-        assertEquals(4, list.size());
-        assertEquals(1, list.getFirst());
-        assertEquals(2, list.get(1));
-        assertEquals(3, list.get(2));
-        assertEquals(4, list.get(3));
+        SinglyLinkedList<Integer> revered = list.reverse();
+        assertEquals(4, revered.size());
+        assertEquals(1, revered.getFirst());
+        assertEquals(2, revered.get(1));
+        assertEquals(3, revered.get(2));
+        assertEquals(4, revered.get(3));
     }
 
     @Test
     void reverseEmtpyList(){
         SinglyLinkedList<Integer> list = new SinglyLinkedList<>();
-        list.reverse();
-        assertEquals(0, list.size());
+        SinglyLinkedList<Integer> revered = list.reverse();
+        assertEquals(0, revered.size());
     }
 }
