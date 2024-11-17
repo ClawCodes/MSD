@@ -11,13 +11,11 @@ public class WebBrowser {
     public WebBrowser() {}
 
     public WebBrowser(SinglyLinkedList<URL> history) {
-        if (!history.isEmpty()) {
             if (!history.isEmpty()) {
                 for (URL url : history.reverse()) {
                     history_.push(url);
                 }
                 current_ = history_.pop();
-            }
         }
     }
 
@@ -57,8 +55,9 @@ public class WebBrowser {
         while(!history_.isEmpty()){
             orderedHistory.insertFirst(history_.pop());
         }
+        orderedHistory = orderedHistory.reverse();
         WebBrowser tmp = new WebBrowser(orderedHistory);
         history_ = tmp.history_;
-        return orderedHistory.reverse();
+        return orderedHistory;
     }
 }

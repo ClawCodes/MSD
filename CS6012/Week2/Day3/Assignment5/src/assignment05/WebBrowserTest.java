@@ -198,7 +198,6 @@ class WebBrowserTest {
         assertEquals(JavaDotCom, webBrowser.current_);
     }
 
-    // TODO: ADD MORE TESTS
     @Test
     void historyWithNoFwdHistory(){
         WebBrowser webBrowser = new WebBrowser(history);
@@ -208,5 +207,23 @@ class WebBrowserTest {
         assertEquals(googleDotCom, actual.getFirst());
         assertEquals(utahEdu, actual.get(1));
         assertEquals(gitHub, actual.get(2));
+    }
+
+    @Test
+    void historyWithFwdHistory(){
+        WebBrowser webBrowser = new WebBrowser(history);
+        webBrowser.back();
+
+        // two sites left in history
+        SinglyLinkedList<URL> actual = webBrowser.history();
+        assertEquals(2, actual.size());
+        assertEquals(utahEdu, actual.getFirst());
+        assertEquals(gitHub, actual.get(1));
+
+        webBrowser.back();
+        // One sites left in history (i.e. only current)
+        actual = webBrowser.history();
+        assertEquals(1, actual.size());
+        assertEquals(gitHub, actual.getFirst());
     }
 }
