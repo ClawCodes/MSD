@@ -8,10 +8,10 @@ public class SinglyLinkedList<T> implements List<T> {
     protected Node<T> first = null;
     int size = 0;
 
-    SinglyLinkedList() {
+    public SinglyLinkedList() {
     }
 
-    protected static class Node<T> {
+    public static class Node<T> {
         T data;
         Node<T> next;
 
@@ -168,7 +168,7 @@ public class SinglyLinkedList<T> implements List<T> {
     /**
      * Iterator enabling iteration over the linked list
      */
-    protected class ThisIterator implements Iterator<T> {
+    private class ThisIterator implements Iterator<T> {
         private int position = 0;
         private Node<T> current = first;
 
