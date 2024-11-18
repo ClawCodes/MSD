@@ -171,9 +171,11 @@ public class SinglyLinkedList<T> implements List<T> {
     private class ThisIterator implements Iterator<T> {
         private int position = 0;
         private Node<T> current = first;
+        boolean nextCalledLast = false;
 
         @Override
         public boolean hasNext() {
+            nextCalledLast = false;
             if (size() == 0) {
                 throw new NoSuchElementException();
             }
@@ -182,6 +184,7 @@ public class SinglyLinkedList<T> implements List<T> {
 
         @Override
         public T next() {
+            nextCalledLast = true;
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
@@ -193,10 +196,11 @@ public class SinglyLinkedList<T> implements List<T> {
 
         @Override
         public void remove() {
-            if (size() == 0) {
+            if (!nextCalledLast || size() == 0) {
                 throw new IllegalStateException();
             }
             delete(size() - 1);
+            nextCalledLast = false;
         }
 
         @Override
