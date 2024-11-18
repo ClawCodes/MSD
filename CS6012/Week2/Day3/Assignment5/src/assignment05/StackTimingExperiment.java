@@ -42,15 +42,40 @@ public class StackTimingExperiment extends TimerTemplate {
 
     @Override
     protected void timingIteration(int n) {
-        System.out.println("IMPLEMENT TIMING EXPERIMENT");
+        if (classUndertest.equals("ArrayStack")) {
+            if (methodUndertest.equals("pop")) {
+                arrayStack.pop();
+            } else if (methodUndertest.equals("push")) {
+                arrayStack.push(n);
+            } else {
+                arrayStack.peek();
+            }
+        } else {
+            if (methodUndertest.equals("pop")) {
+                linkedStack.pop();
+            } else if (methodUndertest.equals("push")) {
+                linkedStack.push(n);
+            } else {
+                linkedStack.peek();
+            }
+        }
     }
 
     @Override
     protected void compensationIteration(int n) {
-        System.out.println("IMPLEMENT TIMING EXPERIMENT");
-    }
+        if (classUndertest.equals("ArrayStack")) {
+            if (methodUndertest.equals("pop")) {
+            } else if (methodUndertest.equals("push")) {
+            } else {
+            }
+        } else {
+            if (methodUndertest.equals("pop")) {
+            } else if (methodUndertest.equals("push")) {
+            } else {
+            }
+        }    }
 
-    protected static class ExperimentResult{
+    protected static class ExperimentResult {
         public Result[] results;
         public String stackType;
 
@@ -71,7 +96,7 @@ public class StackTimingExperiment extends TimerTemplate {
             dataset.addSeries(series);
         }
 
-        JFreeChart chart = ChartFactory.createXYLineChart(
+        JFreeChart chart = ChartFactory.createScatterPlot(
                 "ArrayStack vs. LinkedListStack " + methodUndertest + "() runtime growth", "Time: nanoseconds", "# of Elements", dataset
         );
 
@@ -89,7 +114,7 @@ public class StackTimingExperiment extends TimerTemplate {
         }
     }
 
-    public static void runTest(int[] problemSizes, String method){
+    public static void runTest(int[] problemSizes, String method) {
         ArrayList<ExperimentResult> results_ = new ArrayList<>();
         for (String classToTest : Arrays.asList("ArrayStack", "LinkedListStack")) {
             StackTimingExperiment.classUndertest = classToTest;
@@ -110,5 +135,12 @@ public class StackTimingExperiment extends TimerTemplate {
             problemSizes[i] = (int) Math.pow(2, i + 10);
         }
         return problemSizes;
+    }
+
+    public static void main(String[] args) {
+        var problemSizes = generateProblemSizes();
+        runTest(problemSizes, "pop");
+        runTest(problemSizes, "push");
+        runTest(problemSizes, "peek");
     }
 }
