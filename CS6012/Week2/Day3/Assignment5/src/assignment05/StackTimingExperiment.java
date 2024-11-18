@@ -91,20 +91,20 @@ public class StackTimingExperiment extends TimerTemplate {
         for (ExperimentResult r : results) {
             XYSeries series = new XYSeries(r.stackType);
             for (Result result : r.results) {
-                series.add(result.avgNanoSecs(), result.n());
+                series.add(result.n(), result.avgNanoSecs());
             }
             dataset.addSeries(series);
         }
 
+
         JFreeChart chart = ChartFactory.createScatterPlot(
-                "ArrayStack vs. LinkedListStack " + methodUndertest + "() runtime growth", "Time: nanoseconds", "# of Elements", dataset
+                "ArrayStack vs. LinkedListStack " + methodUndertest + "() runtime growth", "# of Elements", "Time: nanoseconds", dataset
         );
 
         JFrame frame = new JFrame("Plot");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setContentPane(new ChartPanel(chart));
         frame.pack();
-        frame.setVisible(true);
+        frame.setVisible(false);
 
         try {
             OutputStream out = new FileOutputStream(methodUndertest + ".png");

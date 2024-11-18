@@ -172,34 +172,37 @@ public class SinglyLinkedList<T> implements List<T> {
         private int position = 0;
         private Node<T> current = first;
         boolean nextCalledLast = false;
+        // Save initial size here as the SLL size can change from remove calls
+        // But we can still iterate through all elements which existed upon initialization of the iterator
+        int iterSize = size();
 
         @Override
         public boolean hasNext() {
-            nextCalledLast = false;
-            if (size() == 0) {
+            if (iterSize == 0) {
                 throw new NoSuchElementException();
             }
-            return position < size();
+            nextCalledLast = false;
+            return position < iterSize;
         }
 
         @Override
         public T next() {
-            nextCalledLast = true;
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             T returnValue = current.data;
             position++;
             current = current.next;
+            nextCalledLast = true;
             return returnValue;
         }
 
         @Override
         public void remove() {
-            if (!nextCalledLast || size() == 0) {
+            if (!nextCalledLast || iterSize == 0) {
                 throw new IllegalStateException();
             }
-            delete(size() - 1);
+            delete(position - 1);
             nextCalledLast = false;
         }
 

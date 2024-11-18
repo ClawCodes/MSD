@@ -271,15 +271,19 @@ class SinglyLinkedListTest {
         list.insertFirst(4);
 
         Iterator<Integer> iterator = list.iterator();
+        assertEquals(4, iterator.next());
         iterator.remove();
 
         assertEquals(3, list.size());
         assertTrue(iterator.hasNext());
-        assertEquals(4, iterator.next());
         assertEquals(3, iterator.next());
         assertEquals(2, iterator.next());
+        assertEquals(1, iterator.next());
         assertEquals(3, list.size()); // Size remains unchanged after next calls
         assertFalse(iterator.hasNext());
+        // Ensure list was altered from iterator.remove()
+        assertEquals(3, list.size());
+        assertEquals(3, list.getFirst());
     }
 
     @Test
