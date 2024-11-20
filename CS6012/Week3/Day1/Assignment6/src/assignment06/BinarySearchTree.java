@@ -24,7 +24,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         size_ = 0;
     }
 
-    class Node<T extends Comparable<? super T>>{
+    protected static class Node<T extends Comparable<? super T>>{
         Node(T data){
             data_ = data;
             left_ = null;
@@ -36,6 +36,18 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         Node<T> right_;
     }
 
+    /**
+     * Recursive method intended to be called by `add` driver method.
+     * Add new node to tree preserving BST rules.
+     * Set the provided root to the return of the method.
+     * Example:
+     * T item = 5;
+     * root = add_(item, root);
+     *
+     * @param item the item to add to the tree
+     * @param node root of tree to add the item too
+     * @return the new tree with added item
+     */
     private Node<T> add_(T item, Node<T> node){
         if (node == null)
             node = new Node<>(item);
@@ -110,6 +122,12 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         return containsAll;
     }
 
+    /**
+     * Get the minimum value in the tree
+     *
+     * @param node root node to tree to traverse
+     * @return minimum value in tree
+     */
     private T min(Node<T> node){
         Node<T> current = node;
         while( current.left_ != null){
@@ -201,6 +219,11 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         return size_;
     }
 
+    /**
+     * Insert elements of the tree into provided ArrayList instance in ascending order.
+     * @param out the array list to append to
+     * @param node root node of tree to traverse
+     */
     private void DFTAdd(ArrayList<T> out, Node<T> node){
         if (node == null){
             return;

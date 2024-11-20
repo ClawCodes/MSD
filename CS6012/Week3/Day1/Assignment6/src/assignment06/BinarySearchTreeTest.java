@@ -350,4 +350,12 @@ class BinarySearchTreeTest {
         ArrayList<Integer> actual = bst.toArrayList();
         assertEquals(expected, actual);
     }
+
+    @Test
+    void toArrayListEmptyTree(){
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        ArrayList<Integer> expected = new ArrayList<>();
+        ArrayList<Integer> actual = bst.toArrayList();
+        assertEquals(expected, actual);
+    }
 }
