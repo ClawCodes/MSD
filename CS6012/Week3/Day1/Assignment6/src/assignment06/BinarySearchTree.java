@@ -201,9 +201,19 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         return size_;
     }
 
+    private void DFTAdd(ArrayList<T> out, Node<T> node){
+        if (node == null){
+            return;
+        }
+        DFTAdd(out, node.left_);
+        out.add(node.data_);
+        DFTAdd(out, node.right_);
+    }
+
     @Override
     public ArrayList<T> toArrayList() {
-
-        return null;
+        ArrayList<T> out = new ArrayList<>();
+        DFTAdd(out, root_);
+        return out;
     }
 }

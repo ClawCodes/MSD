@@ -341,4 +341,13 @@ class BinarySearchTreeTest {
         assertTrue(bst.removeAll(subset));
         assertEquals(items.size() - subset.size(), bst.size());
     }
+
+    @Test
+    void toArrayList(){
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        bst.addAll(Arrays.asList(6, 4, 3, 5, 2, 1, 8, 9, 7, 10));
+        ArrayList<Integer> expected = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+        ArrayList<Integer> actual = bst.toArrayList();
+        assertEquals(expected, actual);
+    }
 }
