@@ -64,7 +64,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         boolean treeAltered = false;
         for (T item : items) {
             if (item == null) {
-                throw new IllegalArgumentException("item cannot be null");
+                throw new NullPointerException("item cannot be null");
             }
             if(add(item))
                 treeAltered = true;
@@ -99,27 +99,90 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
 
     @Override
     public boolean containsAll(Collection<? extends T> items) {
-        return false;
+        boolean containsAll = true;
+        for (T item : items) {
+            if (item == null)
+                throw new NullPointerException("item cannot be null");
+            if (!contains(item)){
+                containsAll = false;
+            }
+        }
+        return containsAll;
+    }
+
+    private T min(Node<T> node){
+        Node<T> current = node;
+        while( current.left_ != null){
+            current = current.left_;
+        }
+        return current.data_;
     }
 
     @Override
     public T first() throws NoSuchElementException {
-        return null;
+        if (root_ == null)
+            throw new NoSuchElementException("the set is empty");
+
+        return min(root_);
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return root_ == null;
     }
 
     @Override
     public T last() throws NoSuchElementException {
-        return null;
+        if (isEmpty())
+            throw new NoSuchElementException("the set is empty");
+
+        Node<T> current = root_;
+        while( current.right_ != null){
+            current = current.right_;
+        }
+
+        return current.data_;
+    }
+
+    private Node<T> remove_(Node<T> node, T item){
+        Node<T> newNode = node;
+        if (item.compareTo(node.data_) < 0)
+            node.left_ = remove_(node.left_, item);
+        else if (item.compareTo(node.data_) > 0)
+            node.right_ = remove_(node.right_, item);
+        else {
+            // successor replacement
+            if (node.left_ != null && node.right_ != null){
+                T minVal = min(node.right_);
+                newNode = new Node<>(minVal);
+                remove_(node.right_, minVal);
+                newNode.left_ = node.left_;
+                newNode.right_ = node.right_;
+                return newNode;
+            }
+            else if (node.left_ != null){
+                newNode = node.left_;
+            }
+            else if (node.right_ != null){
+                newNode = node.right_;
+            }
+            else {
+                newNode = null;
+            }
+            size_--;
+        }
+        return newNode;
     }
 
     @Override
     public boolean remove(T item) {
-        return false;
+        if (item == null){
+            throw new NullPointerException("item cannot be null");
+        }
+        int originalCount = size_;
+        root_ = remove_(root_, item);
+
+        return originalCount > size_;
     }
 
     @Override
@@ -129,7 +192,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
 
     @Override
     public int size() {
-        return 0;
+        return size_;
     }
 
     @Override
