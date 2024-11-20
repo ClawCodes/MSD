@@ -16,10 +16,12 @@ Notes:
 */
 
 public class BinarySearchTree<T extends Comparable<? super T>> implements SortedSet<T>{
-    Node<T> root_;
+    protected Node<T> root_;
+    protected int size_;
 
     BinarySearchTree(){
         root_ = null;
+        size_ = 0;
     }
 
     class Node<T extends Comparable<? super T>>{
@@ -34,23 +36,64 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
         Node<T> right_;
     }
 
+    private Node<T> add_(T item, Node<T> node){
+        if (node == null)
+            node = new Node<>(item);
+        else if (item.compareTo(node.data_) < 0)
+            node.left_ = add_(item, node.left_);
+        else if (item.compareTo(node.data_) > 0)
+            node.right_ = add_(item, node.right_);
+        else
+            throw new IllegalArgumentException("item already exists");
+        return node;
+    }
+
     @Override
     public boolean add(T item) {
-        return false;
+        try {
+            root_ = add_(item, root_);
+            size_++;
+            return true;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return false;
+        }
     }
 
     @Override
     public boolean addAll(Collection<? extends T> items) {
-        return false;
+        boolean treeAltered = false;
+        for (T item : items) {
+            if (item == null) {
+                throw new IllegalArgumentException("item cannot be null");
+            }
+            if(add(item))
+                treeAltered = true;
+        }
+        return treeAltered;
     }
 
     @Override
     public void clear() {
-
+        root_ = null;
+        size_ = 0;
     }
 
     @Override
     public boolean contains(T item) {
+        if (item == null)
+            throw new NullPointerException("item cannot be null");
+
+        Node<T> node = root_;
+        while (node != null) {
+            if (item.compareTo(node.data_) == 0){
+                return true;
+            } else if (item.compareTo(node.data_) < 0) {
+                node = node.left_;
+            } else {
+                node = node.right_;
+            }
+        }
+
         return false;
     }
 
