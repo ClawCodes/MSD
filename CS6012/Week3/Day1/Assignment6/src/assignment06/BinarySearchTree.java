@@ -187,7 +187,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
 
     @Override
     public boolean removeAll(Collection<? extends T> items) {
-        return false;
+        boolean treeAltered = false;
+        for (T item : items) {
+            if (remove(item)){
+                treeAltered = true;
+            };
+        }
+        return treeAltered;
     }
 
     @Override
@@ -197,6 +203,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
 
     @Override
     public ArrayList<T> toArrayList() {
+
         return null;
     }
 }

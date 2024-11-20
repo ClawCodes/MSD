@@ -320,4 +320,25 @@ class BinarySearchTreeTest {
             }
         }
     }
+
+    @Test
+    void removeAllNodesContainedInTree(){
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        ArrayList<Integer> items = new ArrayList<>(Arrays.asList(4, 2, 3, 1, 0, 6, 5, 7, 8));
+        assertTrue(bst.addAll(items));
+        assertEquals(items.size(), bst.size());
+        assertTrue(bst.removeAll(items));
+        assertEquals(0, bst.size());
+    }
+
+    @Test
+    void removeAllNodesSubsetContainedInTree(){
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        ArrayList<Integer> items = new ArrayList<>(Arrays.asList(4, 2, 3, 1, 0, 6, 5, 7, 8));
+        ArrayList<Integer> subset = new ArrayList<>(Arrays.asList(3, 1, 5));
+        assertTrue(bst.addAll(items));
+        assertEquals(items.size(), bst.size());
+        assertTrue(bst.removeAll(subset));
+        assertEquals(items.size() - subset.size(), bst.size());
+    }
 }
