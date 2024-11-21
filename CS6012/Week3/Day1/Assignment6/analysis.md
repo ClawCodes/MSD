@@ -30,13 +30,13 @@ To observe the effect that the order of node additions has on methods which trav
 Both trees contained the same set of node values, the only difference is the order in which the values were added.
 Each call to `contains` checked for a value which was randomly chosen from the same set of values the tree was built from.
 The runtime was tested with the following input sizes: `{ 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288 }`.
-The runtime of `contains` was average over 100 separate calls.
+The runtime of `contains` was averaged over 100 separate calls.
 
 ![](Contains.png)
 
 The graph above shows the largest runtimes being held by the tree built using ordered additions, supporting that the tree built with a random order of nodes should have faster traversal times.
 Interestingly, for input sizes `16384` and `65536`, the ordered set outperformed the unordered set.
-This is likely due to the random order being less ideal than the sorted for the given numbers that were search for.
+This is likely due to the random order being less ideal than the sorted for the given numbers that were search for, meaning the height of the subtree containing said number was larger in the random order than the sorted order.
 Overall, since these cases are the minority, we can conclude that a BST built from random node insertions will likely be faster to traverse than a BST built from additions in sorted order.
 
 ## TreeSet vs. BinarySearchTree
@@ -67,7 +67,7 @@ The tree structure is still better than say, a linked-list which would force `O(
 
 ## Question 6
 
-Inserting the words in alphabetical order with lead to a long linear chain of nodes, that is effectively a linked list.
-This will lead to longer traversal times, enforcing `O(n)`, because there is no branching we will have to visit every node when traversing the tree.
+Inserting the words in alphabetical order will lead to a long linear chain of nodes, that is effectively a linked list.
+This will lead to longer traversal times, enforcing `O(n)`, because there is no bidirectional branching and we will have to visit every node when traversing the tree.
 This is the same problem highlighted in Question 1 above.
 To fix the problem you could insert the words in random order or attempt to pre-sort the insertions so they create a somewhat balances tree.
