@@ -154,7 +154,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
 
     private Node<T> remove_(Node<T> node, T item){
         if (node == null){
-            return node;
+            return null;
         }
         Node<T> newNode = node;
         if (item.compareTo(node.data_) < 0)
@@ -166,9 +166,8 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
             if (node.left_ != null && node.right_ != null){
                 T minVal = min(node.right_);
                 newNode = new Node<>(minVal);
-                remove_(node.right_, minVal);
                 newNode.left_ = node.left_;
-                newNode.right_ = node.right_;
+                newNode.right_ = remove_(node.right_, minVal);
                 return newNode;
             }
             else if (node.left_ != null){
@@ -177,7 +176,7 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
             else if (node.right_ != null){
                 newNode = node.right_;
             }
-            else {
+            else { // leaf case
                 newNode = null;
             }
             size_--;
