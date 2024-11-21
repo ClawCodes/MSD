@@ -5,21 +5,11 @@ import java.util.Collection;
 import java.util.NoSuchElementException;
 
 
-/*
-Notes:
-
-* Removal operations to consider:
-    1. Node is a leaf - removal does not disconnect the tree
-    2. Node has only one child - remove node after attaching its parent to child
-    3. Removal of node with two children - replace with the smallest item in the right subtree
-        - note the smallest will not have a left child, so it's a simple parent-child reconnection
-*/
-
 public class BinarySearchTree<T extends Comparable<? super T>> implements SortedSet<T>{
     protected Node<T> root_;
     protected int size_;
 
-    BinarySearchTree(){
+    public BinarySearchTree(){
         root_ = null;
         size_ = 0;
     }
@@ -163,6 +153,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
     }
 
     private Node<T> remove_(Node<T> node, T item){
+        if (node == null){
+            return node;
+        }
         Node<T> newNode = node;
         if (item.compareTo(node.data_) < 0)
             node.left_ = remove_(node.left_, item);
@@ -196,6 +189,9 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
     public boolean remove(T item) {
         if (item == null){
             throw new NullPointerException("item cannot be null");
+        }
+        if (isEmpty()){
+            return false;
         }
         int originalCount = size_;
         root_ = remove_(root_, item);
