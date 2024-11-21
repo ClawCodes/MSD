@@ -50,7 +50,7 @@ The runtime of each method was average over 100 separate calls for each input.
 
 ![](BSTvsTreeSetContains.png)
 
-![](BSTvsTreeSetaddAll.png)
+![](BSTvsTreeSetAddAll.png)
 
 Overall it appears the `TreeSet` has much better performance for inserting nodes into the tree than the `BinarySearchTree`.
 I did expect this as the traversal time for a TreeSet should be faster than the traversal time of the `BinarySearchTree`, given the `TreeSet` balances the tree upon addition, thus simplifying the subsequent add operations.
