@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class ArrayQueue<T extends Comparable<T>> implements PriorityQueue<T> {
     protected ArrayList<T> list = new ArrayList<>();
+    private int size = 0;
 
     public ArrayQueue() {}
 
@@ -46,19 +47,22 @@ public class ArrayQueue<T extends Comparable<T>> implements PriorityQueue<T> {
         int leftChildIdx = getLeftChild(index);
         int rightChildIdx = getRightChild(index);
 
+        // If node doesn't have a left child then we reached the bottom of the tree
         if (!inBounds(leftChildIdx)) {
             return;
         }
+
         T current = list.get(index);
         T leftChild = list.get(leftChildIdx);
 
+        // Node only has left child - perform single swap only if necessary
         if (!inBounds(rightChildIdx)) {
             if (current.compareTo(leftChild) < 0) {
                 return;
             }
             list.set(index, leftChild);
             list.set(leftChildIdx, current);
-            percolateDown(leftChildIdx);
+            return;
         }
 
         T rightChild = list.get(rightChildIdx);
@@ -90,6 +94,7 @@ public class ArrayQueue<T extends Comparable<T>> implements PriorityQueue<T> {
     public void add(T element) {
         list.add(element);
         percolateUp(list.size() - 1);
+        size++;
     }
 
     @Override
@@ -98,11 +103,12 @@ public class ArrayQueue<T extends Comparable<T>> implements PriorityQueue<T> {
         list.set(0, list.getLast());
         list.removeLast();
         percolateDown(0);
+        size--;
         return min;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size == 0;
     }
 }

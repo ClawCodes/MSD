@@ -46,4 +46,19 @@ class ArrayQueueTest {
         assertEquals(5, queue.list.get(3));
         assertEquals(3, queue.list.get(4));
     }
+
+    @Test
+    public void testAddAndRemoveMin() {
+        ArrayQueue<Integer> pq = new ArrayQueue<>();
+        pq.add(10);
+        pq.add(5);
+        pq.add(3);
+        pq.add(7);
+
+        // Remove minimum element and check order
+        assertEquals(Integer.valueOf(3), pq.removeMin()); // 3 is the smallest element
+        assertEquals(Integer.valueOf(5), pq.removeMin()); // Next smallest is 5
+        assertEquals(Integer.valueOf(7), pq.removeMin()); // Then comes 7
+        assertEquals(Integer.valueOf(10), pq.removeMin()); // Finally 10
+    }
 }
