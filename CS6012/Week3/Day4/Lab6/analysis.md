@@ -1,7 +1,5 @@
 # Lab 6 Analysis
 
-# Questions
-
 ## Experiment 1 - Tree Construction
 
 ![](TreeConstructionOrderedSet.png)
