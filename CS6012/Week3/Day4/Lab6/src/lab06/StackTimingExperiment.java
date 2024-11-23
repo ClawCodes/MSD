@@ -15,11 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-/*
- 1. Build trees with ordered set
- 2. Build trees with permuted set
- 3. Remove all elements
- */
 
 public class StackTimingExperiment extends TimerTemplate {
     public String dataStructure;
@@ -36,18 +31,16 @@ public class StackTimingExperiment extends TimerTemplate {
      */
     public StackTimingExperiment(int[] problemSizes, int timesToLoop) {
         super(problemSizes, timesToLoop);
-
     }
 
     @Override
     protected void setup(int n) {
-        for (int i = 0; i < n; i++){
+        orderdedSet.clear();
+        for (int i = 0; i < n; i++) {
             orderdedSet.add(i);
         }
         suffledSet = new ArrayList<>(orderdedSet);
-        for (int i = 0; i < 10; i++){
-            Collections.shuffle(suffledSet);
-        }
+        Collections.shuffle(suffledSet);
     }
 
     @Override
@@ -94,9 +87,13 @@ public class StackTimingExperiment extends TimerTemplate {
     protected void compensationIteration(int n) {
         if (testAdd) {
             if (useOrder) {
-                if (dataStructure.equals("ArrayQueue")) {} else {}
+                if (dataStructure.equals("ArrayQueue")) {
+                } else {
+                }
             } else {
-                if (dataStructure.equals("ArrayQueue")) {} else {}
+                if (dataStructure.equals("ArrayQueue")) {
+                } else {
+                }
             }
         } else {
             if (dataStructure.equals("ArrayQueue")) {
@@ -120,6 +117,7 @@ public class StackTimingExperiment extends TimerTemplate {
         }
 
     }
+
     public static int[] generateProblemSizes() {
         int numProblemSizes = 10;
         int[] problemSizes = new int[numProblemSizes];
@@ -159,7 +157,7 @@ public class StackTimingExperiment extends TimerTemplate {
         }
     }
 
-    public static void runTest(int[] problemSizes, boolean testAdd , boolean useOrder, String title, String fileName) {
+    public static void runTest(int[] problemSizes, boolean testAdd, boolean useOrder, String title, String fileName) {
         ArrayList<ExperimentResult> results_ = new ArrayList<>();
         for (String classToTest : Arrays.asList("ArrayQueue", "TreeSetQueue")) {
             StackTimingExperiment timer = new StackTimingExperiment(problemSizes, 100);
@@ -176,8 +174,8 @@ public class StackTimingExperiment extends TimerTemplate {
     public static void main(String[] args) {
         var problemSizes = generateProblemSizes();
 
-//        runTest(problemSizes, true, true, "Runtime time of tree construction from ordered set", "TreeConstructionOrderedSet");
-        runTest(problemSizes, true,false, "Runtime time of tree construction from permuted set", "TreeConstructionPermutedSet");
-//        runTest(problemSizes, false,true, "Runtime time of emptying tree with iterative removeMin()", "EmptyingTree");
+        runTest(problemSizes, true, true, "Runtime time of tree construction from ordered set", "TreeConstructionOrderedSet");
+        runTest(problemSizes, true, false, "Runtime time of tree construction from permuted set", "TreeConstructionPermutedSet");
+        runTest(problemSizes, false, true, "Runtime time of emptying tree with iterative removeMin()", "EmptyingTree");
     }
 }
