@@ -16,10 +16,6 @@ This expectation is supported as `ArrayQueue` displays a `O(n)` trend and `TreeS
 
 ![](TreeConstructionPermutedSet.png)
 
-Expect:
-* ArrayQueue - slows down as we need to percolate up more -> average runtime to `O(n)` and worst to `O(nlogn)` most often
-* TreeSetQueue - Stays at `O(nlogn)` - 
-
 In the chart above, we perform the same construction of the trees as in the first chart, except we now build the trees using a permuted list.
 Here I would expect `TreeSetQueue` to remain the same as it has a guaranteed runtime of `O(nlogn)` and `ArrayQueue` would slow down a bit, beause this would require percolating up more often moving it closer to a `O(nlogn)` runtime.
 However, even with percolating up being required the average percolate up runtime is `O(1)`.
