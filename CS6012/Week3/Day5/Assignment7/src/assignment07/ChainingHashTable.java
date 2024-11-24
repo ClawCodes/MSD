@@ -1,5 +1,6 @@
 package assignment07;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -17,13 +18,21 @@ public class ChainingHashTable implements Set<String> {
         size_ = 0;
     }
 
+    private int bucketLocation(String item){
+        return hashFunctor_.hash(item) % storage_.length;
+    }
+
     private LinkedList<String> getBucket(String item){
-        return storage_[hashFunctor_.hash(item) % storage_.length];
+        return storage_[bucketLocation(item)];
     }
 
     @Override
     public boolean add(String item) {
         LinkedList<String> bucket = getBucket(item);
+        if (bucket == null) {
+            storage_[bucketLocation(item)] = new LinkedList<>();
+            bucket = getBucket(item);
+        }
         if (bucket.contains(item)) {
             return false;
         } else {
@@ -46,9 +55,7 @@ public class ChainingHashTable implements Set<String> {
 
     @Override
     public void clear() {
-        for (LinkedList<String> bucket : storage_) {
-            bucket.clear();
-        }
+        Arrays.fill(storage_, null);
         size_ = 0;
     }
 
@@ -74,7 +81,11 @@ public class ChainingHashTable implements Set<String> {
 
     @Override
     public boolean remove(String item) {
-        return getBucket(item).remove(item);
+        boolean result = getBucket(item).remove(item);
+        if (result) {
+            size_--;
+        }
+        return result;
     }
 
     @Override
@@ -91,5 +102,13 @@ public class ChainingHashTable implements Set<String> {
     @Override
     public int size() {
         return size_;
+    }
+
+    public LinkedList<String>[] getStorage(){
+        return storage_;
+    }
+
+    public HashFunctor getHashFunctor(){
+        return hashFunctor_;
     }
 }
