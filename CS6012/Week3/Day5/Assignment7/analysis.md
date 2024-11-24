@@ -27,3 +27,15 @@ But unlike the `BadHashFunctor`; `h` and `he` will not share the same hash.
 
 The `GoodHashFunctor` implements the djb2 algorithm.
 This algorithm can produce a very large number of unique values and will essentially be globally unique thus collisions will only arise if the array backing the hash table is smaller than the number of possible values that will be added.
+
+## Experiment
+
+### Collision frequency for each hash function
+
+1. Need to create a large array of randomly generated Strings
+2. Measure collision count when adding all elements in the above array across multiple input sizes
+   * Use a set to ensure uniquness, then measure bucket length. bucket length - 1 = number of collisions for a given bucket
+
+
+
+### 

@@ -55,5 +55,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="jfree.jfreechart" level="project" />
+    <orderEntry type="library" name="github.javafaker" level="project" />
   </component>
 </module>
