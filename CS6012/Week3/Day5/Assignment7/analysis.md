@@ -10,10 +10,12 @@ Additionally, some characters would have frequent collisions due to their high u
 
 The `MediocreHashFunctor` concatenates the individual ASCII values of each character in the input and converts up to the first 5 digits in the concatenated value to an integer.
 For example:, `Hello` ASCII values are 72101108108111
-`H` - 72
-`e` - 101
-'l' - 108
-`o` - 111
+
+* `H` - 72
+* `e` - 101
+* `l` - 108
+* `o` - 111
+
 The string hello receives the hash `72101`.
 
 This functor should show reduced collisions when compared to `BadHashFunctor`. 
@@ -34,8 +36,6 @@ This algorithm can produce a very large number of unique values and will essenti
 
 1. Need to create a large array of randomly generated Strings
 2. Measure collision count when adding all elements in the above array across multiple input sizes
-   * Use a set to ensure uniquness, then measure bucket length. bucket length - 1 = number of collisions for a given bucket
-
-
+   * Use a set to ensure uniqueness, then measure bucket length. bucket length - 1 = number of collisions for a given bucket
 
 ### 

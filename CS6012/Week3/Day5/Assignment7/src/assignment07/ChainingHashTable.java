@@ -19,7 +19,7 @@ public class ChainingHashTable implements Set<String> {
     }
 
     private int bucketLocation(String item){
-        return hashFunctor_.hash(item) % storage_.length;
+        return Math.abs(hashFunctor_.hash(item) % storage_.length);
     }
 
     private LinkedList<String> getBucket(String item){
@@ -61,7 +61,11 @@ public class ChainingHashTable implements Set<String> {
 
     @Override
     public boolean contains(String item) {
-        return getBucket(item).contains(item);
+        LinkedList<String> bucket = getBucket(item);
+        if (bucket == null) {
+            return false;
+        } else
+            return bucket.contains(item);
     }
 
     @Override
@@ -81,6 +85,10 @@ public class ChainingHashTable implements Set<String> {
 
     @Override
     public boolean remove(String item) {
+        LinkedList<String> bucket = getBucket(item);
+        if (bucket == null) {
+            return false;
+        }
         boolean result = getBucket(item).remove(item);
         if (result) {
             size_--;

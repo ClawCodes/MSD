@@ -227,6 +227,23 @@ class ChainingHashTableTest {
     }
 
     @Test
+    void emptyBucketContains(){
+        HashFunctor inputFunctor = new BadHashFunctor();
+        int storageSize = 31;
+        ChainingHashTable table = new ChainingHashTable(storageSize, inputFunctor);
+        assertFalse(table.contains("a"));
+    }
+
+    @Test
+    void populatedBucketDoesNotContain(){
+        HashFunctor inputFunctor = new BadHashFunctor();
+        int storageSize = 31;
+        ChainingHashTable table = new ChainingHashTable(storageSize, inputFunctor);
+        table.add("a");
+        assertFalse(table.contains("ab")); // ab would result in the same bucket as a
+    }
+
+    @Test
     void isEmpty(){
         HashFunctor inputFunctor = new BadHashFunctor();
         int storageSize = 31;

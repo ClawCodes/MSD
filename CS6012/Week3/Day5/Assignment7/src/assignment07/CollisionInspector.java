@@ -5,6 +5,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -60,6 +61,9 @@ public class CollisionInspector {
                 title, "Capacity", "Collision count", dataset
         );
 
+        XYPlot plot = chart.getXYPlot();
+        plot.setForegroundAlpha(0.6f); // Set global alpha (value between 0.0f and 1.0f)
+
         JFrame frame = new JFrame("Plot");
         frame.setContentPane(new ChartPanel(chart));
         frame.pack();
@@ -99,13 +103,9 @@ public class CollisionInspector {
     }
 
     public static void main(String[] args) {
-        /*
-            Need 3 series
-            - collisions count at each capacity for each hash function
-         */
         createNames(1000);
         ArrayList<Integer> capacities = new ArrayList<>(Arrays.asList(
-                7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71
+                7, 17, 29, 41, 53, 67, 79, 97, 107, 127, 139, 157, 173
         ));
 
         Map<String, Result[]> results = new HashMap<>();
