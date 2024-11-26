@@ -18,10 +18,20 @@ public class ChainingHashTable implements Set<String> {
         size_ = 0;
     }
 
+    /**
+     * Get the index of the array bucket (i.e. linkedlist) in the array for a given item
+     * @param item item to use to find its respective bucket
+     * @return the index of the bucket
+     */
     private int bucketLocation(String item){
         return Math.abs(hashFunctor_.hash(item) % storage_.length);
     }
 
+    /**
+     * Get the linked list where an item will be stored
+     * @param item the item to use to find the linked list
+     * @return the linked list in the underlying array
+     */
     private LinkedList<String> getBucket(String item){
         return storage_[bucketLocation(item)];
     }
@@ -112,10 +122,16 @@ public class ChainingHashTable implements Set<String> {
         return size_;
     }
 
+    /**
+     * @return The underlying storage array containing the added elements
+     */
     public LinkedList<String>[] getStorage(){
         return storage_;
     }
 
+    /**
+     * @return The hash functor used to initialize this object
+     */
     public HashFunctor getHashFunctor(){
         return hashFunctor_;
     }
