@@ -109,9 +109,11 @@ public class CollisionInspector {
         ));
 
         Map<String, Result[]> results = new HashMap<>();
+
         BadHashFunctor badFunctor = new BadHashFunctor();
         Result[] badCollisions = getCollisionSeries(capacities, badFunctor);
         results.put("BadHashFunctor", badCollisions);
+
         MediocreHashFunctor mediocreFunctor = new MediocreHashFunctor();
         Result[] mediocreCollisions = getCollisionSeries(capacities, mediocreFunctor);
         results.put("MediocreHashFunctor", mediocreCollisions);
