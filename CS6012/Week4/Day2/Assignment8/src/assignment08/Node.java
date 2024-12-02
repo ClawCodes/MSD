@@ -5,16 +5,12 @@ import java.util.ArrayList;
 public class Node {
     private String value_;
     private ArrayList<Integer> neighbors_;
-    private int row_;
-    private int col_;
     private boolean visited_;
     private Integer cameFrom_;
 
-    public Node(String value, int row, int col) {
+    public Node(String value) {
         value_ = value;
         neighbors_ = new ArrayList<>();
-        row_ = row;
-        col_ = col;
         visited_ = false;
         cameFrom_ = null;
     }
