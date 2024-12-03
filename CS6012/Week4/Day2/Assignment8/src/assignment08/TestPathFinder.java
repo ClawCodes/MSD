@@ -18,4 +18,6 @@ public class TestPathFinder {
         PathFinder.solveMaze("bigMaze.txt", "bigMazeOutput.txt");
         PathFinder.solveMaze("mediumMaze.txt", "mediumMazeOutput.txt");
     }
+
+
 }

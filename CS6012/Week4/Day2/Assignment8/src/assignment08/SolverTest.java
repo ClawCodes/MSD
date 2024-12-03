@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class SolverTest {
     @Test
@@ -75,5 +77,35 @@ class SolverTest {
         assertEquals(26, actual.get(0));
         assertEquals(34, actual.get(1));
         assertEquals(44, actual.get(2));
+    }
+
+    @Test
+    public void testGetReadTinyMaze() throws FileNotFoundException {
+        Solver solver = new Solver("tinyMaze.txt");
+        Graph maze = solver.getMaze_();
+
+        assertEquals(63, maze.size());
+        assertEquals(51, solver.startVertex_);
+        assertEquals("S", maze.getVertex(51).getValue());
+        assertEquals(46, solver.endVertex_);
+        assertEquals("G", maze.getVertex(46).getValue());
+        assertEquals(7, solver.height_);
+        assertEquals(9, solver.width_);
+
+        Node topLeft = maze.getVertex(0);
+        assertEquals("X", topLeft.getValue());
+        assertEquals(new ArrayList(Arrays.asList(1, 9)), topLeft.neighbors());
+
+        Node topRight = maze.getVertex(8);
+        assertEquals("X", topRight.getValue());
+        assertEquals(new ArrayList(Arrays.asList(7, 17)), topRight.neighbors());
+
+        Node bottomLeft = maze.getVertex(54);
+        assertEquals("X", bottomLeft.getValue());
+        assertEquals(new ArrayList(Arrays.asList(45, 55)), bottomLeft.neighbors());
+
+        Node bottomRight = maze.getVertex(62);
+        assertEquals("X", bottomRight.getValue());
+        assertEquals(new ArrayList(Arrays.asList(53, 61)), bottomRight.neighbors());
     }
 }

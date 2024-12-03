@@ -5,23 +5,35 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+/**
+ * Object which parse maze file into graph and finds the shortest path
+ */
 public class Solver {
-    private Graph maze_;
-    private int startVertex_;
-    private int endVertex_;
-    private int height_;
-    private int width_;
+    protected Graph maze_;
+    protected int startVertex_;
+    protected int endVertex_;
+    protected int height_;
+    protected int width_;
 
     Solver(){
         maze_ = new Graph();
     }
 
+    /**
+     * Initialize Solver object
+     * @param filename file containing maze
+     * @throws FileNotFoundException when provided file name is not found
+     */
     Solver(String filename) throws FileNotFoundException {
         maze_ = new Graph();
         readMaze(filename);
     }
 
-    public void setPath(){
+    /**
+     * Fill in the path from the start to the end node
+     * using the Node.cameFrom values
+     */
+    private void setPath(){
         Node goal = maze_.getVertex(endVertex_);
         Integer cameFrom = goal.getCameFrom();
         if (cameFrom == null){
@@ -33,8 +45,14 @@ public class Solver {
         }
     }
 
+    /**
+     * Write the maze to a file
+     * When calling after solve(), the shortest path will be included in the written file.
+     * @param filename name of file to write the maze to
+     */
     public void writeMaze(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
+            writer.write(height_ + " " + width_ + "\n");
             for (int row = 0; row < height_; row++) {
                 String line = "";
                 for (int col = 0; col < width_; col++) {
@@ -47,6 +65,10 @@ public class Solver {
         }
     }
 
+    /**
+     * Solve the maze using breadth first search
+     * This method fills in the shortest path within the internal graph
+     */
     public void solve() {
         LinkedList<Integer> queue = new LinkedList<>();
         maze_.setNodeVisited(startVertex_, true);
@@ -77,6 +99,12 @@ public class Solver {
         height_ = height;
     }
 
+    /**
+     * Get the index of a given node's neighbors
+     * @param row row of the node in the original maze file
+     * @param col column of the node in the original maze file
+     * @return list of indexes neighboring a node
+     */
     public ArrayList<Integer> getNeighbors(int row, int col){
         if (row >= height_ || col >= width_) {
             throw new IndexOutOfBoundsException("Row or column out of bounds.");
@@ -103,6 +131,11 @@ public class Solver {
         return neighbors;
     }
 
+    /**
+     * Read file containing maze into internal Graph object
+     * @param inputFile file to parse
+     * @throws FileNotFoundException when file is not found
+     */
     public void readMaze(String inputFile) throws FileNotFoundException {
         FileInputStream inStream = new FileInputStream(inputFile);
         Scanner scanner = new Scanner(inStream);
@@ -116,11 +149,11 @@ public class Solver {
         int row = 0;
         while (scanner.hasNextLine()) {
             String[] line = scanner.nextLine().split("");
-            for (int i = 0; i < line.length; i++) {
-                String value = line[i];
+            for (int col = 0; col < line.length; col++) {
+                String value = line[col];
                 Node node = new Node(value);
                 maze_.addVertex(node);
-                for (Integer neighbor : getNeighbors(row, i)){
+                for (Integer neighbor : getNeighbors(row, col)){
                     node.addNeighbor(neighbor);
                 }
                 if (value.equals("S")) {
@@ -131,5 +164,9 @@ public class Solver {
             }
             row++;
         }
+    }
+
+    public Graph getMaze_() {
+        return maze_;
     }
 }
