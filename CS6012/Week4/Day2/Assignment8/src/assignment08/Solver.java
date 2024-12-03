@@ -166,7 +166,7 @@ public class Solver {
         }
     }
 
-    public Graph getMaze_() {
+    public Graph getMaze() {
         return maze_;
     }
 }

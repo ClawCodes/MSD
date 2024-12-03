@@ -19,7 +19,9 @@ class PathFinderTest {
             "tinyMaze",
             "tinyOpen",
             "turn",
-            "unsolvable"
+            "unsolvable",
+            "multipleShortestPaths",
+            "noBorders"
     })
     void testMazes(String fileName) throws IOException {
         String outFile = fileName + "TestOutput.txt";

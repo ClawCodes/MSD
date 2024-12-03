@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 class SolverTest {
     @Test
-    public void testGetNeighborsTopLeftCorner(){
+    public void testGetNeighborsTopLeftCorner() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -22,7 +22,7 @@ class SolverTest {
     }
 
     @Test
-    public void testGetNeighborsTopRightCorner(){
+    public void testGetNeighborsTopRightCorner() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -33,7 +33,7 @@ class SolverTest {
     }
 
     @Test
-    public void testGetNeighborsBottomLeftCorner(){
+    public void testGetNeighborsBottomLeftCorner() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -44,7 +44,7 @@ class SolverTest {
     }
 
     @Test
-    public void testGetNeighborsBottomRightCorner(){
+    public void testGetNeighborsBottomRightCorner() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -55,7 +55,7 @@ class SolverTest {
     }
 
     @Test
-    public void testGetNeighborsCentralNode(){
+    public void testGetNeighborsCentralNode() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -68,7 +68,7 @@ class SolverTest {
     }
 
     @Test
-    public void testGetNeighborsCentralRightMost(){
+    public void testGetNeighborsCentralRightMost() {
         Solver solver = new Solver();
         solver.setWidth(9);
         solver.setHeight(7);
@@ -82,7 +82,7 @@ class SolverTest {
     @Test
     public void testGetReadTinyMaze() throws FileNotFoundException {
         Solver solver = new Solver("tinyMaze.txt");
-        Graph maze = solver.getMaze_();
+        Graph maze = solver.getMaze();
 
         assertEquals(63, maze.size());
         assertEquals(51, solver.startVertex_);
@@ -107,5 +107,29 @@ class SolverTest {
         Node bottomRight = maze.getVertex(62);
         assertEquals("X", bottomRight.getValue());
         assertEquals(new ArrayList(Arrays.asList(53, 61)), bottomRight.neighbors());
+    }
+
+    @Test
+    public void testSetPathTinyMaze() throws FileNotFoundException {
+        Solver solver = new Solver("tinyMaze.txt");
+        Graph maze = solver.getMaze();
+        // Ensure no node is already flagged as "."
+        for (int i = 0; i < maze.size(); i++) {
+            assertNotEquals("." , maze.getVertex(i));
+        }
+
+        solver.solve();
+        maze = solver.getMaze();
+        ArrayList<Integer> pathLocations = new ArrayList<>(Arrays.asList(
+                50, 49, 40, 37, 31, 30, 29, 28
+        ));
+        for (int i = 0; i < maze.size(); i++) {
+            if (pathLocations.contains(maze.getVertex(i))) {
+                assertEquals(".", maze.getVertex(i));
+            } else {
+                assertNotEquals(".", maze.getVertex(i));
+            }
+        }
+
     }
 }
