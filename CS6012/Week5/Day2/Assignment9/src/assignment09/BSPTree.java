@@ -1,5 +1,6 @@
 package assignment09;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -72,24 +73,24 @@ public class BSPTree {
         }
     }
 
-    void insert(Segment segment) {
+    public void insert(Segment segment) {
         try {
             root_ = insert_(segment, root_);
             size_++;
-        } catch (IllegalArgumentException | NullPointerException _){}
+        } catch (IllegalArgumentException | NullPointerException e){}
     }
 
     private Node insert_(Segment segment, Node node) {
         if (node == null) {
             node = new Node(segment);
         } else if (segment.whichSide(node.value) < 0) {
-            node.left = insert_(segment, node.left);
-        } else if (segment.whichSide(node.value) > 0) {
             node.right = insert_(segment, node.right);
+        } else if (segment.whichSide(node.value) > 0) {
+            node.left = insert_(segment, node.left);
         } else if (segment.whichSide(node.value) == 0) {
             Segment[] ret = segment.split(node.value);
-            node.left = insert_(ret[0], node.left);
-            node.right = insert_(ret[1], node.right);
+            node.right = insert_(ret[0], node.right);
+            node.left = insert_(ret[1], node.left);
         }
         return node;
     }
@@ -116,16 +117,16 @@ public class BSPTree {
     private Segment findCollision(Node n, Segment query){
         Segment collision = null;
         if (n != null) {
-            if (n.value.whichSide(query) == -1) {
-                findCollision(n.left, query);
-            } else if (n.value.whichSide(query) == 1) {
-                findCollision(n.right, query);
-            } else if (n.value.intersects(query)) {
+            if (query.whichSide(n.value) == -1) {
+                return findCollision(n.right, query);
+            } else if (query.whichSide(n.value) == 1) {
+                return findCollision(n.left, query);
+            } else if (query.intersects(n.value)) {
                 collision = n.value;
             } else {
                 Segment[] splitSeg = query.split(n.value);
-                findCollision(n.left, splitSeg[0]);
-                findCollision(n.right, splitSeg[1]);
+                findCollision(n.right, splitSeg[0]);
+                findCollision(n.left, splitSeg[1]);
             }
         }
         return collision;

@@ -68,4 +68,11 @@ class BSPTreeTest {
         var collision = tree.collision(collidingSegment);
         assertEquals(root, collision);
     }
+
+    @Test
+    void testCollisionWithChild(){
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+    }
 }
