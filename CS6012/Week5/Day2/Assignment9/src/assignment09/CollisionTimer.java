@@ -1,6 +1,7 @@
 package assignment09;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CollisionTimer extends TimerTemplate {
@@ -42,6 +43,8 @@ public class CollisionTimer extends TimerTemplate {
 
     @Override
     protected void compensationIteration(int n) {
+//        int idx = new Random().nextInt(segments.size() - 1);
+//        segment = new Segment(idx - 0.5, 0.5, idx - 0.5, 0.5); // will only collide with line at idx
         if (bspCollision) {
         } else {
             AtomicBoolean collisionFound = new AtomicBoolean(false);

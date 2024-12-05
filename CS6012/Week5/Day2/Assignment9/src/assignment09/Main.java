@@ -63,15 +63,17 @@ public class Main {
 
         ArrayList<ExperimentResult> constructionResults = new ArrayList<>();
         // Bulk BSP construction
-        BulkConstructionTimer bcT = new BulkConstructionTimer(problemSizes, 100);
-        TimerTemplate.Result[] bulkResults = bcT.run();
-        constructionResults.add(new ExperimentResult(bulkResults, "Bulk Construction"));
-         // Empty BSP construction
-        EmptyConstructionTimer ecT = new EmptyConstructionTimer(problemSizes, 100);
-        TimerTemplate.Result[] emptyResults = ecT.run();
-        constructionResults.add(new ExperimentResult(emptyResults, "Iterative insert"));
+//        BulkConstructionTimer bcT = new BulkConstructionTimer(problemSizes, 100);
+//        TimerTemplate.Result[] bulkResults = bcT.run();
+//        constructionResults.add(new ExperimentResult(bulkResults, "Bulk Construction"));
 
-        plotResults(constructionResults, "Runtime for tree construction: Bulk constructor vs. iterative insert calls", "treeConstruction");
+//        plotResults(constructionResults, "Runtime for tree construction: Bulk constructor", "treeConstructionBulkOnly");
+         // Empty BSP construction
+//        EmptyConstructionTimer ecT = new EmptyConstructionTimer(problemSizes, 100);
+//        TimerTemplate.Result[] emptyResults = ecT.run();
+//        constructionResults.add(new ExperimentResult(emptyResults, "Iterative insert"));
+
+//        plotResults(constructionResults, "Runtime for tree construction: Bulk constructor vs. iterative insert calls", "treeConstruction");
 
         ArrayList<ExperimentResult> collisionResults = new ArrayList<>();
         CollisionTimer ecC = new CollisionTimer(problemSizes, 100);
