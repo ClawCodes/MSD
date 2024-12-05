@@ -1,9 +1,12 @@
 package assignment09;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/**
+ * Binary Space Partitioning Tree
+ */
 public class BSPTree {
     private Node root_;
     private int size_;
@@ -17,6 +20,10 @@ public class BSPTree {
         size_ = 0;
     }
 
+    /**
+     * Constructor which constructs the tree from the segments provided and a randomly chosen segment as the root
+     * @param segments segments to build the tree with
+     */
     public BSPTree(ArrayList<Segment> segments){
         int rootIdx = rand.nextInt(segments.size());
 
@@ -29,6 +36,12 @@ public class BSPTree {
         root_.right = buildNode(partitionedSegs[1]);
     }
 
+    /**
+     * Build a BSP tree recursively using a segment array.
+     * The nodes will be randomly chosen in each frame.
+     * @param segments segments to build the tree from
+     * @return the top-level node of the tree
+     */
     private Node buildNode(ArrayList<Segment> segments){
         Node newNode = null;
         if (!segments.isEmpty()){
@@ -42,6 +55,13 @@ public class BSPTree {
         return newNode;
     }
 
+    /**
+     * Partition a segment array around another segment
+     * @param pivot the segment to partition the segments array around
+     * @param segments the segments to partition
+     * @return Array of length 2 with the first element as the segments which are on the left side of the pivot
+     *         and the second element as the segments which are on the right side of the pivot
+     */
     private ArrayList<Segment>[] partitionSegments(Segment pivot, ArrayList<Segment> segments){
         ArrayList<Segment>[] partitions = new ArrayList[2];
         ArrayList<Segment> left = new ArrayList<>();
@@ -63,6 +83,10 @@ public class BSPTree {
         return partitions;
     }
 
+    /**
+     * Representation of a Node in the BSP tree.
+     * The value of the node is the Node's segment instance
+     */
     protected static class Node {
         Segment value;
         Node left;
@@ -73,13 +97,25 @@ public class BSPTree {
         }
     }
 
+    /**
+     * Insert a Segment into the tree
+     * @param segment segment to insert
+     */
     public void insert(Segment segment) {
         try {
             root_ = insert_(segment, root_);
             size_++;
-        } catch (IllegalArgumentException | NullPointerException e){}
+        } catch (IllegalArgumentException | NullPointerException e){
+            System.out.println("Failed to insert segment.");
+        }
     }
 
+    /**
+     * Recursively insert segment into the tree
+     * @param segment segment to insert
+     * @param node current node to compare the segment to
+     * @return The top-level node of the BSP containing the newly inserted segment
+     */
     private Node insert_(Segment segment, Node node) {
         if (node == null) {
             node = new Node(segment);
@@ -110,10 +146,22 @@ public class BSPTree {
         }
     }
 
+    /**
+     * Traverse the BSP tree and perform the callback action in an in-order like fashion.
+     * @param x x of point to compare to the segments
+     * @param y y of point to compare to the segments
+     * @param callback class implementing a callback method to invoke
+     */
     public void traverseFarToNear(double x, double y, SegmentCallback callback){
         farToNear(root_, x, y, callback);
     }
 
+    /**
+     * Recursively search for a node with intersects with a given segment
+     * @param n node to compare segment to
+     * @param query segment to see if it intersects with a node in the tree
+     * @return the segment in the tree the query intersects with
+     */
     private Segment findCollision(Node n, Segment query){
         Segment collision = null;
         if (n != null) {
@@ -132,6 +180,11 @@ public class BSPTree {
         return collision;
     }
 
+    /**
+     * Find a node which intersects with a given segment
+     * @param query Segment to see if it intersects with a node in the tree
+     * @return the segment in the tree the query intersects with
+     */
     public Segment collision(Segment query){
         return findCollision(root_, query);
     }
