@@ -29,6 +29,7 @@ class BSPTreeTest {
         Segment right = new Segment(2, 1, 3, 1);
 
         ArrayList<Segment> segments = new ArrayList<>();
+
         segments.add(root);
         segments.add(left);
         segments.add(right);
@@ -39,9 +40,47 @@ class BSPTreeTest {
 
         BSPTree.Node actual = tree.getTree();
         assertEquals(root, actual.value);
-        assertEquals(left, actual.right.value);
-        assertEquals(right, actual.left.value);
+        assertEquals(left, actual.left.value);
+        assertEquals(right, actual.right.value);
     }
+
+    @Test
+    void testSingleRootNodeInsert() {
+        Segment segment = new Segment(0, 0, 1, 1);
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(segment);
+
+        BSPTree tree = new BSPTree();
+        tree.insert(segment);
+
+        BSPTree.Node actual = tree.getTree();
+        assertEquals(segment, actual.value);
+        assertNull(actual.left);
+        assertNull(actual.right);
+    }
+
+    @Test
+    void testTwoChildNodeInsert() {
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree tree = new BSPTree();
+        tree.insert(root);
+        tree.insert(left);
+        tree.insert(right);
+
+        BSPTree.Node actual = tree.getTree();
+        assertEquals(root, actual.value);
+        assertEquals(left, actual.left.value);
+        assertEquals(right, actual.right.value);
+    }
+
 
     @Test
     void testCollisionIsNullWithRootReAdd(){
@@ -74,5 +113,17 @@ class BSPTreeTest {
         Segment root = new Segment(0, 0, 1, 1);
         Segment left = new Segment(-1, 1, -2, 1);
         Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree.rand = new Random(0);
+        BSPTree tree = new BSPTree(segments);
+        Segment rightCollision = new Segment(2.5, 0, 2.5, 1.5);
+
+        var collision = tree.collision(rightCollision);
+        assertEquals(right, collision);
     }
 }

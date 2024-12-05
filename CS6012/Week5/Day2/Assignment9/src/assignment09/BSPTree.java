@@ -6,10 +6,10 @@ import java.util.Random;
 
 /**
  * Binary Space Partitioning Tree
+ * Note: Convention for node insertion - "positive points" on the right and "negative points" on the left
  */
 public class BSPTree {
     private Node root_;
-    private int size_;
     static Random rand = new Random();
 
     /**
@@ -17,7 +17,6 @@ public class BSPTree {
      */
     public BSPTree(){
         root_ = null;
-        size_ = 0;
     }
 
     /**
@@ -70,12 +69,12 @@ public class BSPTree {
         for (Segment segment : segments) {
             if (pivot.whichSide(segment) == 0) {
                 Segment[] splitSeg = segment.split(pivot);
-                left.add(splitSeg[0]);
-                right.add(splitSeg[1]);
+                right.add(splitSeg[0]);
+                left.add(splitSeg[1]);
             } else if (pivot.whichSide(segment) == 1) {
-                right.add(segment);
-            } else {
                 left.add(segment);
+            } else {
+                right.add(segment);
             }
         }
         partitions[0] = left;
@@ -102,11 +101,14 @@ public class BSPTree {
      * @param segment segment to insert
      */
     public void insert(Segment segment) {
-        try {
-            root_ = insert_(segment, root_);
-            size_++;
-        } catch (IllegalArgumentException | NullPointerException e){
-            System.out.println("Failed to insert segment.");
+        if (root_ == null) {
+            root_ = new Node(segment);
+        } else {
+            try {
+                root_ = insert_(segment, root_);
+            } catch (IllegalArgumentException | NullPointerException e) {
+                System.out.println("Failed to insert segment.");
+            }
         }
     }
 
@@ -118,12 +120,14 @@ public class BSPTree {
      */
     private Node insert_(Segment segment, Node node) {
         if (node == null) {
-            node = new Node(segment);
-        } else if (segment.whichSide(node.value) < 0) {
+            return new Node(segment);
+        }
+        int side = node.value.whichSide(segment);
+        if (side < 0) {
             node.right = insert_(segment, node.right);
-        } else if (segment.whichSide(node.value) > 0) {
+        } else if (side > 0) {
             node.left = insert_(segment, node.left);
-        } else if (segment.whichSide(node.value) == 0) {
+        } else {
             Segment[] ret = segment.split(node.value);
             node.right = insert_(ret[0], node.right);
             node.left = insert_(ret[1], node.left);
@@ -136,13 +140,13 @@ public class BSPTree {
             return;
         }
         if (node.value.whichSidePoint(x, y) == -1){
-            farToNear(node.right, x, y, callback);
-            callback.callback(node.value);
             farToNear(node.left, x, y, callback);
+            callback.callback(node.value);
+            farToNear(node.right, x, y, callback);
         } else {
-            farToNear(node.left, x, y, callback);
-            callback.callback(node.value);
             farToNear(node.right, x, y, callback);
+            callback.callback(node.value);
+            farToNear(node.left, x, y, callback);
         }
     }
 
@@ -165,11 +169,12 @@ public class BSPTree {
     private Segment findCollision(Node n, Segment query){
         Segment collision = null;
         if (n != null) {
-            if (query.whichSide(n.value) == -1) {
+            int side = n.value.whichSide(query);
+            if (side == -1) {
                 return findCollision(n.right, query);
-            } else if (query.whichSide(n.value) == 1) {
+            } else if (side == 1) {
                 return findCollision(n.left, query);
-            } else if (query.intersects(n.value)) {
+            } else if (n.value.intersects(query)) {
                 collision = n.value;
             } else {
                 Segment[] splitSeg = query.split(n.value);
