@@ -68,7 +68,7 @@ public class BSPTree {
 
         for (Segment segment : segments) {
             if (pivot.whichSide(segment) == 0) {
-                Segment[] splitSeg = segment.split(pivot);
+                Segment[] splitSeg = pivot.split(segment);
                 right.add(splitSeg[0]);
                 left.add(splitSeg[1]);
             } else if (pivot.whichSide(segment) == 1) {
@@ -128,7 +128,7 @@ public class BSPTree {
         } else if (side > 0) {
             node.left = insert_(segment, node.left);
         } else {
-            Segment[] ret = segment.split(node.value);
+            Segment[] ret = node.value.split(segment);
             node.right = insert_(ret[0], node.right);
             node.left = insert_(ret[1], node.left);
         }
@@ -177,7 +177,7 @@ public class BSPTree {
             } else if (n.value.intersects(query)) {
                 collision = n.value;
             } else {
-                Segment[] splitSeg = query.split(n.value);
+                Segment[] splitSeg = n.value.split(query);
                 findCollision(n.right, splitSeg[0]);
                 findCollision(n.left, splitSeg[1]);
             }

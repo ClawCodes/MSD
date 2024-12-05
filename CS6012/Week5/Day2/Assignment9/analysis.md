@@ -32,3 +32,12 @@ Overall, this experiment validates my expectations.
 For this experiment I use the same worst case described above, but then generated a random segment to use as the query for collision.
 In the case of the BSP tree collision method I would expect a `O(log n)` runtime as this method will only search the side of the tree where there the randomly generated segment would be contained in.
 Whereas, the near to far traversal collision method can potentially be `O(N)` as we are not selectively choosing which side of the tree to traverse and are instead comparing the randomly generated segment to every element in the tree until we find the collision.
+
+The plotted trend is not what I expected. Primarily, the BSPTree collision running in what seems to be constant time.
+I believe this is due to the experiment set up.
+The randomly generated segment is generated using `Math.random()` which will only produced numbers between 0 and 1.
+This will only produce a single possible collision with the same point around the origin in the input array.
+Thus, depending on the tree construction, the collision method won't have to recurse far.
+
+A better follow-up experiment would be to create a randomly generated array of segments for the input and in each timing iteration generate a new random segment to search for.
+This would introduce more variation and possible collision cases and would likely move the time complexity to the aveerage case.

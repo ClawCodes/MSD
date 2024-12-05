@@ -126,4 +126,89 @@ class BSPTreeTest {
         var collision = tree.collision(rightCollision);
         assertEquals(right, collision);
     }
+
+    @Test
+    void testCollisionIsNullWithNoCollision(){
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree.rand = new Random(0);
+        BSPTree tree = new BSPTree(segments);
+        Segment noCollisionSeg = new Segment(5, 1, 7, 1);
+
+        var collision = tree.collision(noCollisionSeg);
+        assertNull(collision);
+    }
+
+    @Test
+    void testFarToNearFromOrigin(){
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree.rand = new Random(0);
+        BSPTree tree = new BSPTree(segments);
+        ArrayList<Segment> visited = new ArrayList<>();
+        tree.traverseFarToNear(0, 0, (segment) -> {
+            visited.add(segment);
+        });
+        assertEquals(right, visited.get(0));
+        assertEquals(root, visited.get(1));
+        assertEquals(left, visited.get(2));
+    }
+
+    @Test
+    void testFarToNearFromFarNegative(){
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree.rand = new Random(0);
+        BSPTree tree = new BSPTree(segments);
+        ArrayList<Segment> visited = new ArrayList<>();
+        tree.traverseFarToNear(-10, 0, (segment) -> {
+            visited.add(segment);
+        });
+        assertEquals(right, visited.get(0));
+        assertEquals(root, visited.get(1));
+        assertEquals(left, visited.get(2));
+    }
+
+    @Test
+    void testFarToNearFromFarPositive(){
+        Segment root = new Segment(0, 0, 1, 1);
+        Segment left = new Segment(-1, 1, -2, 1);
+        Segment right = new Segment(2, 1, 3, 1);
+
+        ArrayList<Segment> segments = new ArrayList<>();
+        segments.add(root);
+        segments.add(left);
+        segments.add(right);
+
+        BSPTree.rand = new Random(0);
+        BSPTree tree = new BSPTree(segments);
+        ArrayList<Segment> visited = new ArrayList<>();
+        tree.traverseFarToNear(10, 0, (segment) -> {
+            visited.add(segment);
+        });
+        assertEquals(left, visited.get(0));
+        assertEquals(root, visited.get(1));
+        assertEquals(right, visited.get(2));
+    }
 }
