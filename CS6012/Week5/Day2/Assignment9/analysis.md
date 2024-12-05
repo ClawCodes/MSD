@@ -29,3 +29,6 @@ Overall, this experiment validates my expectations.
 
 ![](collisions.png)
 
+For this experiment I use the same worst case described above, but then generated a random segment to use as the query for collision.
+In the case of the BSP tree collision method I would expect a `O(log n)` runtime as this method will only search the side of the tree where there the randomly generated segment would be contained in.
+Whereas, the near to far traversal collision method can potentially be `O(N)` as we are not selectively choosing which side of the tree to traverse and are instead comparing the randomly generated segment to every element in the tree until we find the collision.
