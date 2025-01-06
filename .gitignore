@@ -34,3 +34,7 @@
 
 # IntelliJ
 .idea/
+
+# VSCode
+*.vscode*
+*.dsYM*
