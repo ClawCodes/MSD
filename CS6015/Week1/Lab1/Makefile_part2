@@ -1,0 +1,20 @@
+CXX=c++
+CXXSOURCE=Caps.cpp Clothing.cpp Pants.cpp main.cpp
+HEADERS=Caps.h Clothing.h Pants.h
+OBJECTS=main.o Pants.o Clothing.o Caps.o
+
+.PHONY: build printM clean objects
+
+main: objects
+	${CXX} ${OBJECTS} -o $@
+
+objects: ${CXXSOURCE} ${HEADERS}
+	${CXX} -c ${CXXSOURCE}
+
+build: main
+
+clean:
+	rm -rf *.o main
+
+printM:
+	echo ${CXX} ${CXXSOURCE} ${HEADERS} ${OBJECTS}
