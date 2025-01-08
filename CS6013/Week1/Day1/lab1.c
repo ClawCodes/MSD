@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h> // For strlen()
+#include <assert.h>
+#include <stdbool.h>
 
 /*********************************************************************
  *
@@ -50,10 +52,98 @@
  * Hint: you may want to write helper functions for these two functions
  *
  *********************************************************************/
+unsigned long generateMask(int index, int seqSize, bool zeroMask) {
+    unsigned long result = 0;
+    for (int i = 0; i < seqSize; i++) {
+        result |= 1;
+        result <<= 1;
+    }
+    result >>= 1;
+    result <<= (64 - index - seqSize);
+    if (zeroMask) {
+        result = ~result;
+    }
+    return result;
+}
 
-unsigned long byte_sort( unsigned long arg )
-{
-  return 0;
+unsigned long extractBitValue(unsigned long num, int index, int seqSize) {
+    unsigned long mask = generateMask(index, seqSize, false);
+    return (num & mask) >> 64 - index - seqSize;
+}
+
+void updateBits(unsigned long* num, unsigned long updateVal, int index, int seqSize) {
+    const unsigned long mask = generateMask(index, seqSize, true);
+    *num &= mask; // zero out bits to insert value into
+    updateVal <<= 64 - index - seqSize; // Shift updateVal to index position (assumes only first 8 bits are populated in updateVal)
+    *num |= updateVal; // Insert value
+}
+
+unsigned long sortBits(unsigned long arr, int seqSize) {
+    // int iterCount = 64 / seqSize;
+    for (int i = 0; i < 64; i += seqSize) {
+        unsigned long ithVal = extractBitValue(arr, i, seqSize);
+        unsigned long maxVal = ithVal;
+        int maxValIndex = i;
+        for (int j = i + seqSize; j < 64; j += seqSize) {
+            unsigned long jthVal = extractBitValue(arr, j, seqSize);
+            if (jthVal > maxVal) {
+                maxVal = jthVal;
+                maxValIndex = j;
+            }
+        }
+        // Swap values
+        updateBits(&arr, maxVal, i, seqSize);
+        updateBits(&arr, ithVal, maxValIndex, seqSize);
+    }
+    return arr;
+}
+
+unsigned long byte_sort(unsigned long arg) {
+    return sortBits(arg, 8);
+}
+
+void testGenerateMask() {
+    // Mask with ones in specified span
+    assert(generateMask(0, 8, false) == 0xff00000000000000);
+    assert(generateMask(8, 8, false) == 0x00ff000000000000);
+    assert(generateMask(16, 8, false) == 0x0000ff0000000000);
+    assert(generateMask(56, 8, false) == 0x00000000000000ff);
+    assert(generateMask(0, 4, false) == 0xf000000000000000);
+    assert(generateMask(8, 4, false) == 0x00f0000000000000);
+    assert(generateMask(16, 4, false) == 0x0000f00000000000);
+    assert(generateMask(60, 4, false) == 0x000000000000000f);
+
+    // Mask with ones in specified span
+    assert(generateMask(0, 8, true) == 0x00ffffffffffffff);
+    assert(generateMask(8, 8, true) == 0xff00ffffffffffff);
+    assert(generateMask(16, 8, true) == 0xffff00ffffffffff);
+    assert(generateMask(56, 8, true) == 0xffffffffffffff00);
+    assert(generateMask(0, 4, true) == 0x0fffffffffffffff);
+    assert(generateMask(8, 4, true) == 0xff0fffffffffffff);
+    assert(generateMask(16, 4, true) == 0xffff0fffffffffff);
+    assert(generateMask(60, 4, true) == 0xfffffffffffffff0);
+}
+
+void testExtractBitValue() {
+    assert(extractBitValue(0xff00000000000000, 0, 8) == 255);
+    assert(extractBitValue(0x0ff0000000000000, 4, 8) == 255);
+    assert(extractBitValue(0x00000000000000ff, 56, 8) == 255);
+}
+
+void testUpdateBits() {
+    unsigned long a = 0x0000000000000000;
+    updateBits(&a, 255, 0, 8);
+    assert(a == 0xff00000000000000);
+
+    unsigned long b = 0x0000000000000000;
+    updateBits(&b, 255, 56, 8);
+    assert(b == 0x00000000000000ff);
+}
+
+void testSortBits() {
+    // assert(sortBits(0x0001020304050607, 8) == 0x0706050403020100);
+    unsigned long res = sortBits(0x0403deadbeef0201, 8);
+    assert(res == 0xefdebead04030201);
 }
 
 /*********************************************************************
@@ -72,23 +162,26 @@ unsigned long byte_sort( unsigned long arg )
  *
  *********************************************************************/
 
-unsigned long nibble_sort (unsigned long arg)
-{
-  return 0;
+unsigned long nibble_sort(unsigned long arg) {
+    return sortBits(arg, 4);
+}
+
+void testNibbleSort() {
+    assert(nibble_sort(0x0403deadbeef0201) == 0xfeeeddba43210000);
 }
 
 /*********************************************************************/
 
 typedef struct elt {
-  char val;
-  struct elt *link;
+    char val;
+    struct elt *link;
 } Elt;
 
 /*********************************************************************/
 
 /* Forward declaration of "free_list()"... This allows you to call   */
 /* free_list() in name_list() [if you'd like].                       */
-void free_list( Elt* head ); // [No code goes here!]
+void free_list(Elt *head); // [No code goes here!]
 
 /*********************************************************************
  *
@@ -122,22 +215,19 @@ void free_list( Elt* head ); // [No code goes here!]
  *
  *********************************************************************/
 
-Elt *name_list()
-{
-   char * name = "Davison";
-   return NULL;
+Elt *name_list() {
+    char *name = "Davison";
+    return NULL;
 }
 
 /*********************************************************************/
 
-void print_list( Elt* head )
-{
+void print_list(Elt *head) {
 }
 
 /*********************************************************************/
 
-void free_list( Elt* head )
-{
+void free_list(Elt *head) {
 }
 
 /*********************************************************************
@@ -152,8 +242,7 @@ void free_list( Elt* head )
  *
  *********************************************************************/
 
-void draw_me()
-{
+void draw_me() {
 }
 
 /*********************************************************************
@@ -176,7 +265,14 @@ void draw_me()
  *********************************************************************/
 
 int main() {
-   // Call your test routines here...
-   printf("Hello World\n");
-   return 0;
+    // Call your test routines here...
+    // testArrayToLong();
+    // testByte_sort();
+    testGenerateMask();
+    testExtractBitValue();
+    testUpdateBits();
+    testSortBits();
+    testNibbleSort();
+    printf("All tests passed!");
+    return 0;
 }
