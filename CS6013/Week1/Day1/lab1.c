@@ -60,10 +60,8 @@ unsigned long generateMask(int index, int seqSize, bool zeroMask) {
     }
     result >>= 1;
     result <<= (64 - index - seqSize);
-    if (zeroMask) {
-        result = ~result;
-    }
-    return result;
+
+    return zeroMask ? ~result : result;
 }
 
 unsigned long extractBitValue(unsigned long num, int index, int seqSize) {
