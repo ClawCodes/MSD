@@ -79,7 +79,6 @@ void updateBits(unsigned long* num, unsigned long updateVal, int index, int seqS
 }
 
 unsigned long sortBits(unsigned long arr, int seqSize) {
-    // int iterCount = 64 / seqSize;
     for (int i = 0; i < 64; i += seqSize) {
         unsigned long ithVal = extractBitValue(arr, i, seqSize);
         unsigned long maxVal = ithVal;
@@ -141,9 +140,12 @@ void testUpdateBits() {
 }
 
 void testSortBits() {
-    // assert(sortBits(0x0001020304050607, 8) == 0x0706050403020100);
-    unsigned long res = sortBits(0x0403deadbeef0201, 8);
-    assert(res == 0xefdebead04030201);
+    assert(sortBits(0x0001020304050607, 8) == 0x0706050403020100);
+    assert(sortBits(0x0403deadbeef0201, 8) == 0xefdebead04030201);
+}
+
+void testByteSort() {
+    assert(byte_sort(0x0403deadbeef0201) == 0xefdebead04030201);
 }
 
 /*********************************************************************
@@ -272,6 +274,7 @@ int main() {
     testExtractBitValue();
     testUpdateBits();
     testSortBits();
+    testByteSort();
     testNibbleSort();
     printf("All tests passed!");
     return 0;
