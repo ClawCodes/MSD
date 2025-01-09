@@ -167,11 +167,20 @@ void free_list(Elt *head); // [No code goes here!]
 
 Elt *name_list(const char *name) {
     // iterate until we hit the termination char
+    if (name[0] != '\0') {
+        return NULL;
+    }
     Elt* head = malloc(sizeof(Elt));
     head->val = name[0];
     Elt* previous = head;
     for (int i = 1; name[i] != '\0'; i++) {
         Elt* new = malloc(sizeof(Elt));
+
+        if (new == NULL) {
+            free(head);
+            return NULL;
+        }
+
         new->val = name[i];
         previous->link = new;
         previous = new;
@@ -214,6 +223,34 @@ void free_list(Elt *head) {
  *********************************************************************/
 
 void draw_me() {
+    const char* me = "     ************\n"
+                     "     *  o    o  *\n"
+                     "     *    <     *\n"
+                     "     *  )-----( *\n"
+                     "     ************\n"
+                     "          **\n"
+                     "    ***************\n"
+                     "    **   ****    **\n"
+                     "    **   ****    **\n"
+                     "    **   ****    **\n"
+                     "    **   ****    **\n"
+                     "    ()   ****    ()\n"
+                     "         ****\n"
+                     "        ******\n"
+                     "        **  **\n"
+                     "        **  **\n"
+                     "        **  **\n"
+                     "        **  **\n"
+                     "      ()**  **()\n"
+    ;
+
+    FILE *fptr = fopen("me.txt", "w");
+    if (fptr == NULL) {
+        printf("Error opening file\n");
+        exit(1);
+    }
+    fprintf(fptr, "%s", me);
+    fclose(fptr);
 }
 
 /*********************************************************************
@@ -266,10 +303,16 @@ void testSortBits() {
 
 void testByteSort() {
     assert(byte_sort(0x0403deadbeef0201) == 0xefdebead04030201);
+    assert(byte_sort(0x0001020304050607) == 0x0706050403020100);
+    assert(byte_sort(0x0000000000111111) == 0x1111110000000000);
+    assert(byte_sort(0x11000000000000ff) == 0xff11000000000000);
 }
 
 void testNibbleSort() {
     assert(nibble_sort(0x0403deadbeef0201) == 0xfeeeddba43210000);
+    assert(nibble_sort(0x0001020304050607) == 0x7654321000000000);
+    assert(nibble_sort(0x0000000000111111) == 0x1111110000000000);
+    assert(nibble_sort(0x11000000000000ff) == 0xff11000000000000);
 }
 
 void testNameList() {
@@ -290,6 +333,43 @@ void testPrintList() {
     free_list(abc);
 }
 
+void testFreeList() {
+    const char* nameList = "abc";
+    Elt* abc = name_list(nameList);
+    free_list(abc);
+    abc = NULL;
+}
+
+// Tests from Alexia Pappas
+void testNameList_AP(){
+    char *name = "Alexia";
+    Elt *list = name_list(name);
+    assert(list != NULL);
+
+    Elt *current = list;
+    int i = 0;
+    while (current != NULL){
+        assert(current->val == name[i]);
+        current = current->link;
+        i++;
+    }
+    assert(name[i] == '\0');
+
+    printf("testNameList passed!\n");
+
+    free_list(list);
+}
+
+void testEmptyName_AP() {
+    char *name = "";
+    Elt *list = name_list(name);
+    assert(list == NULL);
+
+    printf("testEmptyName passed!\n");
+
+    free_list(list);
+}
+
 /*********************************************************************
  *
  * main()
@@ -302,14 +382,18 @@ void testPrintList() {
 
 int main() {
     // Call your test routines here...
-    // testGenerateMask();
-    // testExtractBitValue();
-    // testUpdateBits();
-    // testSortBits();
-    // testByteSort();
-    // testNibbleSort();
+    testGenerateMask();
+    testExtractBitValue();
+    testUpdateBits();
+    testSortBits();
+    testByteSort();
+    testNibbleSort();
     testNameList();
     testPrintList();
+    testFreeList();
+    draw_me();
+    testNameList_AP();
+    testEmptyName_AP();
     printf("All tests passed!");
     return 0;
 }
