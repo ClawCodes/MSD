@@ -69,10 +69,11 @@ unsigned long extractBitValue(unsigned long num, int index, int seqSize) {
     return (num & mask) >> 64 - index - seqSize;
 }
 
-void updateBits(unsigned long* num, unsigned long updateVal, int index, int seqSize) {
+void updateBits(unsigned long *num, unsigned long updateVal, int index, int seqSize) {
     const unsigned long mask = generateMask(index, seqSize, true);
     *num &= mask; // zero out bits to insert value into
-    updateVal <<= 64 - index - seqSize; // Shift updateVal to index position (assumes only first 8 bits are populated in updateVal)
+    updateVal <<= 64 - index - seqSize;
+    // Shift updateVal to index position (assumes only first 8 bits are populated in updateVal)
     *num |= updateVal; // Insert value
 }
 
@@ -98,6 +99,127 @@ unsigned long sortBits(unsigned long arr, int seqSize) {
 unsigned long byte_sort(unsigned long arg) {
     return sortBits(arg, 8);
 }
+
+/*********************************************************************
+ *
+ * nibble_sort()
+ *
+ * specification: nibble_sort() treats its argument as a sequence of 16 4-bit
+ * numbers, and returns a new unsigned long integer containing the same nibbles,
+ * sorted numerically, with smaller-valued nibbles towards the "small end" of
+ * the unsigned long value that you return
+ *
+ * the fact that nibbles and hex digits correspond should make it easy to
+ * verify that your code is working correctly
+ * 
+ * EXAMPLE: nibble_sort (0x0403deadbeef0201) returns 0xfeeeddba43210000
+ *
+ *********************************************************************/
+
+unsigned long nibble_sort(unsigned long arg) {
+    return sortBits(arg, 4);
+}
+
+/*********************************************************************/
+
+typedef struct elt {
+    char val;
+    struct elt *link;
+} Elt;
+
+/*********************************************************************/
+
+/* Forward declaration of "free_list()"... This allows you to call   */
+/* free_list() in name_list() [if you'd like].                       */
+void free_list(Elt *head); // [No code goes here!]
+
+/*********************************************************************
+ *
+ * name_list()
+ *
+ * specification: allocate and return a pointer to a linked list of
+ * struct elts
+ *
+ * - the first element in the list should contain in its "val" field the first
+ *   letter of your first name; the second element the second letter, etc.;
+ *
+ * - the last element of the linked list should contain in its "val" field
+ *   the last letter of your first name and its "link" field should be a null
+ *   pointer
+ *
+ * - each element must be dynamically allocated using a malloc() call
+ * 
+ * - you must use the "name" variable (change it to be your name).
+ *
+ * Note, since we're using C, not C++ you can't use new/delete!
+ * The analog to delete is the free() function
+ *
+ * - if any call to malloc() fails, your function must return NULL and must also
+ *   free any heap memory that has been allocated so far; that is, it must not
+ *   leak memory when allocation fails
+ *
+ * Implement print_list and free_list which should do what you expect.
+ * Printing or freeing a nullptr should do nothing.
+ *
+ * Note: free_list() might be useful for error handling for name_list()... 
+ *
+ *********************************************************************/
+
+Elt *name_list(const char *name) {
+    // iterate until we hit the termination char
+    Elt* head = malloc(sizeof(Elt));
+    head->val = name[0];
+    Elt* previous = head;
+    for (int i = 1; name[i] != '\0'; i++) {
+        Elt* new = malloc(sizeof(Elt));
+        new->val = name[i];
+        previous->link = new;
+        previous = new;
+    }
+    return head;
+}
+
+/*********************************************************************/
+
+void print_list(Elt *head) {
+    Elt* current = head;
+    while (current != NULL) {
+        printf("%c", current->val);
+        current = current->link;
+    }
+    printf("\n");
+}
+
+/*********************************************************************/
+
+void free_list(Elt *head) {
+    Elt* current = head;
+    while (current != NULL) {
+        Elt* next = current->link;
+        free(current);
+        current = next;
+    }
+}
+
+/*********************************************************************
+ *
+ * draw_me()
+ *
+ * This function creates a file called 'me.txt' which contains an ASCII-art
+ * picture of you (it does not need to be very big).
+ * 
+ * Use the C stdlib functions: fopen, fclose, fprintf, etc which live in stdio.h
+ * - Don't use C++ iostreams
+ *
+ *********************************************************************/
+
+void draw_me() {
+}
+
+/*********************************************************************
+ *
+ * Test Code - Place your test functions in this section:
+ */
 
 void testGenerateMask() {
     // Mask with ones in specified span
@@ -146,113 +268,27 @@ void testByteSort() {
     assert(byte_sort(0x0403deadbeef0201) == 0xefdebead04030201);
 }
 
-/*********************************************************************
- *
- * nibble_sort()
- *
- * specification: nibble_sort() treats its argument as a sequence of 16 4-bit
- * numbers, and returns a new unsigned long integer containing the same nibbles,
- * sorted numerically, with smaller-valued nibbles towards the "small end" of
- * the unsigned long value that you return
- *
- * the fact that nibbles and hex digits correspond should make it easy to
- * verify that your code is working correctly
- * 
- * EXAMPLE: nibble_sort (0x0403deadbeef0201) returns 0xfeeeddba43210000
- *
- *********************************************************************/
-
-unsigned long nibble_sort(unsigned long arg) {
-    return sortBits(arg, 4);
-}
-
 void testNibbleSort() {
     assert(nibble_sort(0x0403deadbeef0201) == 0xfeeeddba43210000);
 }
 
-/*********************************************************************/
-
-typedef struct elt {
-    char val;
-    struct elt *link;
-} Elt;
-
-/*********************************************************************/
-
-/* Forward declaration of "free_list()"... This allows you to call   */
-/* free_list() in name_list() [if you'd like].                       */
-void free_list(Elt *head); // [No code goes here!]
-
-/*********************************************************************
- *
- * name_list()
- *
- * specification: allocate and return a pointer to a linked list of
- * struct elts
- *
- * - the first element in the list should contain in its "val" field the first
- *   letter of your first name; the second element the second letter, etc.;
- *
- * - the last element of the linked list should contain in its "val" field
- *   the last letter of your first name and its "link" field should be a null
- *   pointer
- *
- * - each element must be dynamically allocated using a malloc() call
- * 
- * - you must use the "name" variable (change it to be your name).
- *
- * Note, since we're using C, not C++ you can't use new/delete!
- * The analog to delete is the free() function
- *
- * - if any call to malloc() fails, your function must return NULL and must also
- *   free any heap memory that has been allocated so far; that is, it must not
- *   leak memory when allocation fails
- *
- * Implement print_list and free_list which should do what you expect.
- * Printing or freeing a nullptr should do nothing.
- *
- * Note: free_list() might be useful for error handling for name_list()... 
- *
- *********************************************************************/
-
-Elt *name_list() {
-    char *name = "Davison";
-    return NULL;
+void testNameList() {
+    const char* nameList = "abc";
+    Elt* abc = name_list(nameList);
+    assert(abc->val == 'a');
+    Elt* b = abc->link;
+    assert(b->val == 'b');
+    assert(abc->link->link->val == 'c');
+    assert(abc->link->link->link == NULL);
+    free_list(abc);
 }
 
-/*********************************************************************/
-
-void print_list(Elt *head) {
+void testPrintList() {
+    const char* nameList = "abc";
+    Elt* abc = name_list(nameList);
+    print_list(abc);
+    free_list(abc);
 }
-
-/*********************************************************************/
-
-void free_list(Elt *head) {
-}
-
-/*********************************************************************
- *
- * draw_me()
- *
- * This function creates a file called 'me.txt' which contains an ASCII-art
- * picture of you (it does not need to be very big).
- * 
- * Use the C stdlib functions: fopen, fclose, fprintf, etc which live in stdio.h
- * - Don't use C++ iostreams
- *
- *********************************************************************/
-
-void draw_me() {
-}
-
-/*********************************************************************
- *
- * Test Code - Place your test functions in this section:
- */
-
-// bool testByteSort() { ... }
-// ...
-// ...
 
 /*********************************************************************
  *
@@ -266,14 +302,14 @@ void draw_me() {
 
 int main() {
     // Call your test routines here...
-    // testArrayToLong();
-    // testByte_sort();
-    testGenerateMask();
-    testExtractBitValue();
-    testUpdateBits();
-    testSortBits();
-    testByteSort();
-    testNibbleSort();
+    // testGenerateMask();
+    // testExtractBitValue();
+    // testUpdateBits();
+    // testSortBits();
+    // testByteSort();
+    // testNibbleSort();
+    testNameList();
+    testPrintList();
     printf("All tests passed!");
     return 0;
 }
