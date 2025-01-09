@@ -3,6 +3,11 @@
  * File header comments go here... including student name, class, date, 
  * assignment, description, etc.
  *
+ * Name: Chris Lawton
+ * Class: CS6013
+ * Date: Jan 9, 2025
+ * Assignment: L1: C Warmup lab
+ * Description: Warmup lab to gain exposure in C
  */
 
 #include <stdio.h>
