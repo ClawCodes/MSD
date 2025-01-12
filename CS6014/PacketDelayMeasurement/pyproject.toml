@@ -1,0 +1,19 @@
+[project]
+name = "PacketDelayMeasurement"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Christopher Lawton",email = "chris.ian.lawton@gmail.conm"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib (>=3.10.0,<4.0.0)",
+    "pytest (>=8.3.4,<9.0.0)",
+    "pydantic (>=2.10.5,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

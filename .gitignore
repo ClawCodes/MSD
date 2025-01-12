@@ -38,3 +38,9 @@
 # VSCode
 *.vscode*
 *.dsYM*
+
+# Poetry
+*.venv/
+
+# Python
+*__pycache__/
