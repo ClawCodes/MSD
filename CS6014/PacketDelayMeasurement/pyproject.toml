@@ -3,7 +3,7 @@ name = "PacketDelayMeasurement"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Christopher Lawton",email = "chris.ian.lawton@gmail.conm"}
+    {name = "Christopher Lawton",email = ""}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
