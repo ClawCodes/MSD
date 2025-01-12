@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 import re
-from typing import List
+from typing import List, Tuple, Optional, Generator
 
 from pydantic import BaseModel
 
@@ -13,15 +13,15 @@ def run_traceroute(host: str) -> None:
     os.system(f"traceroute {host} >> {fname}")
 
 
-class HopResult(BaseModel):
+class HopResult(BaseModel, validate_assignment=True):
     number: int
     name: str
-    IP: str
-    one: float
-    two: float
-    three: float
+    ip: str
+    one: Optional[float] = None
+    two: Optional[float] = None
+    three: Optional[float] = None
 
-    def add_measurement(self, val: float):
+    def add_measurement(self, val: Optional[float]):
         if self.one is None:
             self.one = val
         elif self.two is None:
@@ -32,26 +32,51 @@ class HopResult(BaseModel):
             raise RuntimeError("All possible measurements have been populated.")
 
 
-# TODO: start here - continue parsing traceroute result. Need to handle lines like "* 108.170.248.45 (108.170.248.45)  26.030 ms *"
+def create_hop_result(line: Generator[str, None, None], hop_number: int) -> HopResult:
+    hop_location = None
+    ip = None
+    measures = []
+    try:
+        while True:
+            elem = next(line)
+            if elem == "*":
+                measures.append(None)
+                continue
+            else:
+                if hop_location:
+                    measures.append(elem)
+                else:
+                    hop_location = elem
+                    ip = next(line).strip(")").strip("(")
+                    measures.append(next(line))
+                next(line)  # skip unit
+                continue
+    except StopIteration:
+        result = HopResult(
+            number=hop_number,
+            name=hop_location,
+            ip=ip
+        )
+        for measure in measures:
+            result.add_measurement(measure)
+        return result
+
+
 def read_traceroute_results(file_name: Path) -> List[HopResult]:
     hop_results: List[HopResult] = []
     with open(file_name, "r") as f:
         for line in f.readlines():
-            split_line = re.split("\s+", line.strip())
-            if split_line[1] == "*":
-                continue  # skip lines which contain no measurements
-            if not line[0].isdigit():
-                # Add to prior hop result when there is a line continuation for the same hop
-                hop_results[-1].add_measurement(float(split_line[1]))
+            if line.endswith("* * *\n"):
+                continue # skip lines with no measurements
+            split_line = (elem for elem in re.split("\s+", line.strip()))
+            hop_number = next(split_line)
+            # Add to prior hop result when there is a line continuation for the same hop
+            if not hop_number.isdigit():
+                next(split_line) # skip IP
+                hop_results[-1].add_measurement(float(next(split_line)))
+                continue
             else:
-                hop_results.append(HopResult(
-                    number=int(split_line[0]),
-                    name=split_line[1],
-                    IP=split_line[2].strip(")").strip("("),
-                    one=float(split_line[3]),
-                    two=float(split_line[5]),
-                    three=float(split_line[7]),
-                ))
+                hop_results.append(create_hop_result(split_line, hop_number))
     return hop_results
 
 
