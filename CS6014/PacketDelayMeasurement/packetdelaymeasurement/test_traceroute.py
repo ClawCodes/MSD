@@ -1,4 +1,4 @@
-from packetdelaymeasurement.main import read_traceroute_results
+from packetdelaymeasurement.traceroute import read_traceroute_results
 from pathlib import Path
 
 ROOT = Path(__file__).parents[1]

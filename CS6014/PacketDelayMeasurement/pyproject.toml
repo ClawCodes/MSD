@@ -3,14 +3,15 @@ name = "PacketDelayMeasurement"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Christopher Lawton",email = ""}
+    {name = "Christopher Lawton",email = "me@example.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "matplotlib (>=3.10.0,<4.0.0)",
     "pytest (>=8.3.4,<9.0.0)",
-    "pydantic (>=2.10.5,<3.0.0)"
+    "pydantic (>=2.10.5,<3.0.0)",
+    "pandas (>=2.2.3,<3.0.0)"
 ]
 
 
