@@ -94,12 +94,9 @@ def write_traceroute_averages(hop_results: List[HopResult], fout: str) -> Path:
 
 
 def main() -> None:
-    # file_name = run_traceroute("www.admin.ch")
-    file_name = Path("/Users/christopherlawton/msd/MSD/CS6014/PacketDelayMeasurement/www.admin.ch_2025-01-13_15:17:32.txt")
+    file_name = run_traceroute("www.admin.ch")
     results: List[HopResult] = read_traceroute_results(file_name)
-    outfile = file_name.stem + "_averages.csv"
-    outfile = write_traceroute_averages(results, file_name.stem + "_averages.csv")
-
+    write_traceroute_averages(results, file_name.stem + "_averages.csv")
 
 if __name__ == '__main__':
     main()
