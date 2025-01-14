@@ -16,7 +16,7 @@ def merge_ip_addresses(ip_addresses: str):
 
     return ".".join(final)
 
-def plot(file1: Path, file2: Path, title: str, x_label: str, y_label: str) -> None:
+def plot(file1: Path, file2: Path, title: str, x_label: str, y_label: str, outfile: str) -> None:
     df1 = pd.read_csv(file1)
     df1["location"] = df1["location"].apply(lambda x: merge_ip_addresses(x))
 
@@ -47,7 +47,7 @@ def plot(file1: Path, file2: Path, title: str, x_label: str, y_label: str) -> No
     plt.ylabel(y_label)
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(ROOT / f'{outfile}.png')
 
 
 if __name__ == '__main__':
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     file2 = ROOT / "www.admin.ch_2025-01-13_20:05:23_averages.csv"
 
     plot(file1, file2, "Average hop time from localhost www.admin.ch", "Hop IP address(es)",
-         "Average time from host to node (ms)")
+         "Average time from host to node (ms)", "traceroute_analysis")
