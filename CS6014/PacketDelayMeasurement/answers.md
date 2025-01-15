@@ -17,9 +17,13 @@ An increase in travel distance will increase the propagation delay.
 
 ### Part C
 The average queuing delay time can be derived using the formula 
+
 $$ delay_{total} = delay_{propagation} + delay_{transmission} + delay_{processing} + delay_{queuing} $$
+
 We can consider transmission, propagation, and processing delays are constant, thus the formula reduces to
+
 $$ delay_{total} = c + delay_{queuing} $$
+
 Since we can assume the minimum RTT value in our ping data, 18.388, corresponds to $ delay_{queuing} = 0 $, we can then say $ 18.388 = c$.
 The average queuing delay can then be solved with 
 
