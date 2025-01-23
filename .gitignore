@@ -28,6 +28,7 @@
 
 ## obnoxious file that has thumbnails and stuff
 .DS_Store
+__MACOSX
 
 # C++ specific files
 *.o
