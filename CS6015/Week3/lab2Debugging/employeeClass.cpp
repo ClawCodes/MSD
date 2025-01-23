@@ -13,7 +13,7 @@ Employee::Employee() {
 Employee::Employee(string nme, int id, string jbTtle, double slry, int yr) {
 	name = nme;
 
-    if (id > 0)
+    if (id < 0)
         ID = 0;
     else
         ID = id;

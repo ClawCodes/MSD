@@ -27,7 +27,7 @@ public:
 	string getJobTitle() const;
 	double getSalary() const;
 	int getHireYear() const;
-    void print();
+    virtual void print();
 };
 
 #endif /* EMPLOYEECLASS_H_ */

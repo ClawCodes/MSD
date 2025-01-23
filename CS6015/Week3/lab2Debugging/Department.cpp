@@ -54,7 +54,6 @@ double Department::CalculateMaxSalary(StaffTypes type)
 			{
                 max = SoftwareArchitects->at(i).getSalary();
 			}
-                max = SoftwareArchitects->at(i).getSalary();
 		}
 		break;
 	default:
@@ -74,13 +73,13 @@ int Department::CalculateAverageSalary(StaffTypes type)
 	case Department::EMPLOYEE:		
 		for (i = 0; i < Employees->size(); i++)
 		{
-			sum = Employees->at(i).getSalary();
+			sum += Employees->at(i).getSalary();
 		}
 		break;
 	case Department::PROGRAMMER:
 		for (i = 0; i < Programmers->size(); i++)
 		{
-			sum = Programmers->at(i).getSalary();
+			sum += Programmers->at(i).getSalary();
 		}
 		break;
 	case Department::SOFTWAREARCHITECTS:
@@ -159,7 +158,7 @@ bool Department::RemoveEmployee(Employee E)
 vector<int>* Department::getAllProjectIDs()
 {
 	vector<int> *result = new vector<int>();
-    int i;
+    int i = 0;
     for ( i=0; i < Programmers->size(); i++)
 	{
 		if (!checkID(Programmers->at(i).getID(), result))
@@ -175,6 +174,7 @@ vector<int>* Department::getAllProjectIDs()
             result->push_back(SoftwareArchitects->at(i).getProjectID());
 		}
 	}
+    sort(result->begin(), result->end());
 	return result;
 }
 

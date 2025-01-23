@@ -19,7 +19,7 @@ public:
 	string getSupervisorName() const;
 	int getProjectID() const;
 	int getExperienceYears() const;
-	void print();
+	void print() override;
 };
 
 #endif /* SOFTWAREARCHITECTCLASS_H_ */
