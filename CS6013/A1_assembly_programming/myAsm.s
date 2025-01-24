@@ -4,6 +4,7 @@ section .text ; code goes here, not data!
 
 global sayHello ; "sayHello" is a symbol that the linker needs to know about
 global myPuts
+global myGTOD
 
 sayHello:
 	mov rax, 1 ; Ensure syscall in puts writes to stdout
@@ -12,23 +13,30 @@ sayHello:
 	ret
 
 myPuts:
-	mov rax, 1;
-	mov rdx, rsi;
-	mov rsi, rdi;
-	mov rdi, 1;
+	mov rax, 1
+	mov rdx, rsi
+	mov rsi, rdi
+	mov rdi, 1
 	syscall
 	ret
 
 myGTOD:
-	sub rsp, 16
-	; mov [rsp], 0 
-	mov rdi, rsp ; Fill rdi with stack address to fill with timeval stuct values 
-	; mov [rsp+8], 0 ; Null out memory at tz struct location
-	mov rsi, 0;
+
+	; Prologue
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16 ; move stack to make room for two longs (seconds and microseconds)
+	
+	mov rax, 96 ; Denote future sys call as gettimeofday 
+	mov rdi, rsp ; Fill rdi with stack address where time values will be stored
+	mov rsi, 0 ; Pass 0 for timezone
 	syscall 
-	mov rax, [rsp]
-	mov rdx, [rsp+8]
-	add rsp, 16
+	mov rax, [rsp] ; Move seconds in stack to rax for struct ABI
+	mov rdx, [rsp+8] ; Move microseconds in stack to rdx for struct ABI
+
+	; Epilogue
+	mov rsp, rbp ; Move stack point back up 
+	pop rbp ; Reset base pointer to where it started in frame
 	ret
 
 section .rodata

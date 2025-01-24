@@ -1,6 +1,8 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <time.h>
+#include <cassert>
+#include <iostream>
 
 extern "C" {
 	void sayHello();
@@ -15,16 +17,21 @@ void printHumanTime(timeval tv){
 
 int main(){
 	sayHello();
+
 	const char* helloCPP = "Hello from c++!\n";
 	myPuts(helloCPP, 17);
-	struct timeval tv;
+	
+	struct timeval tv = myGTOD();
 	printf("Time from ASM: %lu\n", tv.tv_sec);
 	printHumanTime(tv);
 
 	struct timeval tvCPP;
 	struct timezone tz;
-	gettimeofday(&tv, &tz);
+	gettimeofday(&tvCPP, &tz);
 	printf("Time from CPP: %lu\n", tvCPP.tv_sec);
 	printHumanTime(tvCPP);
+
+	assert((tv.tv_sec - tvCPP.tv_sec) <= 1); // Accept off by one 
+	std::cout << "ASM and CPP time stamps are equivalent!\n"; 
 	return 0;
 }
