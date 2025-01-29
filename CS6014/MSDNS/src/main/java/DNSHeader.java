@@ -1,41 +1,11 @@
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class DNSHeader {
-    private int id_;
-    private int qr_;
-    private int opCode_;
-    private int AA_;
-    private int TC_;
-    private int RD_;
-    private int RA_;
-    private int Z_;
-    private int AD_;
-    private int CD_;
-    private int RCode_;
-    private int QDCount_;
-    private int ANCount_;
-    private int NSCount_;
-    private int ARCount_;
+    byte[] header_;
 
-    private DNSHeader(int id, int qr, int opCode, int aa, int tc, int rd,
-                      int ra, int z, int ad, int cd, int rcode,
-                      int qdCount, int anCount, int nsCount, int arCount) {
-        id_ = id;
-        qr_ = qr;
-        opCode_ = opCode;
-        AA_ = aa;
-        TC_ = tc;
-        RD_ = rd;
-        RA_ = ra;
-        Z_ = z;
-        AD_ = ad;
-        CD_ = cd;
-        RCode_ = rcode;
-        QDCount_ = qdCount;
-        ANCount_ = anCount;
-        NSCount_ = nsCount;
-        ARCount_ = arCount;
+    DNSHeader(byte[] header) {
+        header_ = header;
     }
 
     private static int bytePairToInt(byte[] bytes) {
@@ -75,52 +45,35 @@ public class DNSHeader {
      *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
      *   |                    ARCOUNT                    |
      *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-     * @param in - input stream containing datagram packet
+     * @param inStream - input stream containing datagram packet
      * @return Instance of DNSHeader
      * @throws IOException
      */
-    public static DNSHeader decodeHeader(InputStream in) throws IOException {
-        // Extract ID
-        byte[] line1 = in.readNBytes(2);
-        int QRtoRD = in.read();
-        int RAtoRCODE = in.read();
-
-        return new DNSHeader(
-                bytePairToInt(line1),
-                getBits(QRtoRD, 0, 0),
-                getBits(QRtoRD, 1, 4),
-                getBits(QRtoRD, 5, 5),
-                getBits(QRtoRD, 6, 6),
-                getBits(QRtoRD, 7, 7),
-                getBits(RAtoRCODE, 0, 0),
-                getBits(RAtoRCODE, 1, 1),
-                getBits(RAtoRCODE, 2, 2),
-                getBits(RAtoRCODE, 3, 3),
-                getBits(RAtoRCODE, 4, 7),
-                bytePairToInt(in.readNBytes(2)),
-                bytePairToInt(in.readNBytes(2)),
-                bytePairToInt(in.readNBytes(2)),
-                bytePairToInt(in.readNBytes(2))
-                );
+    public static DNSHeader decodeHeader(ByteArrayInputStream inStream) throws IOException {
+//        // Extract ID
+//        byte[] line1 = in.readNBytes(2);
+//        int QRtoRD = in.read();
+//        int RAtoRCODE = in.read();
+//        return new DNSHeader(
+//                bytePairToInt(line1),
+//                getBits(QRtoRD, 0, 0),
+//                getBits(QRtoRD, 1, 4),
+//                getBits(QRtoRD, 5, 5),
+//                getBits(QRtoRD, 6, 6),
+//                getBits(QRtoRD, 7, 7),
+//                getBits(RAtoRCODE, 0, 0),
+//                getBits(RAtoRCODE, 1, 1),
+//                getBits(RAtoRCODE, 2, 2),
+//                getBits(RAtoRCODE, 3, 3),
+//                getBits(RAtoRCODE, 4, 7),
+//                bytePairToInt(in.readNBytes(2)),
+//                bytePairToInt(in.readNBytes(2)),
+//                bytePairToInt(in.readNBytes(2)),
+//                bytePairToInt(in.readNBytes(2))
+//                );
+        return new DNSHeader(inStream.readNBytes(12));
     }
-
-    public int getId() {
-        return id_;
-    }
-
-    public int getQR() {
-        return qr_;
-    }
-    public int getOpCode() {
-        return opCode_;
-    }
-    public int getAa() {
-        return AA_;
-    }
-    public int getTc() {
-        return TC_;
-    }
-    public int getRd() {
-        return RD_;
+    byte[] getHeader() {
+        return header_;
     }
 }
