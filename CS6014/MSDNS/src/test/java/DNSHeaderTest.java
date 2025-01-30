@@ -26,4 +26,25 @@ class DNSHeaderTest {
         DNSHeader actual = DNSHeader.decodeHeader(in);
         assertArrayEquals(Arrays.copyOfRange(inputHeader, 0, 12), actual.getHeader());
     }
+
+    @Test
+    public void testGetQCount() throws IOException {
+        byte[] inputHeader = new byte[] {
+                (byte)0x12, (byte)0x34,
+                (byte)0xAD, (byte)0x61,
+                (byte)0x12, (byte)0x34,
+                (byte)0x56, (byte)0x78,
+                (byte)0x11, (byte)0x22,
+                (byte)0x33, (byte)0x44,
+                // additional bytes beyond header (should not be reader into header)
+                (byte)0x11, (byte)0x22,
+                (byte)0x33, (byte)0x44,
+        };
+
+        int expectedQCount = 4660;
+
+        ByteArrayInputStream in = new ByteArrayInputStream(inputHeader);
+        DNSHeader actual = DNSHeader.decodeHeader(in);
+        assertEquals(expectedQCount, actual.getQCount());
+    }
 }

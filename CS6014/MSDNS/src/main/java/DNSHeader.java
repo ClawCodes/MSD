@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class DNSHeader {
     byte[] header_;
@@ -75,5 +76,9 @@ public class DNSHeader {
     }
     byte[] getHeader() {
         return header_;
+    }
+
+    int getQCount(){
+        return bytePairToInt(Arrays.copyOfRange(header_, 4, 6));
     }
 }
