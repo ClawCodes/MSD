@@ -13,9 +13,10 @@ public class Server {
         DatagramPacket pkt = new DatagramPacket(buffer, buffer.length);
         while (true) {
             socket.receive(pkt);
-            ByteArrayInputStream inStream = new ByteArrayInputStream(pkt.getData());
+            DNSMessage message = new DNSMessage(pkt.getData());
+            ByteArrayInputStream inStream = message.getInputStream();
             DNSHeader header = DNSHeader.decodeHeader(inStream);
-            DNSMessage message = new DNSMessage(header);
+            message.setHeader(header);
             DNSQuestion question = DNSQuestion.decodeQuestion(inStream, message);
             message.setQuestion(question);
         }

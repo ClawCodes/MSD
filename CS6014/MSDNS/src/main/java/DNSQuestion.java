@@ -1,6 +1,5 @@
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class DNSQuestion {
     private String[] domain_;
