@@ -1,4 +1,3 @@
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -13,7 +12,7 @@ public class Server {
         DatagramPacket pkt = new DatagramPacket(buffer, buffer.length);
         while (true) {
             socket.receive(pkt);
-            DNSMessage message = new DNSMessage(pkt.getData());
+            DNSMessage message = DNSMessage.decodeMessage(pkt.getData());
         }
     }
 }

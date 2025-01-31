@@ -1,6 +1,20 @@
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ *                                   1  1  1  1  1  1
+ *     0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+ *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *   |                                               |
+ *   /                     QNAME                     /
+ *   /                                               /
+ *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *   |                     QTYPE                     |
+ *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *   |                     QCLASS                    |
+ *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ */
 public class DNSQuestion {
     private String[] domain_;
     private String qType_;
@@ -13,17 +27,6 @@ public class DNSQuestion {
     }
 
     /**
-     *                                     1  1  1  1  1  1
-     *       0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-     *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-     *     |                                               |
-     *     /                     QNAME                     /
-     *     /                                               /
-     *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-     *     |                     QTYPE                     |
-     *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-     *     |                     QCLASS                    |
-     *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
      * @param inStream Stream containing start of message section at the front of the stream
      * @param message DNSMessage to append question to
      * @return Instance of DNSQuestion containing decoded question
