@@ -13,9 +13,6 @@ public class DNSMessage {
     }
 
     private ByteArrayInputStream readDomainName(int firstByte){
-        if (firstByte < 12){
-            throw new IllegalArgumentException("A domain pointer is not expected in a header section.");
-        }
         return new ByteArrayInputStream(Arrays.copyOfRange(message_, firstByte, message_.length));
     }
 
@@ -24,7 +21,7 @@ public class DNSMessage {
         ArrayList<String> domain = new ArrayList<>();
         int labelLen = inStream.read();
         // first two bits are set indicates pointer
-        if (BitHelper.getBits(labelLen, 0, 2) == 3){
+        if (BitHelper.getBits(labelLen, 0, 1) == 3){
             int offset = BitHelper.getBits(labelLen, 2, 8);
             inStream = readDomainName(offset); // new stream containing non-compressed domain name
             labelLen = inStream.read();
@@ -37,6 +34,19 @@ public class DNSMessage {
         return domain.toArray(new String[domain.size()]);
     }
 
+    public static DNSMessage decodeMessage(byte[] bytes) throws IOException {
+        DNSMessage message = new DNSMessage(bytes);
+        ByteArrayInputStream inStream = new ByteArrayInputStream(bytes);
+
+        DNSHeader header = DNSHeader.decodeHeader(inStream);
+        message.setHeader(header);
+
+        DNSQuestion question = DNSQuestion.decodeQuestion(inStream, message);
+        message.setQuestion(question);
+
+        return message;
+    }
+
     public void setHeader(DNSHeader header){
         header_ = header;
     }
@@ -44,9 +54,4 @@ public class DNSMessage {
     public void setQuestion(DNSQuestion question) {
         question_ = question;
     }
-
-    public ByteArrayInputStream getInputStream(){
-        return new ByteArrayInputStream(message_);
-    }
-
 }

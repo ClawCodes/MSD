@@ -14,11 +14,6 @@ public class Server {
         while (true) {
             socket.receive(pkt);
             DNSMessage message = new DNSMessage(pkt.getData());
-            ByteArrayInputStream inStream = message.getInputStream();
-            DNSHeader header = DNSHeader.decodeHeader(inStream);
-            message.setHeader(header);
-            DNSQuestion question = DNSQuestion.decodeQuestion(inStream, message);
-            message.setQuestion(question);
         }
     }
 }
