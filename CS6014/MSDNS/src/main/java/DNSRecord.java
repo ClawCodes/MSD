@@ -1,5 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  *                                     1  1  1  1  1  1
@@ -24,25 +25,29 @@ import java.io.IOException;
  *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  */
 public class DNSRecord {
-    String[] domain_;
-    byte[] type_;
-    byte[] class_;
-    int ttl_;
-    int rdLength_;
-    byte[] rdata_;
+    private String[] domain_;
+    private int type_;
+    private byte[] class_;
+    private int ttl_;
+    private int rdLength_;
+    private byte[] rdata_;
+    private LocalDateTime expireDtm;
 
-    private DNSRecord(String[] domain, byte[] type, byte[] class_, int ttl, int rdLength, byte[] rdata) {
+
+    private DNSRecord(String[] domain, int type, byte[] class_, int ttl, int rdLength, byte[] rdata) {
         domain_ = domain;
         type_ = type;
         this.class_ = class_;
         ttl_ = ttl;
         rdLength_ = rdLength;
         rdata_ = rdata;
+        expireDtm = LocalDateTime.now().plusSeconds(ttl);
     }
 
     static DNSRecord decodeRecord(ByteArrayInputStream inStream, DNSMessage message) throws IOException {
         String[] domain = message.readDomainName(inStream);
-        byte[] type_ = inStream.readNBytes(2);
+        int type_ = BitHelper.bytePairToInt(inStream.readNBytes(2));
+
         byte[] class_ = inStream.readNBytes(2);
         int ttl = BitHelper.bytePairToInt(inStream.readNBytes(2));
         int rdLength = BitHelper.bytePairToInt(inStream.readNBytes(2));
@@ -55,5 +60,13 @@ public class DNSRecord {
                 rdLength,
                 inStream.readNBytes(rdLength)
         );
+    }
+
+    public String[] getDomain() {
+        return domain_;
+    }
+
+    boolean isExpired() {
+        return LocalDateTime.now().isAfter(expireDtm);
     }
 }

@@ -47,4 +47,23 @@ class DNSHeaderTest {
         DNSHeader actual = DNSHeader.decodeHeader(in);
         assertEquals(expectedQCount, actual.getQCount());
     }
+
+    @Test
+    public void testGetRCount() throws IOException {
+        byte[] message = new byte[] {
+                // header
+                (byte)0xC9, (byte)0x39, // ID
+                (byte)0x01, (byte)0x20, // QR = 0
+                (byte)0x00, (byte)0x01, // one question
+                (byte)0x00, (byte)0x00, // no answers
+                (byte)0x00, (byte)0x00, // no auth records
+                (byte)0x00, (byte)0x01, // one additional record
+                // question
+                (byte)0x07, (byte)0x65, (byte)0x78, (byte)0x61, (byte)0x6D, (byte)0x70, (byte)0x6C, (byte)0x65, // 7example
+                (byte)0x03, (byte)0x63, (byte)0x6F, (byte)0x6D, (byte)0x00, // 3com (with termination)
+                (byte)0x00, (byte)0x01, // QTYPE = 1 -> A (IPv4 address)
+                (byte)0x00, (byte)0x01, // QCLASS - 1 -> IN (internet)
+                (byte)0x00, (byte)0x00
+        };
+    }
 }

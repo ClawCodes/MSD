@@ -1,4 +1,5 @@
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -27,7 +28,6 @@ public class DNSHeader {
         header_ = header;
     }
 
-
     /**
      * Parse raw header from DataGramPacket input stream.
      * @param inStream - input stream containing datagram packet
@@ -47,18 +47,58 @@ public class DNSHeader {
     }
 
     int getQCount(){
-        return slicePair(4, 5);
+        return slicePair(4, 6);
     }
     
     int getANCount(){
-        return slicePair(6, 7);
+        return slicePair(6, 8);
     }
     
     int getNSCount(){
-        return slicePair(8, 9);
+        return slicePair(8, 10);
     }
     
     int getARCount(){
-        return slicePair(10, 11);
+        return slicePair(10, 12);
+    }
+
+    int getRCode(){
+        return BitHelper.getBits(header_[3], 4, 7);
+    }
+
+
+    /**
+     * Use this method to build the header only for responses which use a cached answer
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    static DNSHeader buildHeaderForResponse(DNSMessage request, DNSMessage response) throws IOException {
+        if (response.hasHeader()){
+            return response.getHeader();
+        }
+        int RCode = 0;
+        if (!response.hasAnswers()){ // No answer provided by google or found in cache
+            RCode = 2;
+        }
+        byte[] rawRequest = request.getHeader().getHeader();
+        ByteArrayInputStream inStream = new ByteArrayInputStream(rawRequest); // create stream from request header
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+        outStream.write(inStream.readNBytes(2)); // copy ID
+        outStream.write(inStream.read() | 0x80); // flip QR bit
+        int RAtoRCode = inStream.read();
+        RAtoRCode &= 0xF0; // zero out lowest 4 bits
+        RAtoRCode |= RCode;
+        outStream.write(RAtoRCode);
+
+        outStream.write(inStream.readNBytes(2)); // Keep same QDCOUNT
+        byte[] ANCount = inStream.readNBytes(2);
+        ANCount[1] = (byte)((int)ANCount[1] + 1); // increment answer count by 1
+        outStream.write(ANCount);
+        outStream.write(inStream.readAllBytes()); // add the rest of the records to the message
+
+        return new DNSHeader(outStream.toByteArray());
     }
 }

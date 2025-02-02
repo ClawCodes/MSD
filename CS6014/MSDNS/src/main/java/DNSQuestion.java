@@ -1,5 +1,4 @@
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -38,5 +37,15 @@ public class DNSQuestion {
                 new String(inStream.readNBytes(2)),
                 new String(inStream.readNBytes(2))
         );
+    }
+
+    public String[] getDomain() {
+        return domain_;
+    }
+    public String getQType() {
+        return qType_;
+    }
+    public String getQClass() {
+        return qClass_;
     }
 }

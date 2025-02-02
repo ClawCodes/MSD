@@ -7,11 +7,14 @@ import java.util.HashMap;
 public class DNSMessage {
     private byte[] message_;
     private DNSHeader header_;
-    private ArrayList<DNSQuestion> questions_;
-    private ArrayList<DNSRecord> answers_;
-    private ArrayList<DNSRecord> authorityRecords_;
-    private ArrayList<DNSRecord> additionalRecords_;
-    private HashMap<String, Integer> domainLocations;
+    private ArrayList<DNSQuestion> questions_ = new ArrayList<>();
+    private ArrayList<DNSRecord> answers_ = new ArrayList<>();
+    private ArrayList<DNSRecord> authorityRecords_ = new ArrayList<>();
+    private ArrayList<DNSRecord> additionalRecords_ = new ArrayList<>();
+    private HashMap<String, Integer> domainLocations = new HashMap<>();
+
+    // empty message constructor
+    DNSMessage(){}
 
     DNSMessage(byte[] message) {
         message_ = message;
@@ -26,12 +29,13 @@ public class DNSMessage {
         int labelLen = inStream.read();
         // first two bits are set indicates pointer
         int offset = -1;
-        if (BitHelper.getBits(labelLen, 0, 1) == 3){
-            offset = BitHelper.getBits(labelLen, 2, 8);
-            inStream = readDomainName(offset); // new stream containing non-compressed domain name
-            labelLen = inStream.read();
-        }
         while (labelLen != 0){
+            if (BitHelper.getBits(labelLen, 0, 1) == 3){ // firs two bits are 11 indicating a pointer follows
+                offset = BitHelper.getBits(labelLen, 2, 8) << 8; // get first part of offset
+                offset |= inStream.read(); //
+                inStream = readDomainName(offset); // new stream containing non-compressed domain name
+                labelLen = inStream.read();
+            }
             String label = new String(inStream.readNBytes(labelLen));
             domain.add(label);
             labelLen = inStream.read();
@@ -45,7 +49,7 @@ public class DNSMessage {
     }
 
     String joinDomainName(String[] pieces){
-        return String.join(" ", pieces);
+        return String.join(".", pieces);
     }
 
     public static DNSMessage decodeMessage(byte[] bytes) throws IOException {
@@ -65,10 +69,40 @@ public class DNSMessage {
             message.answers_.add(DNSRecord.decodeRecord(inStream, message));
         }
 
+        // decode authority records
+        for (int i = 0; i < header.getNSCount(); i++) {
+            message.authorityRecords_.add(DNSRecord.decodeRecord(inStream, message));
+        }
+
+        // decode additional records
+        for (int i = 0; i < header.getARCount(); i++) {
+            message.additionalRecords_.add(DNSRecord.decodeRecord(inStream, message));
+        }
+
         return message;
     }
 
     public void setHeader(DNSHeader header){
         header_ = header;
+    }
+
+    public DNSHeader getHeader(){
+        return header_;
+    }
+
+    public boolean hasHeader(){
+        return header_ != null;
+    }
+
+    public int numAnswers(){
+        return answers_.size();
+    }
+
+    public boolean hasAnswers(){
+        return !answers_.isEmpty();
+    }
+
+    public ArrayList<DNSQuestion> getQuestions(){
+        return questions_;
     }
 }
