@@ -98,4 +98,35 @@ class DNSHeaderTest {
         assertEquals(1, BitHelper.getBits(respHeader[2], 0, 0)); // QR set to 1 for response
         assertEquals(BitHelper.getBits(respHeader[3], 4, 7), 0); // RCODE == 0
     }
+
+    @Test
+    public void testToString() throws IOException {
+        byte[] request = {
+                (byte) 0x12, (byte) 0x34, (byte) 0x01, (byte) 0x80,  // Transaction ID + Flags
+                (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00,  // QDCOUNT = 1, ANCOUNT = 0
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x01,  // NSCOUNT = 0, ARCOUNT = 1
+
+                // Question Section (www.example.com)
+                (byte) 0x03, (byte) 0x77, (byte) 0x77, (byte) 0x77,  // "3www"
+                (byte) 0x07, (byte) 0x65, (byte) 0x78, (byte) 0x61, (byte) 0x6D, (byte) 0x70, (byte) 0x6C, (byte) 0x65,  // "7example"
+                (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
+
+                (byte) 0x00, (byte) 0x01,  // QTYPE = A
+                (byte) 0x00, (byte) 0x01,  // QCLASS = IN
+
+                // Additional Section (NS Record: ns1.example.com)
+                (byte) 0x03, (byte) 0x6E, (byte) 0x73, (byte) 0x31, (byte) 0xC0, (byte) 0x10,  // "ns1.example.com" (pointer to example.com)
+                (byte) 0x00, (byte) 0x02,  // TYPE = NS (0x0002)
+                (byte) 0x00, (byte) 0x01,  // CLASS = IN (0x0001)
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x3C,  // TTL = 60 seconds (0x3C)
+                (byte) 0x00, (byte) 0x06,  // RDLENGTH = 6 bytes
+                (byte) 0x03, (byte) 0x6E, (byte) 0x73, (byte) 0x31, (byte) 0xC0, (byte) 0x10   // RDATA = "ns1.example.com" (pointer to example.com)
+        };
+        String expected = "ID: 4660\nQR: 0\nOpCode: 0\nAA: 0\nTC: 0\nRD: 1\nRA: 1\nZ: 0\nRCODE: 0\n" +
+                "QDCOUNT: 1\nANCOUNT: 0\nNSCOUNT: 0\nARCOUNT: 1\n";
+        DNSMessage msg = DNSMessage.decodeMessage(request);
+        DNSHeader header = msg.getHeader();
+        String actual = header.toString();
+        assertEquals(expected, actual);
+    }
 }
