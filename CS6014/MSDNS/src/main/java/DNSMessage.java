@@ -94,6 +94,10 @@ public class DNSMessage {
         return header_ != null;
     }
 
+    public void addAnswer(DNSRecord record){
+        answers_.add(record);
+    }
+
     public int numAnswers(){
         return answers_.size();
     }
