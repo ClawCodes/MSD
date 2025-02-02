@@ -105,4 +105,8 @@ public class DNSMessage {
     public ArrayList<DNSQuestion> getQuestions(){
         return questions_;
     }
+
+    public HashMap<String, Integer> getDomainLocations() {
+        return domainLocations;
+    }
 }

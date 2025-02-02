@@ -62,11 +62,6 @@ public class DNSHeader {
         return slicePair(10, 12);
     }
 
-    int getRCode(){
-        return BitHelper.getBits(header_[3], 4, 7);
-    }
-
-
     /**
      * Use this method to build the header only for responses which use a cached answer
      * @param request

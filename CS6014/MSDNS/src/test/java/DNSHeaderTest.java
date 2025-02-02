@@ -49,7 +49,7 @@ class DNSHeaderTest {
     }
 
     @Test
-    public void testGetRCount() throws IOException {
+    public void testGetRCode() throws IOException {
         byte[] message = new byte[] {
                 // header
                 (byte)0xC9, (byte)0x39, // ID
