@@ -1,5 +1,7 @@
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +50,7 @@ public class DNSMessage {
         return domainParts;
     }
 
-    String joinDomainName(String[] pieces){
+    public static String joinDomainName(String[] pieces){
         return String.join(".", pieces);
     }
 
@@ -80,6 +82,24 @@ public class DNSMessage {
         }
 
         return message;
+    }
+
+    static void writeDomainName(ByteArrayOutputStream outStream, HashMap<String,Integer> domainLocations, String[] domainPieces) throws IOException {
+        for (int i = 0; i < domainPieces.length; i++){
+            Integer offset = domainLocations.get(joinDomainName(Arrays.copyOfRange(domainPieces, i, domainPieces.length)));
+            if (offset != null && offset < outStream.size()){
+                int ptr = 0xC0;
+                byte[] offsetParts = BitHelper.intToByteArray(offset, 2);
+                offsetParts[0] |= (byte) ptr;
+                outStream.write(offsetParts);
+                return; // end as rest of domain is a pointer
+            } else {
+                String label = domainPieces[i];
+                outStream.write((byte) label.length());
+                outStream.write(domainPieces[i].getBytes());
+            }
+        }
+        outStream.write((byte)0);
     }
 
     public void setHeader(DNSHeader header){

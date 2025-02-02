@@ -1,3 +1,6 @@
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 public class BitHelper {
     public static int bytePairToInt(byte[] bytes) {
         if (bytes.length != 2){
@@ -16,5 +19,11 @@ public class BitHelper {
         }
         mask = mask << (7 - end);
         return (b & mask) >> (7 - end);
+    }
+
+    public static byte[] intToByteArray(int value, int keep){
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        buffer.putInt(value);
+        return Arrays.copyOfRange(buffer.array(), 4 - keep, 4);
     }
 }

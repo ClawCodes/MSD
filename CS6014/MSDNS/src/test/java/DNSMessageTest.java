@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,5 +114,79 @@ class DNSMessageTest {
         assertEquals(2, locations.size());
         assertEquals(16, locations.get("ns1.example.com"));
         assertEquals(12, locations.get("www.example.com"));
+    }
+
+    @Test
+    public void testWriteDomainNameNoCompression() throws IOException {
+        String[] domainPieces = new String[] {"www", "example", "com"};
+
+        byte[] expected = new byte[] {
+                (byte) 0x03, (byte) 0x77, (byte) 0x77, (byte) 0x77,  // "3www"
+                (byte) 0x07, (byte) 0x65, (byte) 0x78, (byte) 0x61, (byte) 0x6D, (byte) 0x70, (byte) 0x6C, (byte) 0x65,  // "7example"
+                (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
+        };
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        HashMap<String,Integer> locations = new HashMap<>();
+        DNSMessage.writeDomainName(out, locations, domainPieces);
+        byte[] actual  = out.toByteArray();
+
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testWriteDomainNameWithCompression() throws IOException {
+        String[] domainPieces = new String[] {"www", "example", "com"};
+
+        byte[] domainBytes = new byte[] {
+                (byte) 0x03, (byte) 0x77, (byte) 0x77, (byte) 0x77,  // "3www"
+                (byte) 0x07, (byte) 0x65, (byte) 0x78, (byte) 0x61, (byte) 0x6D, (byte) 0x70, (byte) 0x6C, (byte) 0x65,  // "7example"
+                (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
+        };
+
+        byte[] expectedPtr = new byte[] {
+                (byte) 0xC0, (byte) 0x00
+        };
+
+        int offset = 0;
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        out.writeBytes(domainBytes);
+
+        HashMap<String,Integer> locations = new HashMap<>();
+        locations.put("www.example.com", offset);
+        DNSMessage.writeDomainName(out, locations, domainPieces);
+        byte[] actual  = out.toByteArray();
+
+        assertArrayEquals(domainBytes, Arrays.copyOfRange(actual, 0, 17));
+        assertArrayEquals(expectedPtr, Arrays.copyOfRange(actual, 17, 19));
+    }
+
+    @Test
+    public void testWriteDomainNamePartialCompression() throws IOException {
+        String[] domainPieces = new String[] {"abc", "example", "com"};
+
+        byte[] domainBytes = new byte[] {
+                (byte) 0x03, (byte) 0x77, (byte) 0x77, (byte) 0x77,  // "3www"
+                (byte) 0x07, (byte) 0x65, (byte) 0x78, (byte) 0x61, (byte) 0x6D, (byte) 0x70, (byte) 0x6C, (byte) 0x65,  // "7example"
+                (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
+        };
+
+        byte[] expectedPtr = new byte[] {
+                (byte) 0xC0, (byte) 0x04
+        };
+
+        int offset = 0;
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        out.writeBytes(domainBytes);
+
+        HashMap<String,Integer> locations = new HashMap<>();
+        locations.put("www.example.com", offset);
+        DNSMessage.writeDomainName(out, locations, domainPieces);
+        byte[] actual  = out.toByteArray();
+
+        assertArrayEquals(domainBytes, Arrays.copyOfRange(actual, 0, 17));
+        assertArrayEquals(expectedPtr, Arrays.copyOfRange(actual, 17, 19));
     }
 }
