@@ -96,7 +96,7 @@ public class DNSHeader {
 
         outStream.write(inStream.readNBytes(2)); // Keep same QDCOUNT
         byte[] ANCount = inStream.readNBytes(2);
-        ANCount[1] = (byte) ((int) ANCount[1] + 1); // increment answer count by 1
+        ANCount[1] = (byte) ((int) ANCount[1] + response.numAnswers()); // answers
         outStream.write(ANCount);
         outStream.write(inStream.readAllBytes()); // add the rest of the records to the message
 

@@ -78,7 +78,18 @@ public class DNSRecord {
     }
 
     boolean isExpired() {
-        LocalDateTime now = LocalDateTime.now();
         return LocalDateTime.now().isAfter(expireDtm);
+    }
+
+    public String toString() {
+        return String.format(
+                "Domain: %s\nType: %s\nClass: %s\nTTL: %d\nRD Length: %d\nExpires: %s",
+                DNSMessage.joinDomainName(domain_),
+                type_,
+                BitHelper.bytePairToInt(class_),
+                ttl_,
+                rdLength_,
+                expireDtm
+        );
     }
 }

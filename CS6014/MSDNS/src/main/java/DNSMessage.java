@@ -105,6 +105,42 @@ public class DNSMessage {
         outStream.write((byte)0);
     }
 
+    public static DNSMessage buildResponse(DNSMessage request, DNSRecord[] answers) throws IOException {
+        DNSMessage response = new DNSMessage();
+        for (DNSRecord answer : answers){
+            response.addAnswer(answer);
+        }
+
+        DNSHeader header = DNSHeader.buildHeaderForResponse(request, response);
+        response.setHeader(header);
+
+        response.questions_.addAll(request.questions_);
+        response.answers_.addAll(request.answers_);
+        response.authorityRecords_.addAll(request.authorityRecords_);
+        response.additionalRecords_.addAll(request.additionalRecords_);
+        response.domainLocations.putAll(request.domainLocations);
+
+        return response;
+    }
+
+    public byte[] toBytes() throws IOException {
+     ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+     header_.writeBytes(outStream);
+     for (DNSQuestion question : questions_){
+         question.writeBytes(outStream, domainLocations);
+     }
+     for (DNSRecord answer : answers_){
+         answer.writeBytes(outStream, domainLocations);
+     }
+     for (DNSRecord authorityRecord : authorityRecords_){
+         authorityRecord.writeBytes(outStream, domainLocations);
+     }
+     for (DNSRecord additionalRecord : additionalRecords_){
+         additionalRecord.writeBytes(outStream, domainLocations);
+     }
+     return outStream.toByteArray();
+    }
+
     public void setHeader(DNSHeader header){
         header_ = header;
     }
@@ -135,5 +171,23 @@ public class DNSMessage {
 
     public HashMap<String, Integer> getDomainLocations() {
         return domainLocations;
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        str.append(header_.toString());
+        for (DNSQuestion question : questions_){
+            str.append(question.toString());
+        }
+        for (DNSRecord answer : answers_){
+            str.append(answer.toString());
+        }
+        for (DNSRecord authorityRecord : authorityRecords_){
+            str.append(authorityRecord.toString());
+        }
+        for (DNSRecord additionalRecord : additionalRecords_){
+            str.append(additionalRecord.toString());
+        }
+        return str.toString();
     }
 }
