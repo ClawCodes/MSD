@@ -86,7 +86,6 @@ class DNSMessageTest {
                 (byte) 0x03, (byte) 0x77, (byte) 0x77, (byte) 0x77,  // "3www"
                 (byte) 0x07, (byte) 0x65, (byte) 0x78, (byte) 0x61, (byte) 0x6D, (byte) 0x70, (byte) 0x6C, (byte) 0x65,  // "7example"
                 (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
-
                 (byte) 0x00, (byte) 0x01,  // QTYPE = A
                 (byte) 0x00, (byte) 0x01,  // QCLASS = IN
 
@@ -102,7 +101,7 @@ class DNSMessageTest {
                 (byte) 0x03, (byte) 0x6E, (byte) 0x73, (byte) 0x31, (byte) 0xC0, (byte) 0x10,  // "ns1.example.com" (pointer to example.com)
                 (byte) 0x00, (byte) 0x02,  // TYPE = NS (0x0002)
                 (byte) 0x00, (byte) 0x01,  // CLASS = IN (0x0001)
-                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x3C,  // TTL = 60 seconds (0x3C)
+                (byte) 0x00, (byte) 0x3C,  // TTL = 60 seconds (0x3C)
                 (byte) 0x00, (byte) 0x06,  // RDLENGTH = 6 bytes
                 (byte) 0x03, (byte) 0x6E, (byte) 0x73, (byte) 0x31, (byte) 0xC0, (byte) 0x10   // RDATA = "ns1.example.com" (pointer to example.com)
         };
@@ -112,7 +111,7 @@ class DNSMessageTest {
         assertEquals(1, message.numAnswers());
         HashMap<String, Integer> locations = message.getDomainLocations();
         assertEquals(2, locations.size());
-        assertEquals(16, locations.get("ns1.example.com"));
+        assertEquals(16, locations.get("example.com"));
         assertEquals(12, locations.get("www.example.com"));
     }
 
@@ -172,21 +171,22 @@ class DNSMessageTest {
                 (byte) 0x03, (byte) 0x63, (byte) 0x6F, (byte) 0x6D, (byte) 0x00,  // "3com."
         };
 
-        byte[] expectedPtr = new byte[] {
-                (byte) 0xC0, (byte) 0x04
+        byte[] expected = new byte[] {
+                (byte)0x03, (byte)0x61, (byte)0x62, (byte)0x63, // abc
+                (byte) 0xC0, (byte) 0x04 // example.com pointer
         };
 
-        int offset = 0;
+        int offset = 4;
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         out.writeBytes(domainBytes);
 
         HashMap<String,Integer> locations = new HashMap<>();
-        locations.put("www.example.com", offset);
+        locations.put("example.com", offset);
         DNSMessage.writeDomainName(out, locations, domainPieces);
         byte[] actual  = out.toByteArray();
 
         assertArrayEquals(domainBytes, Arrays.copyOfRange(actual, 0, 17));
-        assertArrayEquals(expectedPtr, Arrays.copyOfRange(actual, 17, 19));
+        assertArrayEquals(expected, Arrays.copyOfRange(actual, 17, 23));
     }
 }

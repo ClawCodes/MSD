@@ -1,6 +1,8 @@
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 /**
  *                                     1  1  1  1  1  1
@@ -62,11 +64,21 @@ public class DNSRecord {
         );
     }
 
+    public void writeBytes(ByteArrayOutputStream outStream, HashMap<String, Integer> domainLocations) throws IOException {
+        DNSMessage.writeDomainName(outStream, domainLocations, domain_);
+        outStream.writeBytes(BitHelper.intToByteArray(type_, 2));
+        outStream.writeBytes(class_);
+        outStream.writeBytes(BitHelper.intToByteArray(ttl_, 2));
+        outStream.writeBytes(BitHelper.intToByteArray(rdLength_, 2));
+        outStream.writeBytes(rdata_);
+    }
+
     public String[] getDomain() {
         return domain_;
     }
 
     boolean isExpired() {
+        LocalDateTime now = LocalDateTime.now();
         return LocalDateTime.now().isAfter(expireDtm);
     }
 }

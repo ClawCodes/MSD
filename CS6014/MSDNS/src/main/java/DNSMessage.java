@@ -1,7 +1,6 @@
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,12 +30,14 @@ public class DNSMessage {
         int labelLen = inStream.read();
         // first two bits are set indicates pointer
         int offset = -1;
+        int numUniqueLables = 0;
         while (labelLen != 0){
             if (BitHelper.getBits(labelLen, 0, 1) == 3){ // firs two bits are 11 indicating a pointer follows
                 offset = BitHelper.getBits(labelLen, 2, 8) << 8; // get first part of offset
                 offset |= inStream.read(); //
                 inStream = readDomainName(offset); // new stream containing non-compressed domain name
                 labelLen = inStream.read();
+                numUniqueLables = domain.size();
             }
             String label = new String(inStream.readNBytes(labelLen));
             domain.add(label);
@@ -45,7 +46,9 @@ public class DNSMessage {
         String[] domainParts = domain.toArray(new String[domain.size()]);
         // Add domain to locations when a pointer is encountered
         if (offset >= 0){
-            domainLocations.put(joinDomainName(domainParts), offset);
+            domainLocations.put(joinDomainName(
+                    Arrays.copyOfRange(domainParts, numUniqueLables, domainParts.length)
+            ), offset);
         }
         return domainParts;
     }
