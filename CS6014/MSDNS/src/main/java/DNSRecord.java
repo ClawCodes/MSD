@@ -77,6 +77,10 @@ public class DNSRecord {
         return domain_;
     }
 
+    public void increaseExpiration(int seconds){
+        expireDtm = expireDtm.plusSeconds(seconds);
+    }
+
     boolean isExpired() {
         return LocalDateTime.now().isAfter(expireDtm);
     }

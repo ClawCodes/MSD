@@ -169,6 +169,10 @@ public class DNSMessage {
         return questions_;
     }
 
+    public ArrayList<DNSRecord> getAnswers(){
+        return answers_;
+    }
+
     public HashMap<String, Integer> getDomainLocations() {
         return domainLocations;
     }

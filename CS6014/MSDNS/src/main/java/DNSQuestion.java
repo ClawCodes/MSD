@@ -52,6 +52,7 @@ public class DNSQuestion {
     public String[] getDomain() {
         return domain_;
     }
+
     public int getQType() {
         return BitHelper.bytePairToInt(qType_);
     }
