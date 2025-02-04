@@ -1,0 +1,30 @@
+A2 - Reading Vocabulary Assignment
+
+1) Hz - “Hertz” is the SI unit of frequency and is equivalent to one event per second
+2) Metric unit prefixes - each of the following are prefixed to a unit to describe a quantity as a fraction or multiple of a unit. The following are multiples. 
+    Kilo - 1,000 or (10^3)
+    Mega - 1,000,000 or (10^6)
+    Giga -1,000,000,000 or (10^9)
+    Tera -1,000,000,000,000 or (10^12)
+3) Elf - Executable and Linkable Format - ELF is a file format used for storing binaries, libraries, and core dumps within linux/unix-based systems. Its design allows it to be executed across platforms, making it a widely used executable format.
+4) Thrashing - Thrashing occurs in a system with virtual memory when a computer's storage is overcommited. This leads to a state of continually paging (i.e. moving data from secondary storage to main memory.). Paging is a slow processes and contiutally performing this causes the performace of a given application to degrade or collapse.
+5) Virtual memory - A memory management technique that allows secondary memory to be used as if it were part of the main memory. This technique allows programs to use not just RAM, but also secondary memory (disk) to store infrequently used data.  
+6) Virtual Address Space - A set of virtual addresses that an OS makes available to a give process.
+7) Virtual Address - A virtual address is a memory address that is created by the OS and presented to a program as if it were a physical memory address. However, under the hood, the the virtual address is mapped to a physical address, where there is available memory for storage.
+8) Virtual Machine - A virtual machine is the virtualization/emulation of a computer system. These are software-based machines that run as if they are an individual machine with its own hardware, when in fact it is using a host systems hardware under the hood.
+9) Time sharing - A technique that allows multiple users to concurrently use resources on a computer. It relies on giving each user small slices of processing time to execute their tasks and rapidly switches between users to provide the illusion that each user is using their own machine.
+10) Digital (discrete) vs. Analog - Digital and analog are two methods of representing information. Digital relies on transmitting information using two different states (0's or 1's, on vs. off, etc.) and Analog relies on a continuous signal which has a wide range of values, not just 0 or 1.
+11) Kernel vs. OS - An operating system is the sofwtware that manages a computer's hardware and software. It is the intermediary between the user and the hardware. The Kernel is a core component of the Operating system. It specifically manages the communication between the software and the hardware.
+12) Von Neumann - Jon von Neumann was a mathmetician, physicist, and computer scientist. He was a pivitol figure in many fields and pioneered the mathematical framework of quantum physics.
+13) Integrated Circuit (IC) - Also known as a microchip is a set of various electronic components which are etched onto a small piece of semiconductor material. They are used in a wide range of electronic devices including computers and televisions.
+14) State Machine (FSA) - A finite state machine is a mathematial model of computation. It's an abstract machine that can only be in one state at a given time. It can move between states based on changed in input to the machine.
+15) Hardware (or program) privilege level - Within the x86 instruction set the privilege level controls a program's access to resources such as memory, I/O ports, etc. There are four privilege levels (0-3) with 3 being least privileged. Level 0 is full kernel/executive access and level 3 is for application programs. 
+16) Context swtich - A context switch is the process of soring the state of a process/thread so that is can be resumed at a later data and then resotring a previously saved state and resuming the process of the resoted state/program.
+17) Lazy loading - A method which delays the loading of resources until they are needed. This is opposed to eager loading where a resource is pre-loaded before it's every needed.
+18) PID (Process ID) - A Unique identifier which identifies a process running in an operating system. 
+19) DMA (direct memory access) - A process in which a device can directly transfer data to and from a system's memory without the need for the CPU.
+20) MMU (Memory Management Unit) - A hardware unit which translates virtual memory addresses into physical memory addresses
+21) TLB (Translation Lookaside Buffer) - A cache that stores the recent translations of virtual memory to physical memory. It is part of the MMU and provides a faster way to look upphysical addresses from a virtual address if said virtual address is in the cache.
+22) Daemon - A program which runs in the background of a multitasking operating system. These programs are not in direct control of the user.
+23) Symbol - A name that represents and address or value within a program. There are things such as labels and constatns in assembly programs. 
+24) Shared Library - A library that contains executable code that can be used by multiple programs concurrently.
