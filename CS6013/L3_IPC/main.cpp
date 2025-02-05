@@ -35,7 +35,7 @@ void childHandler(int fd) {
     kill(parentPid, SIGUSR1);
 }
 
-void parentHandler(int fd, std::string word, pid_t childPid) {
+void parentHandler(int fd, std::string word) {
     // Parent
     int wordLen = word.size();
     write(fd, &wordLen, sizeof(wordLen));
@@ -52,7 +52,10 @@ int main(int argc, char *argv[]) {
     std::string word = std::string(param);
 
     int fds[2];
-    pipe(fds);
+    if (pipe(fds) < 0) {
+        perror("Pipe Error");
+        exit(1);
+    }
 
     int writef = fds[1];
     int readf = fds[0];
@@ -68,9 +71,11 @@ int main(int argc, char *argv[]) {
 
     while (true) {
         if (pid == 0) {
+            close(writef);
             childHandler(readf);
         } else {
-            parentHandler(writef, word, pid);
+            close(readf);
+            parentHandler(writef, word);
             std::cin >> word;
         }
     }
