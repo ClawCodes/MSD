@@ -1,0 +1,7 @@
+exclude: tests/catch.h
+repos:
+  - repo: https://github.com/cpp-linter/cpp-linter-hooks
+    rev: v0.6.0
+    hooks:
+      - id: clang-format
+        args: [--style=Google]

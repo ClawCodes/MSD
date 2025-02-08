@@ -1,11 +1,13 @@
-#include <unistd.h>
+#include "shelpers.h"
+
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "shelpers.h"
+#include <unistd.h>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
-// Author: Ben Jones (I think) with a lot of clean up by J. Davison de St. Germain
+// Author: Ben Jones (I think) with a lot of clean up by J. Davison de St.
+// Germain
 //
 // Date:   2019?
 //         Jan 2022 - Cleanup
@@ -26,13 +28,14 @@ using namespace std;
 // cat < shelpers.cpp | nl
 // cat shelpers.cpp | nl
 // cat shelpers.cpp | nl | head -50 | tail -10
-// cat shelpers.cpp | nl | head -50 | tail -10 > ten_lines.txt 
+// cat shelpers.cpp | nl | head -50 | tail -10 > ten_lines.txt
 //
-// - The following two commands are equivalent.  [data.txt is sent into nl and the
+// - The following two commands are equivalent.  [data.txt is sent into nl and
+// the
 //   output is saved to numbered_data.txt.]
 //
 // nl > numbered_data.txt < data.txt
-// nl < data.txt > numbered_data.txt 
+// nl < data.txt > numbered_data.txt
 //
 // - Assuming numbered_data.txt has values in it... try running:
 //   [Note this probably doesn't work like one might expect...
@@ -46,91 +49,86 @@ using namespace std;
 //   message to the user).
 //
 // cat shelpers.cpp | nl | head -50 | tail -10 > ten_lines.txt < abc
-// 
+//
 
 ////////////////////////////////////////////////////////////////////////
 // This routine is used by tokenize().  You do not need to modify it.
 
-bool splitOnSymbol( vector<string> & words, int i, char c )
-{
-   if( words[i].size() < 2 ){
-      return false;
-   }
-   int pos;
-   if( (pos = words[i].find(c)) != string::npos ){
-      if( pos == 0 ){
-         // Starts with symbol.
-         words.insert( words.begin() + i + 1, words[i].substr(1, words[i].size() -1) );
-         words[i] = words[i].substr( 0, 1 );
+bool splitOnSymbol(vector<string>& words, int i, char c) {
+  if (words[i].size() < 2) {
+    return false;
+  }
+  int pos;
+  if ((pos = words[i].find(c)) != string::npos) {
+    if (pos == 0) {
+      // Starts with symbol.
+      words.insert(words.begin() + i + 1,
+                   words[i].substr(1, words[i].size() - 1));
+      words[i] = words[i].substr(0, 1);
+    } else {
+      // Symbol in middle or end.
+      words.insert(words.begin() + i + 1, string{c});
+      string after = words[i].substr(pos + 1, words[i].size() - pos - 1);
+      if (!after.empty()) {
+        words.insert(words.begin() + i + 2, after);
       }
-      else {
-         // Symbol in middle or end.
-         words.insert( words.begin() + i + 1, string{c} );
-         string after = words[i].substr( pos + 1, words[i].size() - pos - 1 );
-         if( !after.empty() ){
-            words.insert( words.begin() + i + 2, after );
-         }
-         words[i] = words[i].substr( 0, pos );
-      }
-      return true;
-   }
-   else {
-      return false;
-   }
+      words[i] = words[i].substr(0, pos);
+    }
+    return true;
+  } else {
+    return false;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////
-// You do not need to modify tokenize().  
+// You do not need to modify tokenize().
 
-vector<string> tokenize( const string& s )
-{
-   vector<string> ret;
-   int pos = 0;
-   int space;
+vector<string> tokenize(const string& s) {
+  vector<string> ret;
+  int pos = 0;
+  int space;
 
-   // Split on spaces:
+  // Split on spaces:
 
-   while( (space = s.find(' ', pos) ) != string::npos ){
-      string word = s.substr( pos, space - pos );
-      if( !word.empty() ){
-         ret.push_back( word );
+  while ((space = s.find(' ', pos)) != string::npos) {
+    string word = s.substr(pos, space - pos);
+    if (!word.empty()) {
+      ret.push_back(word);
+    }
+    pos = space + 1;
+  }
+
+  string lastWord = s.substr(pos, s.size() - pos);
+
+  if (!lastWord.empty()) {
+    ret.push_back(lastWord);
+  }
+
+  for (int i = 0; i < ret.size(); ++i) {
+    for (char c : {'&', '<', '>', '|'}) {
+      if (splitOnSymbol(ret, i, c)) {
+        --i;
+        break;
       }
-      pos = space + 1;
-   }
-
-   string lastWord = s.substr( pos, s.size() - pos );
-
-   if( !lastWord.empty() ){
-      ret.push_back( lastWord );
-   }
-
-   for( int i = 0; i < ret.size(); ++i ) {
-      for( char c : {'&', '<', '>', '|'} ) {
-         if( splitOnSymbol( ret, i, c ) ){
-            --i;
-            break;
-         }
-      }
-   }
-   return ret;
+    }
+  }
+  return ret;
 }
 
 ////////////////////////////////////////////////////////////////////////
 
-ostream& operator<<( ostream& outs, const Command& c )
-{
-   outs << c.execName << " [argv: ";
-   for( const auto & arg : c.argv ){
-      if( arg ) {
-         outs << arg << ' ';
-      }
-      else {
-         outs << "NULL ";
-      }
-   }
-   outs << "] -- FD, in: " << c.inputFd << ", out: " << c.outputFd << " "
-        << (c.background ? "(background)" : "(foreground)");
-   return outs;
+ostream& operator<<(ostream& outs, const Command& c) {
+  outs << c.execName << " [argv: ";
+  for (const auto& arg : c.argv) {
+    if (arg) {
+      outs << arg << ' ';
+    } else {
+      outs << "NULL ";
+    }
+  }
+  outs << "] -- FD, in: " << c.inputFd << ", out: " << c.outputFd << " "
+       << (c.background ? "(background)" : "(foreground)");
+  return outs;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -142,136 +140,140 @@ ostream& operator<<( ostream& outs, const Command& c )
 //
 // Returns an empty vector if the command line (tokens) is invalid.
 //
-// You'll need to fill in a few gaps in this function and add appropriate error handling
-// at the end.  Note, most of the gaps contain "assert( false )".
+// You'll need to fill in a few gaps in this function and add appropriate error
+// handling at the end.  Note, most of the gaps contain "assert( false )".
 //
 
-vector<Command> getCommands( const vector<string> & tokens )
-{
-   vector<Command> commands( count( tokens.begin(), tokens.end(), "|") + 1 ); // 1 + num |'s commands
+vector<Command> getCommands(const vector<string>& tokens) {
+  vector<Command> commands(count(tokens.begin(), tokens.end(), "|") +
+                           1);  // 1 + num |'s commands
 
-   int first = 0;
-   int last = find( tokens.begin(), tokens.end(), "|" ) - tokens.begin();
+  int first = 0;
+  int last = find(tokens.begin(), tokens.end(), "|") - tokens.begin();
 
-   bool error = false;
+  bool error = false;
 
-   for( int cmdNumber = 0; cmdNumber < commands.size(); ++cmdNumber ){
-      const string & token = tokens[ first ];
+  for (int cmdNumber = 0; cmdNumber < commands.size(); ++cmdNumber) {
+    const string& token = tokens[first];
 
-      if( token == "&" || token == "<" || token == ">" || token == "|" ) {
-         error = true;
-         break;
+    if (token == "&" || token == "<" || token == ">" || token == "|") {
+      error = true;
+      break;
+    }
+
+    Command& command =
+        commands[cmdNumber];  // Get reference to current Command struct.
+    command.execName = token;
+
+    // Must _copy_ the token's string (otherwise, if token goes out of scope
+    // (anywhere) this pointer would become bad...) Note, this fixes a security
+    // hole in this code that had been here for quite a while.
+
+    command.argv.push_back(strdup(token.c_str()));  // argv0 == program name
+
+    command.inputFd = STDIN_FILENO;
+    command.outputFd = STDOUT_FILENO;
+
+    command.background = false;
+
+    bool openFile = false;
+    for (int j = first + 1; j < last; ++j) {
+      if (openFile) {
+        const char* fileName = tokens[j].c_str();
+        if (tokens[j - 1] == "<") {
+          int inputFd = open(fileName, O_RDONLY);
+          if (inputFd == -1) {
+            error = true;
+            continue;
+          }
+          command.inputFd = inputFd;
+        } else {
+          int outputFd = open(fileName, O_WRONLY | O_CREAT,
+                              0644);  // Create file if not exists
+          if (outputFd == -1) {
+            error = true;
+            continue;
+          }
+          command.outputFd = outputFd;
+        }
+        openFile = false;
+        continue;
+      }
+      if (tokens[j] == ">" || tokens[j] == "<") {
+        // Handle I/O redirection tokens
+        //
+        // Note, that only the FIRST command can take input redirection
+        // (all others get input from a pipe)
+        // Only the LAST command can have output redirection!
+        // TODO: add error handling for the above situations
+        openFile = true;
+      } else if (tokens[j] == "&") {
+        command.background = true;
+      } else {
+        // Otherwise this is a normal command line argument! Add to argv.
+        command.argv.push_back(tokens[j].c_str());
+      }
+    }
+
+    if (!error) {
+      if (cmdNumber > 0) {
+        // There are multiple commands.  Open a pipe and
+        // connect the ends to the fd's for the commands!
+
+        //            assert( false );
+        // TODO: implement
       }
 
-      Command & command = commands[ cmdNumber ]; // Get reference to current Command struct.
-      command.execName = token;
+      // Exec wants argv to have a nullptr at the end!
+      command.argv.push_back(nullptr);
 
-      // Must _copy_ the token's string (otherwise, if token goes out of scope (anywhere)
-      // this pointer would become bad...) Note, this fixes a security hole in this code
-      // that had been here for quite a while.
+      // Find the next pipe character
+      first = last + 1;
 
-      command.argv.push_back( strdup( token.c_str() ) ); // argv0 == program name
-
-      command.inputFd  = STDIN_FILENO;
-      command.outputFd = STDOUT_FILENO;
-
-      command.background = false;
-
-      bool openFile = false;
-      for( int j = first + 1; j < last; ++j ) {
-
-         if (openFile) {
-           const char* fileName = tokens[j].c_str();
-           if( tokens[j - 1] == "<" ) {
-             int inputFd = open( fileName, O_RDONLY );
-             if ( inputFd == -1 ) {
-               error = true;
-                continue;
-             }
-             command.inputFd = inputFd;
-           } else {
-             int outputFd = open( fileName, O_WRONLY | O_CREAT, 0644); // Create file if not exists
-             if ( outputFd == -1 ) {
-               error = true;
-                continue;
-             }
-             command.outputFd = outputFd;
-           }
-           openFile = false;
-         }
-         if( tokens[j] == ">" || tokens[j] == "<" ) {
-            // Handle I/O redirection tokens
-            //
-            // Note, that only the FIRST command can take input redirection
-            // (all others get input from a pipe)
-            // Only the LAST command can have output redirection!
-            // TODO: add error handling for the above situations
-            openFile = true;
-         }
-         else if( tokens[j] == "&" ){
-              command.background = true;
-         }
-         else {
-            // Otherwise this is a normal command line argument! Add to argv.
-            command.argv.push_back( tokens[j].c_str() );
-         }
+      if (first < tokens.size()) {
+        last = find(tokens.begin() + first, tokens.end(), "|") - tokens.begin();
       }
+    }  // end if !error
+  }    // end for( cmdNumber = 0 to commands.size )
 
-      if( !error ) {
+  if (error) {
+    // Close any file descriptors you opened in this function and return the
+    // appropriate data!
 
-         if( cmdNumber > 0 ){
-            // There are multiple commands.  Open a pipe and
-            // connect the ends to the fd's for the commands!
+    // Note, an error can happen while parsing any command. However, the
+    // "commands" vector is pre-populated with a set of "empty" commands and
+    // filled in as we go.  Because of this, a "command" name can be blank (the
+    // default for a command struct that has not yet been filled in).  (Note, it
+    // has not been filled in yet because the processing has not gotten to it
+    // when the error (in a previous command) occurred.
 
-//            assert( false );
-            // TODO: implement
-         }
+    //      assert(false);
+    // TODO: implement
+    throw runtime_error("ERROR");
+  }
 
-         // Exec wants argv to have a nullptr at the end!
-         command.argv.push_back( nullptr );
+  return commands;
 
-         // Find the next pipe character
-         first = last + 1;
+}  // end getCommands()
 
-         if( first < tokens.size() ){
-            last = find( tokens.begin() + first, tokens.end(), "|" ) - tokens.begin();
-         }
-      } // end if !error
-   } // end for( cmdNumber = 0 to commands.size )
-
-   if( error ){
-
-      // Close any file descriptors you opened in this function and return the appropriate data!
-
-      // Note, an error can happen while parsing any command. However, the "commands" vector is
-      // pre-populated with a set of "empty" commands and filled in as we go.  Because
-      // of this, a "command" name can be blank (the default for a command struct that has not
-      // yet been filled in).  (Note, it has not been filled in yet because the processing
-      // has not gotten to it when the error (in a previous command) occurred.
-
-//      assert(false);
-      // TODO: implement
-      throw runtime_error( "ERROR" );
-   }
-
-   return commands;
-
-} // end getCommands()
-
-void dupFileDescriptors(Command & command){
-   if (command.inputFd != STDIN_FILENO) {
-     dup2(STDIN_FILENO, command.inputFd);
-   }
-   if (command.outputFd != STDOUT_FILENO) {
-      dup2(STDOUT_FILENO, command.outputFd);
-   }
-}
-
-void closeFileDescriptors(Command & command){
+void dupFileDescriptors(Command& command) {
   if (command.inputFd != STDIN_FILENO) {
-    close( command.inputFd );
+    if (dup2(command.inputFd, STDIN_FILENO) == -1) {
+      perror("dup2 one");
+    }
   }
   if (command.outputFd != STDOUT_FILENO) {
-    close( command.outputFd );
+    if (dup2(command.outputFd, STDOUT_FILENO)) {
+      perror("dup2 two");
+    }
+  }
+}
+
+void closeFileDescriptors(Command& command) {
+  if (command.inputFd != STDIN_FILENO) {
+    close(command.inputFd);
+  }
+  if (command.outputFd != STDOUT_FILENO) {
+    close(command.outputFd);
   }
 }
