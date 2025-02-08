@@ -45,3 +45,6 @@ __MACOSX
 
 # Python
 *__pycache__/
+
+# Cmake
+cmake-build-debug/

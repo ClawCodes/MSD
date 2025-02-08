@@ -15,7 +15,6 @@ public class Server {
             DNSMessage message = DNSMessage.decodeMessage(pkt.getData());
             DNSQuestion question = message.getQuestions().get(0);
             DNSRecord answer = cache.get(question);
-
             if (answer == null) {
                 // Fetch from google
                 DatagramPacket forwardPkt = new DatagramPacket(pkt.getData(), pkt.getLength(), googleDNS, 53);
