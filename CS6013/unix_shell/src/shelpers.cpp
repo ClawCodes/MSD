@@ -256,20 +256,20 @@ vector<Command> getCommands(const vector<string>& tokens) {
 
 }  // end getCommands()
 
-void dupFileDescriptors(Command& command) {
+void dupFileDescriptors(const Command& command) {
   if (command.inputFd != STDIN_FILENO) {
     if (dup2(command.inputFd, STDIN_FILENO) == -1) {
       perror("dup2 one");
     }
   }
   if (command.outputFd != STDOUT_FILENO) {
-    if (dup2(command.outputFd, STDOUT_FILENO)) {
+    if (dup2(command.outputFd, STDOUT_FILENO) == -1) {
       perror("dup2 two");
     }
   }
 }
 
-void closeFileDescriptors(Command& command) {
+void closeFileDescriptors(const Command& command) {
   if (command.inputFd != STDIN_FILENO) {
     close(command.inputFd);
   }
