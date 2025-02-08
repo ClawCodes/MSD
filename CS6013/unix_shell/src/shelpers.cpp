@@ -294,3 +294,9 @@ void closePipes(const std::vector<Command>& commands, int index) {
     }
   }
 }
+
+void changeDir(const char* path) {
+  if (chdir(path) == -1) {
+    perror("chdir");
+  }
+}
