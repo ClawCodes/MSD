@@ -75,4 +75,7 @@ void dupFileDescriptors(const Command& command);
 // Close non-standard file descriptors
 void closeFileDescriptors(const Command& command);
 
+// Close all pipes that the provided command will not use
+void closePipes(const std::vector<Command>& commands, int index);
+
 #endif  // SHELPERS_H

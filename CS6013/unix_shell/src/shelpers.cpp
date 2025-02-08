@@ -233,6 +233,14 @@ vector<Command> getCommands(const vector<string>& tokens) {
       if (first < tokens.size()) {
         last = find(tokens.begin() + first, tokens.end(), "|") - tokens.begin();
       }
+      if (cmdNumber > 0) {
+        int pipeFds[2];
+        pipe(pipeFds);
+        commands[cmdNumber - 1].outputFd =
+            pipeFds[1];  // Set last command's output to write end of pipe
+        command.inputFd =
+            pipeFds[0];  // Set current command's input to the read end of pipe
+      }
     }  // end if !error
   }    // end for( cmdNumber = 0 to commands.size )
 
@@ -275,5 +283,14 @@ void closeFileDescriptors(const Command& command) {
   }
   if (command.outputFd != STDOUT_FILENO) {
     close(command.outputFd);
+  }
+}
+
+void closePipes(const std::vector<Command>& commands, int index) {
+  for (int i = index; i < commands.size(); ++i) {
+    if (i != index) {
+      close(commands[i].inputFd);
+      close(commands[i].outputFd);
+    }
   }
 }

@@ -11,12 +11,14 @@ int main() {
   while (std::getline(std::cin, input)) {
     std::vector<std::string> tokens = tokenize(input);
     std::vector<Command> commands = getCommands(tokens);
-    for (auto command : commands) {
+    for (int i = 0; i < commands.size(); i++) {
+      Command command = commands[i];
       pid_t pid = fork();
       if (pid == -1) {
         perror("Fork Error");
       }
       if (pid == 0) {
+        closePipes(commands, i);
         dupFileDescriptors(command);
         execvp(command.execName.c_str(),
                const_cast<char**>(command.argv.data()));
