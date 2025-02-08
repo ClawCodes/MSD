@@ -1,10 +1,11 @@
+#include <stdlib.h>
 #include <unistd.h>
 
+#include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
-// #include <stdlib.h>
-#include <filesystem>
 
 #include "shelpers.h"
 
@@ -20,31 +21,20 @@ int main() {
     for (int i = 0; i < commands.size(); i++) {
       Command command = commands[i];
       if (command.execName == "cd") {
-        if (command.argv.size() < 2) {
-          // TODO: FIX CHANGE DIRS
-          auto home = std::getenv("HOME");
-          if (home == nullptr) {
+        const char* path;
+        if (command.argv.size() < 3) {
+          path = std::getenv("HOME");
+          if (path == nullptr) {
             std::cout << "HOME environment variable is empty\n";
             continue;
           }
-          changeDir(home);
         } else {
-          std::string path = std::string(command.argv[1]);
-          fs::path currentPath = fs::current_path();
-          if (path == ".") {
-            continue;
-          }
-          // adjust relative dirs
-          while (path.substr(0, 2) == "..") {
-            path = path.substr(2, path.size());
-            if (path.substr(0, 1) == "/") {
-              path = path.substr(1, path.size());
-            }
-            currentPath = currentPath.parent_path();
-          }
-          std::cout << currentPath / path << std::endl;
-          changeDir((currentPath / path).c_str());
+          path = command.argv[1];
         }
+        if (chdir(path) == -1) {
+          perror("chdir");
+        }
+        continue;
       }
       pid_t pid = fork();
       if (pid == -1) {

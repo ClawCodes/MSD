@@ -78,7 +78,4 @@ void closeFileDescriptors(const Command& command);
 // Close all pipes that the provided command will not use
 void closePipes(const std::vector<Command>& commands, int index);
 
-// Change dirs with error handling
-void changeDir(const char* path);
-
 #endif  // SHELPERS_H
