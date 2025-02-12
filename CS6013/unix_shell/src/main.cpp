@@ -8,7 +8,6 @@
 #include <filesystem>
 #include <iostream>
 #include <map>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -74,7 +73,6 @@ int main() {
                const_cast<char **>(command.argv.data()));
       } else {
         if (command.background) {
-          // backgroundPIDs.push_back(pid);
           backgroundPIDs[pid] = command;
         } else {
           waitpid(pid, nullptr, 0);
