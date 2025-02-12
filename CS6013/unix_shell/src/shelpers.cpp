@@ -217,11 +217,12 @@ vector<Command> getCommands(const vector<string>& tokens) {
 
     if (!error) {
       if (cmdNumber > 0) {
-        // There are multiple commands.  Open a pipe and
-        // connect the ends to the fd's for the commands!
-
-        //            assert( false );
-        // TODO: implement
+        int pipeFds[2];
+        pipe(pipeFds);
+        commands[cmdNumber - 1].outputFd =
+            pipeFds[1];  // Set last command's output to write end of pipe
+        command.inputFd =
+            pipeFds[0];  // Set current command's input to the read end of pipe
       }
 
       // Exec wants argv to have a nullptr at the end!
@@ -232,14 +233,6 @@ vector<Command> getCommands(const vector<string>& tokens) {
 
       if (first < tokens.size()) {
         last = find(tokens.begin() + first, tokens.end(), "|") - tokens.begin();
-      }
-      if (cmdNumber > 0) {
-        int pipeFds[2];
-        pipe(pipeFds);
-        commands[cmdNumber - 1].outputFd =
-            pipeFds[1];  // Set last command's output to write end of pipe
-        command.inputFd =
-            pipeFds[0];  // Set current command's input to the read end of pipe
       }
     }  // end if !error
   }    // end for( cmdNumber = 0 to commands.size )
@@ -267,12 +260,12 @@ vector<Command> getCommands(const vector<string>& tokens) {
 void dupFileDescriptors(const Command& command) {
   if (command.inputFd != STDIN_FILENO) {
     if (dup2(command.inputFd, STDIN_FILENO) == -1) {
-      perror("dup2 one");
+      perror("dup2 stdin");
     }
   }
   if (command.outputFd != STDOUT_FILENO) {
     if (dup2(command.outputFd, STDOUT_FILENO) == -1) {
-      perror("dup2 two");
+      perror("dup2 stdout");
     }
   }
 }
