@@ -1,4 +1,6 @@
-# Question 1
+# Question 1: Reliable Data Transfer
+
+![](broadcast_fsm.jpeg)
 
 # Question 2: Throttling
 
