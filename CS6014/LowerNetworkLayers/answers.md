@@ -52,7 +52,7 @@ Overall this results in the following saw tooth behavior of adjusting congestion
 
 # Question 3: Routers
 
-* `1.1.0/16` is the smallest prefix which describes the entire collection of addresses
+* `1.1.0.0/21` is the smallest prefix which describes the entire collection of addresses
 * Router A's forwarding table:
 
 | Destination  | Port |
@@ -61,3 +61,7 @@ Overall this results in the following saw tooth behavior of adjusting congestion
 | `1.1.4.1`    | `2`  |
 | `1.1.5.1`    | `3`  |
 | `0.0.0.0/0`  | `4`  |
+
+# Question 4: Routing
+
+![](networkTrials.png)

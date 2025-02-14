@@ -21,15 +21,11 @@ public class Network {
         }
         links.get(a).add(ab);
         links.get(b).add(ba);
-
     }
 
     public static void sendDistanceMessage(Message message) throws InterruptedException {
             messageQueue.put(message);
-
     }
-
-
 
     public static void runBellmanFord() throws InterruptedException {
 
