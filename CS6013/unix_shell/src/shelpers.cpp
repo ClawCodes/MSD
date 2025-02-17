@@ -181,31 +181,36 @@ vector<Command> getCommands(const vector<string>& tokens) {
       if (openFile) {
         const char* fileName = tokens[j].c_str();
         if (tokens[j - 1] == "<") {
+          if (cmdNumber !=
+              0) {  // Input redirection can only occur with the first command
+            error = true;
+            break;
+          }
           int inputFd = open(fileName, O_RDONLY);
           if (inputFd == -1) {
             error = true;
-            continue;
+            break;
           }
           command.inputFd = inputFd;
         } else {
+          if (cmdNumber !=
+              commands.size() - 1) {  // Only the last command can have file
+                                      // output redirection
+            error = true;
+            break;
+          }
           int outputFd = open(fileName, O_WRONLY | O_CREAT,
                               0644);  // Create file if not exists
           if (outputFd == -1) {
             error = true;
-            continue;
+            break;
           }
           command.outputFd = outputFd;
         }
         openFile = false;
-        continue;
+        continue;  // Skip other processing when file name is encountered
       }
       if (tokens[j] == ">" || tokens[j] == "<") {
-        // Handle I/O redirection tokens
-        //
-        // Note, that only the FIRST command can take input redirection
-        // (all others get input from a pipe)
-        // Only the LAST command can have output redirection!
-        // TODO: add error handling for the above situations
         openFile = true;
       } else if (tokens[j] == "&") {
         command.background = true;
@@ -238,18 +243,11 @@ vector<Command> getCommands(const vector<string>& tokens) {
   }    // end for( cmdNumber = 0 to commands.size )
 
   if (error) {
-    // Close any file descriptors you opened in this function and return the
-    // appropriate data!
+    // Close all open descriptors when error occurs
+    for (const Command& command : commands) {
+      closeFileDescriptors(command);
+    }
 
-    // Note, an error can happen while parsing any command. However, the
-    // "commands" vector is pre-populated with a set of "empty" commands and
-    // filled in as we go.  Because of this, a "command" name can be blank (the
-    // default for a command struct that has not yet been filled in).  (Note, it
-    // has not been filled in yet because the processing has not gotten to it
-    // when the error (in a previous command) occurred.
-
-    //      assert(false);
-    // TODO: implement
     throw runtime_error("ERROR");
   }
 
@@ -257,6 +255,10 @@ vector<Command> getCommands(const vector<string>& tokens) {
 
 }  // end getCommands()
 
+/**
+ * Duplicate the file descriptors in a command struct with dup2
+ * @param command populated command struct
+ */
 void dupFileDescriptors(const Command& command) {
   if (command.inputFd != STDIN_FILENO) {
     if (dup2(command.inputFd, STDIN_FILENO) == -1) {
@@ -270,6 +272,11 @@ void dupFileDescriptors(const Command& command) {
   }
 }
 
+/**
+ * Close the file descriptors in a populated command struct.
+ * Note: this does not close the descriptor when STDIN or STDOUT
+ * @param command populated command struct
+ */
 void closeFileDescriptors(const Command& command) {
   if (command.inputFd != STDIN_FILENO) {
     close(command.inputFd);
@@ -279,11 +286,16 @@ void closeFileDescriptors(const Command& command) {
   }
 }
 
+/**
+ * Close all file descriptors in a vector of commands other than the command at
+ * the provided index
+ * @param commands Vector of populated command structs
+ * @param index index of command to skip
+ */
 void closePipes(const std::vector<Command>& commands, int index) {
   for (int i = index; i < commands.size(); ++i) {
     if (i != index) {
-      close(commands[i].inputFd);
-      close(commands[i].outputFd);
+      closeFileDescriptors(commands[i]);
     }
   }
 }
