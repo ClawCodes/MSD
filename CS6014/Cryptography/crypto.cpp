@@ -48,10 +48,10 @@ int SubTables::getIndex(const int table, const int value) const {
 }
 
 void LshiftState(std::array<uint8_t, 8> &state) {
-  uint8_t zerothOverflow = state[0] & 0x80;
+  uint8_t zerothOverflow = (state[0] & 0x80) >> 7;
   state[0] = state[0] << 1;
   for (int i = 1; i < state.size(); i++) {
-    uint8_t overflow = state[i] & 0x80;
+    uint8_t overflow = (state[i] & 0x80) >> 7;
     state[i] = state[i] << 1;
     state[i - 1] = state[i - 1] | overflow;
   }
@@ -59,10 +59,10 @@ void LshiftState(std::array<uint8_t, 8> &state) {
 }
 
 void RshiftState(std::array<uint8_t, 8> &state) {
-  uint8_t lastOverflow = state[state.size() - 1] & 0x01;
+  uint8_t lastOverflow = (state[state.size() - 1] & 0x01) << 7;
   state[state.size() - 1] = state[state.size() - 1] >> 1;
   for (int i = state.size() - 2; i >= 0; i--) {
-    uint8_t overflow = state[i] & 0x01;
+    uint8_t overflow = (state[i] & 0x01) << 7;
     state[i] = state[i] >> 1;
     state[i - 1] = state[i - 1] | overflow;
   }

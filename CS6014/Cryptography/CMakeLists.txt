@@ -1,22 +1,19 @@
-find_package(Catch2 3 REQUIRED)
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.14)
 project(Cryptography)
-
-enable_testing()
-
-include(FetchContent)
-FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG v3.5.2
-)
-FetchContent_MakeAvailable(Catch2)
-
-add_executable(tests test_crypto.cpp)
 
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(main
-    main.cpp
-    crypto.cpp
+        main.cpp
+        crypto.cpp
 )
+
+# TESTING
+find_package(Catch2 3 REQUIRED)
+
+add_executable(tests test_crypto.cpp crypto.cpp)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)
