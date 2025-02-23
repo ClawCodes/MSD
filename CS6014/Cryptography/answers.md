@@ -25,3 +25,9 @@ The mode outlined in the question is using the electronic code book mode which h
 Instead, one could use a mode like counter mode which relies on a unique nonce for each block, this result in different ciphertexts even when the plaintexts are the same.
 Thus, the preserved patterns an attacker could see in the ciphertexts, would no longer be observable.
 
+# Question 3
+
+* "Verify that you can encrypt and decrypt messages using your program" - see "Encrypt-Decrypt" test case
+* "Demonstate that trying to decrypt a message using the wrong password (and therefore the wrong key) does not recover the plaintext message" - see "decrypt-wrong-password" test case 
+* "Try modifying 1 bit of the ciphertext and then decrypting with the correct passwords. What do you see?"
+  * The entire decrypted cipher is jumbled

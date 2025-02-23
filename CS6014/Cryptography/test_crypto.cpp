@@ -32,3 +32,24 @@ TEST_CASE("RshiftState") {
   CHECK(s1[6] == 0x80);
   CHECK(s1[7] == 0x80);
 }
+
+TEST_CASE("Encrypt-Decrypt") {
+  std::array<uint8_t, 8> key = generateKey("1234567890");
+  SubTables tables = SubTables();
+  std::array<uint8_t, 8> plaintext = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  std::array<uint8_t, 8> ciphertext = encrypt(plaintext, key, tables);
+  REQUIRE(ciphertext != plaintext);
+  std::array<uint8_t, 8> decryptedText = decrypt(ciphertext, key, tables);
+  REQUIRE(decryptedText == plaintext);
+}
+
+TEST_CASE("decrypt-wrong-password") {
+  std::array<uint8_t, 8> key = generateKey("1234567890");
+  SubTables tables = SubTables();
+  std::array<uint8_t, 8> plaintext = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+  std::array<uint8_t, 8> ciphertext = encrypt(plaintext, key, tables);
+  REQUIRE(ciphertext != plaintext);
+  std::array<uint8_t, 8> key2 = generateKey("notTheSamePassword");
+  std::array<uint8_t, 8> decryptedText = decrypt(ciphertext, key2, tables);
+  REQUIRE(decryptedText != plaintext);
+}
