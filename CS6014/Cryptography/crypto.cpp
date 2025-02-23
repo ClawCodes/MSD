@@ -64,7 +64,7 @@ void RshiftState(std::array<uint8_t, 8> &state) {
   for (int i = state.size() - 2; i >= 0; i--) {
     uint8_t overflow = (state[i] & 0x01) << 7;
     state[i] = state[i] >> 1;
-    state[i - 1] = state[i - 1] | overflow;
+    state[i + 1] = state[i + 1] | overflow;
   }
   state[0] = state[0] | lastOverflow;
 }
