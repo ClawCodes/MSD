@@ -75,8 +75,7 @@ std::array<uint8_t, 8> encrypt(std::array<uint8_t, 8> plaintext,
   std::array<uint8_t, 8> state = plaintext;
   for (int round = 0; round < 16; round++) {
     for (int i = 0; i < state.size(); ++i) {
-      state[i] = state[i] ^ key[i];
-      state[i] = tables.get(i, state[i]);
+      state[i] = tables.get(i, state[i] ^ key[i]);
     }
     LshiftState(state);
   }

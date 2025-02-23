@@ -31,3 +31,4 @@ Thus, the preserved patterns an attacker could see in the ciphertexts, would no 
 * "Demonstate that trying to decrypt a message using the wrong password (and therefore the wrong key) does not recover the plaintext message" - see "decrypt-wrong-password" test case 
 * "Try modifying 1 bit of the ciphertext and then decrypting with the correct passwords. What do you see?"
   * The entire decrypted cipher is jumbled
+

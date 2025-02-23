@@ -8,6 +8,10 @@ add_executable(main
         crypto.cpp
 )
 
+add_executable(rc4
+        rc4.cpp
+)
+
 # TESTING
 find_package(Catch2 3 REQUIRED)
 
