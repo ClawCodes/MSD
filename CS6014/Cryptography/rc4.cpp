@@ -40,7 +40,7 @@ std::vector<uint8_t> generateKey(RC4 &rng, const std::string &plaintext) {
 std::string encrypt(std::string plaintext, std::vector<uint8_t> key) {
   std::stringstream ss;
   for (int i = 0; i < plaintext.size(); i++) {
-    ss << (char)(plaintext[i] ^ key[i]);
+    ss << (char)((unsigned char)plaintext[i] ^ key[i]);
   }
   return ss.str();
 }
@@ -90,10 +90,9 @@ int main() {
   std::stringstream ss;
   for (int i = 0; i < ciphertext3.size(); i++) {
     if (i == ciphertext3.size() - 4) {
-      ss << static_cast<char>(ciphertext3[i] ^ ('9' ^ '1'));
-    }
-    if (i > ciphertext3.size() - 4) {
-      ss << static_cast<char>(ciphertext3[i] ^ ('9' ^ '0'));
+      ss << static_cast<unsigned char>(ciphertext3[i] ^ ('9' ^ '1'));
+    } else if (i > ciphertext3.size() - 4) {
+      ss << static_cast<unsigned char>(ciphertext3[i] ^ ('9' ^ '0'));
     } else {
       ss << ciphertext3[i];
     }
