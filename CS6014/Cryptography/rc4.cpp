@@ -83,11 +83,26 @@ int main() {
     std::cout << ciphertext[i] << " ^ " << ciphertext2[i] << " = " << xored
               << std::endl;
   }
-
-  // TODO: finish bit flipping attack
   std::cout << "\nBit flip attack\n";
   std::string plaintext3 = "Your salary is $1000";
-  std::string ciphertext3 = encrypt(plaintext3, key);
-
+  std::vector<uint8_t> key3 = generateKey(rng, plaintext3);
+  std::string ciphertext3 = encrypt(plaintext3, key3);
+  std::stringstream ss;
+  for (int i = 0; i < ciphertext3.size(); i++) {
+    if (i == ciphertext3.size() - 4) {
+      ss << static_cast<char>(ciphertext3[i] ^ ('9' ^ '1'));
+    }
+    if (i > ciphertext3.size() - 4) {
+      ss << static_cast<char>(ciphertext3[i] ^ ('9' ^ '0'));
+    } else {
+      ss << ciphertext3[i];
+    }
+  }
+  std::string decryptedText3 = encrypt(ss.str(), key3);
+  std::cout << "Plaintext -> Ciphertext -> Decrypted text\n";
+  for (int i = 0; i < plaintext3.size(); i++) {
+    std::cout << plaintext3[i] << "->" << ciphertext3[i] << "->"
+              << decryptedText3[i] << std::endl;
+  }
   return 0;
 }
