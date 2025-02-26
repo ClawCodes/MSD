@@ -67,6 +67,7 @@ int main() {
     std::cout << key2[i];
   }
   std::string decryptedText2 = encrypt(ciphertext, key2);
+  assert(decryptedText != decryptedText2);
   for (int i = 0; i < plaintext.size(); i++) {
     std::cout << plaintext[i] << "->" << ciphertext[i] << "->"
               << decryptedText2[i] << std::endl;
@@ -79,6 +80,8 @@ int main() {
                            plaintext2)
             << std::endl;
   for (int i = 0; i < plaintext2.size(); i++) {
+    // XORing ciphertexts can reveal information - here 'W' in world persists in
+    // the XORed text
     char xored = ciphertext[i] ^ ciphertext2[i];
     std::cout << ciphertext[i] << " ^ " << ciphertext2[i] << " = " << xored
               << std::endl;
@@ -98,6 +101,7 @@ int main() {
     }
   }
   std::string decryptedText3 = encrypt(ss.str(), key3);
+  assert(decryptedText3 == std::string("Your salary is $9999"));
   std::cout << "Plaintext -> Ciphertext -> Decrypted text\n";
   for (int i = 0; i < plaintext3.size(); i++) {
     std::cout << plaintext3[i] << "->" << ciphertext3[i] << "->"
