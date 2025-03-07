@@ -4,7 +4,11 @@
 
 #include "hash_table.h"
 
-#include <catch2/generators/catch_generators.hpp>
+#include <sys/mman.h>
+
+#include <iostream>
+#include <ostream>
+#include <stdexcept>
 
 #include "helper.h"
 
@@ -50,7 +54,7 @@ void HashTable::grow() {
       insert(oldTable[i].addr, oldTable[i].size);
     }
   }
-  // TODO: free oldTable
+  munmap(oldTable, oldCapacity * sizeof(tableEntry));
 }
 
 int HashTable::insert(void *address, size_t size) {
@@ -76,3 +80,36 @@ int HashTable::insert(void *address, size_t size) {
   }
   throw std::runtime_error("Failed to insert record!");
 }
+
+int HashTable::find(void *address) {
+  int index = getHash(address) % capacity_;
+  if (table_[index].addr == address) {
+    return index;
+  }
+  int currentIndex = index + 1;
+  while (currentIndex != index) {
+    if (currentIndex > capacity_ - 1) {
+      currentIndex = 0;
+    }
+    tableEntry entry = table_[index];
+    if (entry.isEmpty()) {
+      return -1;  // not found
+    }
+    if (table_[currentIndex].addr == address) {
+      return currentIndex;
+    }
+    currentIndex++;
+  }
+  throw std::runtime_error("Failed to find record!");
+}
+
+size_t HashTable::remove(void *address) {
+  int index = find(address);
+  size_t size = table_[index].size;
+  if (index != -1) {
+    table_[index].makeTombStone();
+    size_--;
+    return size;
+  }
+  return -1;
+};

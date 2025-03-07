@@ -41,6 +41,10 @@ class HashTable {
 
   int insert(void *address, size_t size);
 
+  int find(void *address);
+
+  size_t remove(void *address);
+
   size_t size() { return size_; }
 
   size_t capacity() const { return capacity_; }
