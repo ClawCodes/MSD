@@ -8,7 +8,7 @@
 #include "../src/allocator.h"
 #include "vector"
 
-TEST_CASE("small_objects") {
+TEST_CASE("Allocator::small_objects") {
   std::vector<int*> ints;
   HashTable* table = local::allocator->get_table();
   CHECK(table->size() == 0);
@@ -18,6 +18,31 @@ TEST_CASE("small_objects") {
     ints.push_back(num);
   }
   CHECK(local::allocator->get_table()->size() == 1000);
+  int expected = 0;
+  for (int* ptr : ints) {
+    CHECK(*ptr == expected);
+    local::free(ptr);
+    expected++;
+  }
+  CHECK(local::allocator->get_table()->size() == 0);
+}
+
+TEST_CASE("serial_add_small_objects") {
+  std::vector<int*> ints;
+  HashTable* table = local::allocator->get_table();
+  CHECK(table->size() == 0);
+  for (int i = 0; i < 1000; i++) {
+    int* num = (int*)local::malloc(sizeof(int));
+    *num = i;
+    ints.push_back(num);
+  }
+  CHECK(local::allocator->get_table()->size() == 1000);
+  for (int i = 1000; i < 2000; i++) {
+    int* num = (int*)local::malloc(sizeof(int));
+    *num = i;
+    ints.push_back(num);
+  }
+  CHECK(local::allocator->get_table()->size() == 2000);
   int expected = 0;
   for (int* ptr : ints) {
     CHECK(*ptr == expected);

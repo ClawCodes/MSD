@@ -104,7 +104,12 @@ int HashTable::find(void *address) {
 }
 
 size_t HashTable::remove(void *address) {
-  int index = find(address);
+  int index;
+  try {
+    index = find(address);
+  } catch (std::runtime_error &e) {
+    return -1;
+  }
   size_t size = table_[index].size;
   if (index != -1) {
     table_[index].makeTombStone();
