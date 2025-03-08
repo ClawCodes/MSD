@@ -124,7 +124,7 @@ TEST_CASE("HashTable::Remove multi record") {
   table->remove(addr);
   CHECK(table->size() == 0);
   CHECK(table->get(indexD).isTombStone());
-  // // Additional remove when empty
+  // Additional remove when hashtable is expected to be empty
   int idx = table->remove(addr);
   CHECK(idx == -1);
   CHECK(table->size() == 0);

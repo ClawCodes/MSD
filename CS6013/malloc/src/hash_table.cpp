@@ -62,20 +62,10 @@ int HashTable::insert(void *address, size_t size) {
     grow();
   }
   int index = getHash(address) % capacity_;
-  if (isAvailable(index)) {
-    updateRecord(&index, address, &size);
-    return index;
-  }
-  int currentIndex = index + 1;
-  while (currentIndex != index) {
+  for (int i = 0; i < capacity_; i++) {
+    int currentIndex = (index + i) % capacity_;
     if (updateRecord(&currentIndex, address, &size)) {
       return currentIndex;
-    }
-    // Wrap around to beginning for complete probing
-    if (currentIndex == capacity_ - 1) {
-      currentIndex = 0;
-    } else {
-      currentIndex++;
     }
   }
   throw std::runtime_error("Failed to insert record!");
@@ -83,38 +73,28 @@ int HashTable::insert(void *address, size_t size) {
 
 int HashTable::find(void *address) {
   int index = getHash(address) % capacity_;
-  if (table_[index].addr == address) {
-    return index;
-  }
-  int currentIndex = index + 1;
-  while (currentIndex != index) {
-    if (currentIndex > capacity_ - 1) {
-      currentIndex = 0;
+
+  for (int i = 0; i < capacity_; i++) {
+    int currentIndex = (index + i) % capacity_;
+    if (table_[currentIndex].isEmpty()) {
+      return -1;  // Not found
     }
-    tableEntry entry = table_[index];
-    if (entry.isEmpty()) {
-      return -1;  // not found
-    }
-    if (table_[currentIndex].addr == address) {
+    if (!table_[currentIndex].isTombStone() &&
+        table_[currentIndex].addr == address) {
       return currentIndex;
     }
-    currentIndex++;
   }
-  throw std::runtime_error("Failed to find record!");
+
+  return -1;
 }
 
 size_t HashTable::remove(void *address) {
-  int index;
-  try {
-    index = find(address);
-  } catch (std::runtime_error &e) {
-    return -1;
-  }
+  int index = find(address);
+  if (index == -1) return -1;
+
   size_t size = table_[index].size;
-  if (index != -1) {
-    table_[index].makeTombStone();
-    size_--;
-    return size;
-  }
-  return -1;
+  table_[index].makeTombStone();
+  size_--;
+
+  return size;
 };
