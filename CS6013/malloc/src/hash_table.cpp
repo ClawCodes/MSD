@@ -92,6 +92,9 @@ size_t HashTable::remove(void *address) {
   int index = find(address);
   if (index == -1) return -1;
 
+  // A lazy deletion is a "deletion" in which you mark something as deleted
+  // so it can be treated as deleted, but the data and/or object itself is not
+  // deleted
   size_t size = table_[index].size;
   table_[index].makeTombStone();
   size_--;
