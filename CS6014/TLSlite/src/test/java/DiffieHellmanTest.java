@@ -19,6 +19,7 @@ class DiffieHellmanTest {
         BigInteger sharedSecretA = diffieHellman.generateSharedSecret(secretA, publicB);
         BigInteger sharedSecretB = diffieHellman.generateSharedSecret(secretB, publicA);
 
+        // Assert derived shared secret is equivalent
         assertEquals(sharedSecretA, sharedSecretB);
     }
 }
