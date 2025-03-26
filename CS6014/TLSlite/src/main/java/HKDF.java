@@ -50,4 +50,16 @@ public class HKDF {
     public static HKDF createFromServer(byte[] nonce, BigInteger sharedDHSecret) throws NoSuchAlgorithmException, InvalidKeyException {
         return HKDF.create(nonce, sharedDHSecret, "server");
     }
+
+    public SecretKey getEncryptionKey_() {
+        return encryptionKey_;
+    }
+
+    public SecretKey getMacKey_() {
+        return macKey_;
+    }
+
+    public IvParameterSpec getInitVector_() {
+        return initVector_;
+    }
 }
