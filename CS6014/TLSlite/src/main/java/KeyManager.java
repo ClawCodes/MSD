@@ -2,6 +2,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
@@ -48,6 +49,7 @@ public class KeyManager {
         return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
     }
 
+    // TODO: remove?
     public PublicKey readPublicKey(String file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] keyBytes = Files.readAllBytes(Paths.get(certPath_ + file));
 
@@ -59,6 +61,12 @@ public class KeyManager {
         InputStream in = new FileInputStream(certPath_ + file);
         CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
         return certFactory.generateCertificate(in);
+    }
+
+    // TODO: generate DH keys
+    public void generateDHKeys(){
+        DiffieHellman diffieHellman = new DiffieHellman();
+        BigInteger secretA = diffieHellman.generateSecret();
     }
 
     Certificate getCACert() {
