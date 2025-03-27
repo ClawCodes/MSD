@@ -13,7 +13,6 @@ class HKDFTest {
         BigInteger secretA = diffieHellman.generateSecret();
         BigInteger secretB = diffieHellman.generateSecret();
 
-        // Assert secrets are not equivalent
         assertNotEquals(secretA, secretB);
 
         BigInteger publicA = diffieHellman.generatePublicKey(secretA);
@@ -24,6 +23,7 @@ class HKDFTest {
 
         assertEquals(sharedSecretA, sharedSecretB);
 
+        // HKDF generation
         Nonce nonceA = new Nonce();
         Nonce nonceB = new Nonce();
 
