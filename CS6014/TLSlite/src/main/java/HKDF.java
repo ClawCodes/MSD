@@ -51,15 +51,15 @@ public class HKDF {
         return HKDF.create(nonce, sharedDHSecret, "server");
     }
 
-    public SecretKey getEncryptionKey_() {
+    public SecretKey getEncryptionKey() {
         return encryptionKey_;
     }
 
-    public SecretKey getMacKey_() {
+    public SecretKey getMacKey() {
         return macKey_;
     }
 
-    public IvParameterSpec getInitVector_() {
+    public IvParameterSpec getInitVector() {
         return initVector_;
     }
 }

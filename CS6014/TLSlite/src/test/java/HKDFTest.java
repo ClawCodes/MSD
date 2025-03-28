@@ -32,8 +32,8 @@ class HKDFTest {
         HKDF clientGen = HKDF.createFromClient(nonceA.generate(), sharedSecretA);
         HKDF serverGen = HKDF.createFromServer(nonceB.generate(), sharedSecretA);
 
-        assertNotEquals(clientGen.getEncryptionKey_(), serverGen.getEncryptionKey_());
-        assertNotEquals(clientGen.getMacKey_(), serverGen.getMacKey_());
-        assertNotEquals(clientGen.getInitVector_(), serverGen.getInitVector_());
+        assertNotEquals(clientGen.getEncryptionKey(), serverGen.getEncryptionKey());
+        assertNotEquals(clientGen.getMacKey(), serverGen.getMacKey());
+        assertNotEquals(clientGen.getInitVector(), serverGen.getInitVector());
     }
 }

@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
-import java.security.Key;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -18,9 +17,11 @@ public class KeyManager {
     Certificate CACert_;
     PrivateKey rsaPrivateKey_;
     Certificate rsaPublicKey_;
-    Key DHPrivateKey_;
-    Key DHPublicKey_;
-    Key DHShared_;
+    BigInteger DHPrivateKey_;
+    BigInteger DHPublicKey_;
+    BigInteger DHShared_;
+    DiffieHellman DHGenerator_;
+
     private static final String certPath_ = "certs/";
 
     private KeyManager(String privateRSA, String publicRSA) {
@@ -28,6 +29,9 @@ public class KeyManager {
             CACert_ = readCertificate("CAcertificate.pem");
             rsaPrivateKey_ = readPrivateKey(privateRSA);
             rsaPublicKey_ = readCertificate(publicRSA);
+            DHGenerator_ = new DiffieHellman();
+            DHPrivateKey_ = DHGenerator_.generateSecret();
+            DHPublicKey_ = DHGenerator_.generatePublicKey(DHPrivateKey_);
         } catch (CertificateException | NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
             throw new RuntimeException("Error raised when reading key files");
         }
@@ -49,7 +53,6 @@ public class KeyManager {
         return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
     }
 
-    // TODO: remove?
     public PublicKey readPublicKey(String file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] keyBytes = Files.readAllBytes(Paths.get(certPath_ + file));
 
@@ -63,10 +66,12 @@ public class KeyManager {
         return certFactory.generateCertificate(in);
     }
 
-    // TODO: generate DH keys
-    public void generateDHKeys(){
-        DiffieHellman diffieHellman = new DiffieHellman();
-        BigInteger secretA = diffieHellman.generateSecret();
+    public void setDHSharedKey(byte[] key){
+        DHShared_ = DHGenerator_.generateSharedSecret(DHPrivateKey_, new BigInteger(1, key));
+    }
+
+    public BigInteger getDHShared(){
+        return DHShared_;
     }
 
     Certificate getCACert() {
