@@ -68,7 +68,7 @@ public class Handshake {
         }
     }
 
-    public static void clientInit(Socket socket, MessageHandler handler) throws IOException, ClassNotFoundException, CertificateException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, NoSuchProviderException, NoSuchPaddingException {
+    public static HKDF clientInit(Socket socket, MessageHandler handler) throws IOException, ClassNotFoundException, CertificateException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, NoSuchProviderException, NoSuchPaddingException {
         Nonce nonce = new Nonce();
         ClientHello hello = new ClientHello(nonce.generate());
         handler.send(socket, hello);
@@ -98,9 +98,11 @@ public class Handshake {
 
         handler.send(socket, new ByteMessage(handler.getHmac()));
         System.out.println("Client-side handshake complete!");
+
+        return keyGen;
     }
 
-    public static void serverInit(Socket socket, MessageHandler handler) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, CertificateException, NoSuchProviderException, NoSuchPaddingException {
+    public static HKDF serverInit(Socket socket, MessageHandler handler) throws IOException, ClassNotFoundException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, CertificateException, NoSuchProviderException, NoSuchPaddingException {
         ClientHello clientHello = (ClientHello) handler.receive(socket);
 
         KeyManager manager = KeyManager.fromServer();
@@ -128,5 +130,6 @@ public class Handshake {
         // Assert HMACs are equivalent between server and client
         assert (Arrays.equals(clientHmac.getData(), clientHmacExpected));
         System.out.println("Server-side handshake complete!");
+        return keyGen;
     }
 }

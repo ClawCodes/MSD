@@ -3,10 +3,12 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MessageHandler {
     MessageDigest md_;

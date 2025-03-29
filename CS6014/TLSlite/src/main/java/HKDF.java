@@ -30,10 +30,10 @@ public class HKDF {
 
     private void generateKeys(byte[] nonce){
         byte[] prk = mac_.doFinal(nonce);
-        serverEncKey_ = new SecretKeySpec(hkdfExpand(prk, "server encrypt"), "RawBytes");
-        clientEncKey_ = new SecretKeySpec(hkdfExpand(serverEncKey_.getEncoded(), "client encrypt"), "RawBytes");
-        serverMACKey_ = new SecretKeySpec(hkdfExpand(clientEncKey_.getEncoded(), "server MAC"), "RawBytes");
-        clientMACKey_ = new SecretKeySpec(hkdfExpand(serverMACKey_.getEncoded(), "client MAC"), "RawBytes");
+        serverEncKey_ = new SecretKeySpec(hkdfExpand(prk, "server encrypt"), "AES");
+        clientEncKey_ = new SecretKeySpec(hkdfExpand(serverEncKey_.getEncoded(), "client encrypt"), "AES");
+        serverMACKey_ = new SecretKeySpec(hkdfExpand(clientEncKey_.getEncoded(), "server MAC"), "HmacSHA256");
+        clientMACKey_ = new SecretKeySpec(hkdfExpand(serverMACKey_.getEncoded(), "client MAC"), "HmacSHA256");
         serverInitVector_ = new IvParameterSpec(hkdfExpand(clientMACKey_.getEncoded(), "server IV"));
         clientInitVector_ = new IvParameterSpec(hkdfExpand(clientMACKey_.getEncoded(), "client IV"));
     }
