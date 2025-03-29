@@ -11,7 +11,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 
 public class KeyManager {
     Certificate CACert_;
@@ -51,13 +50,6 @@ public class KeyManager {
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
 
         return KeyFactory.getInstance("RSA").generatePrivate(keySpec);
-    }
-
-    public PublicKey readPublicKey(String file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(certPath_ + file));
-
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
     }
 
     public Certificate readCertificate(String file) throws FileNotFoundException, CertificateException {
