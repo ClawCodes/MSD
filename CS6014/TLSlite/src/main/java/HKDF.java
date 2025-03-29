@@ -9,15 +9,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class HKDF {
-    private SecretKey encryptionKey_;
-    private SecretKey macKey_;
-    private IvParameterSpec initVector_;
+    private SecretKey clientEncKey_;
+    private SecretKey serverEncKey_;
+    private SecretKey clientMACKey_;
+    private SecretKey serverMACKey_;
+    private IvParameterSpec clientInitVector_;
+    private IvParameterSpec serverInitVector_;
     Mac mac_;
 
-    private HKDF(SecretKey key) throws NoSuchAlgorithmException, InvalidKeyException {
-        mac_ = Mac.getInstance("HmacSHA256");
-        mac_.init(key);
-    }
+
 
     private byte[] hkdfExpand(byte[] data, String tag){
         byte[] tagBytes = tag.getBytes();
@@ -28,38 +28,39 @@ public class HKDF {
         return Arrays.copyOfRange(macBytes, 0, 16);
     }
 
-    private void generateKeys(byte[] nonce, String tag){
+    private void generateKeys(byte[] nonce){
         byte[] prk = mac_.doFinal(nonce);
-        encryptionKey_ = new SecretKeySpec(hkdfExpand(prk, tag + " encrypt"), "RawBytes");
-        macKey_ = new SecretKeySpec(hkdfExpand(encryptionKey_.getEncoded(), tag + " MAC"), "RawBytes");
-        initVector_ = new IvParameterSpec(hkdfExpand(macKey_.getEncoded(), tag + " IV"));
+        serverEncKey_ = new SecretKeySpec(hkdfExpand(prk, "server encrypt"), "RawBytes");
+        clientEncKey_ = new SecretKeySpec(hkdfExpand(serverEncKey_.getEncoded(), "client encrypt"), "RawBytes");
+        serverMACKey_ = new SecretKeySpec(hkdfExpand(clientEncKey_.getEncoded(), "server MAC"), "RawBytes");
+        clientMACKey_ = new SecretKeySpec(hkdfExpand(serverMACKey_.getEncoded(), "client MAC"), "RawBytes");
+        serverInitVector_ = new IvParameterSpec(hkdfExpand(clientMACKey_.getEncoded(), "server IV"));
+        clientInitVector_ = new IvParameterSpec(hkdfExpand(clientMACKey_.getEncoded(), "client IV"));
     }
 
-    private static HKDF create(byte[] nonce, BigInteger sharedDHSecret, String tag) throws NoSuchAlgorithmException, InvalidKeyException {
+    public HKDF(byte[] nonce, BigInteger sharedDHSecret) throws NoSuchAlgorithmException, InvalidKeyException {
         SecretKey key = new SecretKeySpec(sharedDHSecret.toByteArray(), "RawBytes");
-        HKDF hkdf = new HKDF(key);
-        hkdf.generateKeys(nonce, tag);
-
-        return hkdf;
+        mac_ = Mac.getInstance("HmacSHA256");
+        mac_.init(key);
+        generateKeys(nonce);
     }
 
-    public static HKDF createFromClient(byte[] nonce, BigInteger sharedDHSecret) throws NoSuchAlgorithmException, InvalidKeyException {
-        return HKDF.create(nonce, sharedDHSecret, "client");
+    public SecretKey getClientEncKey() {
+        return clientEncKey_;
     }
-
-    public static HKDF createFromServer(byte[] nonce, BigInteger sharedDHSecret) throws NoSuchAlgorithmException, InvalidKeyException {
-        return HKDF.create(nonce, sharedDHSecret, "server");
+    public SecretKey getServerEncKey() {
+        return serverEncKey_;
     }
-
-    public SecretKey getEncryptionKey() {
-        return encryptionKey_;
+    public SecretKey getClientMACKey() {
+        return clientMACKey_;
     }
-
-    public SecretKey getMacKey() {
-        return macKey_;
+    public SecretKey getServerMACKey() {
+        return serverMACKey_;
     }
-
-    public IvParameterSpec getInitVector() {
-        return initVector_;
+    public IvParameterSpec getClientInitVector() {
+        return clientInitVector_;
+    }
+    public IvParameterSpec getServerInitVector() {
+        return serverInitVector_;
     }
 }

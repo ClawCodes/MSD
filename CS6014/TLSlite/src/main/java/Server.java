@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,10 +11,10 @@ public class Server {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
-
-                // TODO: Implement TLS handshake
+                MessageHandler handler = new MessageHandler(false);
+                Handshake.serverInit(clientSocket, handler);
             }
-        } catch (IOException | RuntimeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

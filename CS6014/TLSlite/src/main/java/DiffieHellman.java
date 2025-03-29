@@ -5,7 +5,6 @@ import java.security.SecureRandom;
  * Class for computing secret, public, and shared secret keys for Diffie-hellman
  * This used the 2048-bit MODP Group standard by default
  */
-// TODO: decide if you will change this class to use Java DH classes
 public class DiffieHellman {
     private int g;
     private BigInteger N;

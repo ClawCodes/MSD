@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.net.Socket;
 
 public class LocalClient {
@@ -8,9 +7,10 @@ public class LocalClient {
     public static void main(String[] args) {
         try (Socket socket = new Socket(LocalClient.server_host_, LocalClient.server_port_)) {
             System.out.println("Connected to TLS server at " + LocalClient.server_host_ + ":" + LocalClient.server_port_);
+            MessageHandler handler = new MessageHandler(true);
+            Handshake.clientInit(socket, handler);
 
-            // TODO: Implement TLS handshake
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
