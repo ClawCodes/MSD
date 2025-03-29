@@ -3,12 +3,10 @@ import javax.crypto.spec.IvParameterSpec;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.security.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MessageHandler {
     MessageDigest md_;
@@ -39,10 +37,6 @@ public class MessageHandler {
     public void setOtherMAC(SecretKey macKey) throws NoSuchAlgorithmException, InvalidKeyException {
         otherHmac_ = Mac.getInstance("HmacSHA256");
         otherHmac_.init(macKey);
-    }
-
-    byte[] hashMessage(byte[] message){
-        return md_.digest(message);
     }
 
     byte[] getHMAC(byte[] message){

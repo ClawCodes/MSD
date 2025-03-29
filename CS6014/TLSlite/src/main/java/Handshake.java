@@ -51,23 +51,6 @@ public class Handshake {
         }
     }
 
-    public static class ByteMessage implements Serializable {
-        private final byte[] data;
-
-        public ByteMessage(byte[] data) {
-            this.data = data;
-        }
-
-        public byte[] getData() {
-            return data;
-        }
-
-        @Override
-        public String toString() {
-            return Arrays.toString(data);
-        }
-    }
-
     public static HKDF clientInit(Socket socket, MessageHandler handler) throws IOException, ClassNotFoundException, CertificateException, NoSuchAlgorithmException, SignatureException, InvalidKeyException, NoSuchProviderException, NoSuchPaddingException {
         Nonce nonce = new Nonce();
         ClientHello hello = new ClientHello(nonce.generate());
