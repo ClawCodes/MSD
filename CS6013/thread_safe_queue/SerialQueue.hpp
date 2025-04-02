@@ -6,28 +6,21 @@ class SerialQueue {
   SerialQueue() : head_(new Node{T{}, nullptr}), size_(0) { tail_ = head_; }
 
   void enqueue(const T& x) {
-    if (size_ == 0) {
-      head_->data = x;
-      tail_ = head_;
-    } else {
-      Node* newNode = new Node{x, nullptr};
-      tail_->next = newNode;
-      tail_ = newNode;
-    }
+    Node* newNode = new Node{x, nullptr};
+    tail_->next = newNode;
+    tail_ = newNode;
     size_++;
   }
 
   bool dequeue(T* ret) {
-    if (size_ == 0) {
+    Node* oldHead = head_;
+    Node* newHead = oldHead->next;
+    if (newHead == nullptr) {
       return false;
     }
-    *ret = head_->data;
-    head_ = head_->next;
+    *ret = newHead->data;
+    head_ = newHead;
     size_--;
-    if (size_ == 0) {
-      tail_->data = T{};
-      head_ = tail_;
-    }
     return true;
   }
 
@@ -41,9 +34,19 @@ class SerialQueue {
 
   int size() const { return size_; }
 
-  T head() const { return head_->data; }
+  T head() const {
+    if (head_->next == nullptr) {
+      throw std::out_of_range("Empty queue");
+    }
+    return head_->next->data;
+  }
 
-  T tail() const { return tail_->data; }
+  T tail() const {
+    if (head_ == tail_) {
+      throw std::out_of_range("Empty queue");
+    }
+    return tail_->data;
+  }
 
  private:
   struct Node {

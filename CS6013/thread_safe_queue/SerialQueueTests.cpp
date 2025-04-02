@@ -9,8 +9,8 @@
 TEST_CASE("Serial Queue Constructor", "[SerialQueue::SerialQueue]") {
   SerialQueue<int>* queue = new SerialQueue<int>();
   CHECK(queue->size() == 0);
-  CHECK(queue->head() == 0);
-  CHECK(queue->tail() == 0);
+  CHECK_THROWS_WITH(queue->head(), "Empty queue");
+  CHECK_THROWS_WITH(queue->tail(), "Empty queue");
 }
 
 TEST_CASE("SerialQueue enqueue", "[SerialQueue::enqueue]") {
@@ -67,8 +67,8 @@ TEST_CASE("SerialQueue dequeue", "[SerialQueue::dequeue]") {
     CHECK(queue->dequeue(&actual));
     CHECK(queue->size() == 0);
     CHECK(actual == 3);
-    CHECK(queue->head() == 0);
-    CHECK(queue->tail() == 0);
+    CHECK_THROWS_WITH(queue->head(), "Empty queue");
+    CHECK_THROWS_WITH(queue->tail(), "Empty queue");
   }
 }
 
