@@ -3,7 +3,7 @@ project(thread_safe_queue)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(thread_safe_queue main.cpp)
+add_executable(ConcurrentQueueTest ConcurrentQueueTest.cpp)
 
 # ********** TESTING **********
 find_package(Catch2 3 REQUIRED)

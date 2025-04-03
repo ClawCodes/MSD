@@ -1,33 +1,31 @@
 #pragma once
 
+#include <mutex>
+
 template <typename T>
 class ConcurrentQueue {
  public:
-  ConcurrentQueue() : head_(new Node{T{}, nullptr}), size_(0) { tail_ = head_; }
+  ConcurrentQueue() {
+    head_ = new Node{T{}, nullptr};
+    tail_ = head_;
+  }
 
   void enqueue(const T& x) {
-    if (size_ == 0) {
-      head_->data = x;
-      tail_ = head_;
-    } else {
-      Node* newNode = new Node{x, nullptr};
-      tail_->next = newNode;
-      tail_ = newNode;
-    }
-    size_++;
+    Node* newNode = new Node{x, nullptr};
+    std::unique_lock<std::mutex> lock(tailLock_);
+    tail_->next = newNode;
+    tail_ = newNode;
   }
 
   bool dequeue(T* ret) {
-    if (size_ == 0) {
+    std::unique_lock<std::mutex> lock(headLock_);
+    Node* oldHead = head_;
+    Node* newHead = oldHead->next;
+    if (newHead == nullptr) {
       return false;
     }
-    *ret = head_->data;
-    head_ = head_->next;
-    size_--;
-    if (size_ == 0) {
-      tail_->data = T{};
-      head_ = tail_;
-    }
+    *ret = newHead->data;
+    head_ = newHead;
     return true;
   }
 
@@ -39,12 +37,6 @@ class ConcurrentQueue {
     }
   }
 
-  int size() const { return size_; }
-
-  T head() const { return head_->data; }
-
-  T tail() const { return tail_->data; }
-
  private:
   struct Node {
     T data;
@@ -53,5 +45,6 @@ class ConcurrentQueue {
 
   Node* head_;
   Node* tail_;
-  int size_;
+  std::mutex headLock_;
+  std::mutex tailLock_;
 };
