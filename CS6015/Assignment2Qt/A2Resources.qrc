@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="background">images/background.jpg</file>
+        <file alias="bucket">images/bucket.png</file>
+        <file alias="cloud">images/cloud.png</file>
+        <file alias="water">images/water.gif</file>
+    </qresource>
+</RCC>
