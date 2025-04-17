@@ -1,6 +1,8 @@
 #include <omp.h>
 
+#include <cassert>
 #include <format>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <span>
@@ -109,18 +111,67 @@ void run_parallel_tests(Result (*func_under_test)(int[], size_t, size_t)) {
     std::cout << "\n*************************************\n";
     std::cout << "Parallel sum test - Num Elements: " << N
               << " | Expected sum: " << expected_sum << "\n";
+    Result result;
     for (int threads = 2; threads <= 6; threads++) {
       std::cout << "\tThread Count: " << threads << "\n\t";
-      Result result = func_under_test(arr.data(), N, threads);
+      result = func_under_test(arr.data(), N, threads);
       result.print();
     }
     std::cout << "*************************************\n";
+    assert(result.sum == expected_sum);
+  }
+}
+
+void test_strong_scaling() {
+  std::vector<int> threads{1, 2, 4, 8, 16};
+  std::vector<int> input_sizes{1000, 5000, 10000, 100000, 1000000000};
+
+  std::vector<Result> std_thread_sum;
+  std::vector<Result> omp1_sum;
+  std::vector<Result> omp_builtin_sum;
+  for (int input_size : input_sizes) {
+    int expected_sum = 0;
+    std::vector<int> vector_under_test;
+    for (int j = 0; j < input_size; j++) {
+      vector_under_test.push_back(j);
+      expected_sum += j;
+    }
+    for (int &t : threads) {
+      auto arr = vector_under_test.data();
+      Result res1 = parallel_sum(arr, input_size, t);
+      assert(res1.sum == expected_sum);
+      std_thread_sum.push_back(res1);
+
+      Result res2 = parallel_sum_omp1(arr, input_size, t);
+      omp1_sum.push_back(res2);
+      assert(res2.sum == expected_sum);
+
+      Result res3 = parallel_sum_omp_builtin(arr, input_size, t);
+      std_thread_sum.push_back(res3);
+      assert(res3.sum == expected_sum);
+    }
+  }
+
+  std::ofstream fout("strong_scaling.csv");
+  if (!fout.is_open()) {
+    std::cerr << "Failed to open file strong_scaling.csv\n";
+    exit(1);
+  }
+  fout << "input_size,num_threads,std_thread_sum,omp1_sum,omp_builtin_sum\n";
+  for (int input_size : input_sizes) {
+    for (int t : threads) {
+      // TODO: fix format call
+      fout << std::format("{},{},{},{},{}\n", input_size, t,
+                          std_thread_sum[t].time, omp1_sum[t].time,
+                          omp_builtin_sum[t].time);
+    }
   }
 }
 
 int main() {
-  run_parallel_tests(parallel_sum);
-  run_parallel_tests(parallel_sum_omp1);
-  run_parallel_tests(parallel_sum_omp_builtin);
+  // run_parallel_tests(parallel_sum);
+  // run_parallel_tests(parallel_sum_omp1);
+  // run_parallel_tests(parallel_sum_omp_builtin);
+  test_strong_scaling();
   return 0;
 }

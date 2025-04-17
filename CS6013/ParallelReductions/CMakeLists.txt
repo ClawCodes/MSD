@@ -3,13 +3,9 @@ project(ParallelReductions)
 
 set(CMAKE_CXX_STANDARD 20)
 
-
-# Set OpenMP root (change if you're on Intel Mac)
 set(OPENMP_ROOT /opt/homebrew/opt/libomp)
 
-# Add OpenMP manually
 set(OpenMP_C_FLAGS "-Xpreprocessor -fopenmp -I${OPENMP_ROOT}/include")
-set(OpenMP_C_LIB_NAMES "omp")
 set(OpenMP_omp_LIBRARY ${OPENMP_ROOT}/lib/libomp.dylib)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
