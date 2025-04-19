@@ -1,12 +1,19 @@
+from typing import Dict
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 
-def plot_strong():
+def plot_strong(filter_type: str) -> None:
     df_strong = pd.read_csv(ROOT / "strong_scaling.csv")
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    conversions: Dict[str, str] = {"l": "Long", "i": "Integer", "f": "float"}
+    df_strong["type"] = df_strong["type"].apply(lambda val: conversions.get(val))
+
+    df_strong = df_strong[df_strong['type'] == filter_type]
 
     for func_idx, func_name in enumerate(["std_thread_sum", "omp1_sum", "omp_builtin_sum"]):
         for idx, size in enumerate(df_strong["input_size"].unique()):
@@ -16,11 +23,11 @@ def plot_strong():
         axes[func_idx].set_ylabel("Exec time (µs)")
         axes[func_idx].set_title(f"Func: {func_name}")
         axes[func_idx].legend()
-    fig.suptitle("Strong Scaling")
+    fig.suptitle(f"Strong Scaling - {filter_type}")
     fig.tight_layout()
-    plt.show()
+    plt.savefig(f"strong_scaling_{filter_type}.png")
 
-def plot_weak():
+def plot_weak() -> None:
     df_weak = pd.read_csv(ROOT / "weak_scaling.csv")
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -31,12 +38,14 @@ def plot_weak():
         axes[idx].set_title(f"{func_name}")
     fig.suptitle("Weak Scaling")
     fig.tight_layout()
-    plt.show()
+    plt.savefig("weak_scaling.png")
 
 
 def main():
-    plot_strong()
-    # plot_weak()
+    # plot_strong("Integer")
+    # plot_strong("Float")
+    # plot_strong("Long")
+    plot_weak()
 
 
 if __name__ == '__main__':
