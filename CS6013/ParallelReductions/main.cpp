@@ -198,7 +198,7 @@ void test_strong_scaling() {
   bool write_header =
       !fs::exists(output_path) || fs::file_size(output_path) == 0;
 
-  std::ofstream fout(output_path);
+  std::ofstream fout(output_path, std::ios::app);
   if (!fout.is_open()) {
     std::cerr << "Failed to open file strong_scaling.csv\n";
     exit(1);

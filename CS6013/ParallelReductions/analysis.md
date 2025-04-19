@@ -4,6 +4,8 @@
 
 ![](strong_scaling_Integer.png)
 
+![](strong_scaling_Float.png)
+
 1. Do the curves match the ideal case?
 
 No the curves do not match the ideal case.
@@ -14,8 +16,10 @@ Currently, the input sizes are too small to see a significant difference between
 
 2. Does timing change if you sum integers vs. longs vs. floats?
 
-It appears it does take slightly longer to sum longs and floats, but not significantly.
-However, this is still clouded 
+It appears there is not significant change between floats and integers. 
+However, this may change at larger input sizes.
+I would suspect floating point arithmetic would increase the execution time slightly over integer summation.
+The change may not be significant enough to see at the current input sizes.
 
 ## Weak Scaling
 
@@ -34,7 +38,7 @@ Once we jump to 16 threads we are now introducing additional context switches, t
 
 1. Which of the three methods performs best on each test?
 
-Base on the strong scaling integer curves, it appears the OpenMP non-built in reduction approach is the most performant.
+Based on the strong scaling integer curves, it appears the OpenMP non-built in reduction approach is the most performant.
 However, it is just barely more performant than the other methods.
 I suspect this would change with larger input sizes, and we would see the best method as the built-in OpenMP reduction method.
-I suspect the OpenMP non-built in method was more performant just by chance; I may have had more processes running at the time which causes additional context switches during the other methods.
+I suspect the OpenMP non-built in method was more performant just by chance; I may have had more processes running at the time which causes additional context switches during execution of the other methods.

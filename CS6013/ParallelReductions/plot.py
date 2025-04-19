@@ -43,9 +43,9 @@ def plot_weak() -> None:
 
 def main():
     # plot_strong("Integer")
-    # plot_strong("Float")
+    plot_strong("float")
     # plot_strong("Long")
-    plot_weak()
+    # plot_weak()
 
 
 if __name__ == '__main__':
