@@ -5,7 +5,6 @@
 
 #include "constants.h"
 
-// TODO: listen to left and right arrow keys
 class BucketMan : public QObject, public QGraphicsPixmapItem {
  private:
   static constexpr int xMin_ = 0 - 100;

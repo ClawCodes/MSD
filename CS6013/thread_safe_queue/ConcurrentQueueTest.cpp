@@ -25,12 +25,14 @@ void run_producer(ConcurrentQueue<int>* queue, int num) {
 }
 
 void run_producer_with_sync(ConcurrentQueue<int>* queue, int num) {
-  sync_point->arrive_and_wait();
+  sync_point->arrive_and_wait();  // Wait for consumer and producer threads to
+                                  // reach sync point
   run_producer(queue, num);
 }
 
 void run_consumer_with_sync(ConcurrentQueue<int>* queue, int num) {
-  sync_point->arrive_and_wait();
+  sync_point->arrive_and_wait();  // Wait for consumer and producer threads to
+                                  // reach sync point
   run_consumer(queue, num);
 }
 
@@ -54,8 +56,9 @@ int getSize(ConcurrentQueue<int>* queue) {
 
 /**
  * Test ConcurrentQueue when all producer and consumer threads are scheduled
- * together. This enforces concurrent execution. The program not crashing is a
- * successful case
+ * together. This enforces true concurrent execution (i.e. all producer and
+ * consumer threads are scheduled at the same time). The program not crashing is
+ * a successful case.
  */
 bool testQueueSimultaneousExec(int num_producers, int num_consumers,
                                int num_ints) {
@@ -103,6 +106,10 @@ bool testQueueSerial(int num_producers, int num_consumers, int num_ints) {
   return (num_producers - num_consumers) * num_ints == getSize(queue);
 }
 
+/**
+ * Test ConcurrentQueue with a second delay for consumer threads.
+ * Thus, giving the producer threads a head start.
+ */
 bool testQueueWithDelayedConsumers(int num_producers, int num_consumers,
                                    int num_ints) {
   std::vector<std::thread> threads;
@@ -132,6 +139,7 @@ int main(int argc, char* argv[]) {
   int producers = atoi(argv[1]);
   int consumers = atoi(argv[2]);
   int num_ints = atoi(argv[3]);
+
   sync_point = std::make_unique<std::barrier<>>(producers + consumers);
   bool res1 = testQueueSimultaneousExec(producers, consumers, num_ints);
   bool res2 = testQueueSerial(producers, consumers, num_ints);

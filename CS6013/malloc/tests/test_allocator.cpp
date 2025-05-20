@@ -96,20 +96,6 @@ TEST_CASE("Allocator-multi_page") {
   CHECK(local::allocator->get_table()->size() == 0);
 }
 
-int run_my_malloc() {
-  for (int i = 0; i < 1000; i++) {
-    char *str = (char *)local::malloc(1000 * sizeof(char));
-  }
-  return 0;
-}
-
-int run_malloc() {
-  for (int i = 0; i < 1000; i++) {
-    char *str = (char *)malloc(1000 * sizeof(char));
-  }
-  return 0;
-}
-
 TEST_CASE("time malloc/free") {
   constexpr int COUNT = 1000;
   // Using BENCHMARK_ADVANCED to avoid double free during free benchmarck
