@@ -109,10 +109,25 @@ For_sale
 
 # Part 5 - Abstract Reasoning
 
-* If {x} is a superkey, then any set containing x is also a superkey.
-  * False - If a superkey is also a key, then we know the key's proper subsets cannot be superkeys as a key is the least amount of attributes that fulfills the definition of a superkey.
-* If {x} is a key, then any set containing x is also a key.
-  * False - If x is a key then any set containing x which has an additional attribute not contained in x cannot be a key as x is already a key and has fewer attributes than the set containing x (i.e. )
-* If {x} is a key, then {x} is also a superkey.
-* If {x, y, z} is a superkey, then one of {x}, {y}, or {z} must also be a superkey.
-* If an entire schema consists of the set {x, y, z}, and if none of the proper subsets of {x, y, z} are keys, then {x, y, z} must be a key.
+a. If {x} is a superkey, then any set containing x is also a superkey.
+  * True - any set containing x guarantees uniqueness for a given row across each attribute as the values in x cannot be repeated.
+
+b. If {x} is a key, then any set containing x is also a key.
+  * False - If x is a key, then x is also a super key. Any set containing x would then violate the key rule that no proper subset of its fields is a superkey.
+
+c. If {x} is a key, then {x} is also a superkey.
+  * True - a definition of a key is that it must also be a superkey.
+
+d. If {x, y, z} is a superkey, then one of {x}, {y}, or {z} must also be a superkey.
+  * False - the complete set of attributes (x, y, and z) may be the least amount of attributes required to provide uniqueness across rows.
+
+e. If an entire schema consists of the set {x, y, z}, and if none of the proper subsets of {x, y, z} are keys, then {x, y, z} must be a key.
+  * False - if none of the proper subsets of {x, y, z} are keys, then we can assert that no individual attribute is a superkey. 
+    This is because all keys must be superkeys, and it is impossible for single element sets to contain proper subsets which are superkeys, thus the key rule that single element sets violate is that they are superkeys.
+    We can then assert that no two element set is a superkey as the prior statement confirms that none of its proper subsets are superkeys, thus the two element subsets must also violate the rule they are superkeys.
+    Now that we confirmed that no proper subset of {x, y, z} are superkeys, then {x, y, z} cannot violate the rule that "no proper subset of its fields is a superkey".
+    Thus for it to be a key, it must also be a superkey.
+    However, there is no guarantee that it is a superkey, thus we cannot confidently state that {x, y, z} MUST be a key.
+    
+    
+    
