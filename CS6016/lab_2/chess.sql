@@ -14,11 +14,13 @@ CREATE TABLE events (
 )
 
 CREATE TABLE games (
-    player_black integer REFERENCES players (id),
-    player_white integer REFERENCES players (id),
-    event_id integer REFERENCES events (id),
+    player_black integer,
+    player_white integer,
+    event_id integer,
     round integer,
     moves varchar(255),
     result varchar(8),
-    UNIQUE (player_black, player_white, event_id, round)
+    UNIQUE (player_black, player_white, event_id, round), -- round is partial key, include for uniqueness in weak entity
+    FOREIGN KEY (player_black, player_white) REFERENCES players (id, id),
+    FOREIGN KEY (event_id) REFERENCES events (id)
 )
