@@ -7,11 +7,13 @@ from functools import partial
 
 def parse_submission(submission: Tuple[Tag, Tag]) -> Optional[Tuple[str, int, str, str, str]]:
     sub, subtext = submission
-    rank = sub.find(class_="rank").get_text().rstrip(".") # Rank
-    title_len = len(sub.find(class_="titleline").get_text()) # Title
-    age = subtext.find(class_="age").find("a").get_text() # Perform on subtext
+    rank = sub.find(class_="rank").get_text().rstrip(".")
+    title_len = len(sub.find(class_="titleline").get_text())
+    age = subtext.find(class_="age").find("a").get_text()
     try:
-        points = subtext.find(class_="score").get_text() # points from subtext
+        # If a subtext does not contain a score, then it is a sponsored post
+        # Skip these as I want only posts users can upvote
+        points = subtext.find(class_="score").get_text()
     except AttributeError:
         return None
     num_comments = subtext.find_all("a")[-1].get_text() # number of comments from subtext
@@ -19,7 +21,7 @@ def parse_submission(submission: Tuple[Tag, Tag]) -> Optional[Tuple[str, int, st
     return rank, title_len, age, points, num_comments
 
 
-def get_hn_page_page(page: int = 0):
+def get_hn_page_page(page: int = 0) -> str:
     return requests.get(f"https://news.ycombinator.com/?p={page}").text
 
 def clean_age(age: str) -> float:
