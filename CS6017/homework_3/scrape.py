@@ -1,23 +1,26 @@
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 import requests
-from typing import Tuple
+from typing import Tuple, Optional
 import pandas as pd
 from functools import partial
 
-def parse_submission(submission: Tuple[Tag, Tag]) -> Tuple[str, int, str, str, str]:
+def parse_submission(submission: Tuple[Tag, Tag]) -> Optional[Tuple[str, int, str, str, str]]:
     sub, subtext = submission
     rank = sub.find(class_="rank").get_text().rstrip(".") # Rank
     title_len = len(sub.find(class_="titleline").get_text()) # Title
     age = subtext.find(class_="age").find("a").get_text() # Perform on subtext
-    points = subtext.find(class_="score").get_text() # points from subtext
+    try:
+        points = subtext.find(class_="score").get_text() # points from subtext
+    except AttributeError:
+        return None
     num_comments = subtext.find_all("a")[-1].get_text() # number of comments from subtext
 
     return rank, title_len, age, points, num_comments
 
 
 def get_hn_page_page(page: int = 0):
-    return requests.get(f"https://news.ycombinator.com/?p={page + 2}").text
+    return requests.get(f"https://news.ycombinator.com/?p={page}").text
 
 def clean_age(age: str) -> float:
     value, unit, _ = age.split(" ")
@@ -36,12 +39,13 @@ def extract_first_as_int(val: str, split_on: str) -> int:
 
 def main():
     all_subs = []
-    for page_num in range(5):
-        news = BeautifulSoup(get_hn_page_page(), "html.parser")
+    for page_num in list(range(1, 6)):
+        news = BeautifulSoup(get_hn_page_page(page_num), "html.parser")
         submissions = [parse_submission(sub) for sub in
                        zip(news.find_all(class_="athing submission"), news.find_all(class_="subtext"))]
         all_subs.extend(submissions)
 
+    all_subs = list(filter(lambda x: x is not None, all_subs)) # Remove Null records (i.e. posting is an Ad)
     df = pd.DataFrame.from_records(all_subs, columns=["rank", "title_length", "age", "points", "num_comments"])
 
     df["rank"] = df["rank"].str.rstrip(".").astype(int)
