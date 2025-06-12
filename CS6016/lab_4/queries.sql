@@ -125,6 +125,26 @@ FROM (SELECT *
       UNION
       SELECT *
       FROM black_wins) all_wins
-NATURAL JOIN Events;
+         NATURAL JOIN Events;
 
 -- 6.
+WITH white_magnus AS (SELECT *
+                      FROM Games AS g
+                               JOIN Players AS p1
+                                    ON g.WhitePlayer = p1.pID
+                      WHERE p1.Name = 'Carlsen, Magnus'),
+     black_magnus AS (SELECT *
+                      FROM Games AS g
+                               JOIN Players AS p1
+                                    ON g.BlackPlayer = p1.pID
+                      WHERE p1.Name = 'Carlsen, Magnus')
+SELECT p1.Name
+FROM white_magnus AS wm
+JOIN Players AS p1
+    ON wm.BlackPlayer = p1.pID
+UNION
+SELECT p1.Name
+FROM black_magnus AS wm
+JOIN Players AS p1
+    ON wm.WhitePlayer = p1.pID;
+
