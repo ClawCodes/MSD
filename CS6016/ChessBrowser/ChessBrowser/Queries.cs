@@ -24,31 +24,48 @@ namespace ChessBrowser
       // assuimg you've typed a user and password in the GUI
       string connection = mainPage.GetConnectionString();
 
-      // TODO:
-      //       Load and parse the PGN file
-      //       We recommend creating separate libraries to represent chess data and load the file
       PGNParser parser = new PGNParser();
-      parser.parse(PGNfilename, mainPage);
+      parser.parse(PGNfilename);
     
       // TODO:
       //       Use this to tell the GUI's progress bar how many total work steps there are
       //       For example, one iteration of your main upload loop could be one work step
       //mainPage.SetNumWorkItems( ... );
-
-
+      mainPage.SetNumWorkItems(parser.GetGames().Count);
+      RawGame g = null;
       using ( MySqlConnection conn = new MySqlConnection( connection ) )
       {
         try
         {
           // Open a connection
           conn.Open();
-
-          // TODO:
-          //       iterate through your data and generate appropriate insert commands
-
-          // TODO:
-          //       Use this inside a loop to tell the GUI that one work step has completed:
-          await mainPage.NotifyWorkItemCompleted();
+          foreach (RawGame game in parser.GetGames()){
+            g = game;
+            // Insert Players
+            MySqlCommand playerCmd = conn.CreateCommand();
+            playerCmd.CommandText = @$"INSERT INTO Players(Name, Elo)
+                                       VALUES ('{game.whitePlayer}', '{game.whiteElo}'),
+                                              ('{game.blackPlayer}', '{game.blackElo}')
+                                       ON DUPLICATE KEY UPDATE Elo = CASE
+                                                                      WHEN VALUES(Elo) > Elo THEN VALUES(Elo)
+                                                                      ELSE Elo
+                                                                     END;";
+            playerCmd.ExecuteNonQuery();
+            // Insert Event
+            MySqlCommand eventCmd = conn.CreateCommand();
+            eventCmd.CommandText = @$"INSERT IGNORE INTO Events(Name, Site, Date)
+                                    VALUES ('{game.event_}', '{game.site}', '{game.date}');";
+            eventCmd.ExecuteNonQuery();
+            // Insert Game
+            MySqlCommand gameCmd = conn.CreateCommand();
+            gameCmd.CommandText = @$"INSERT IGNORE INTO Games(Round, Result, Moves, BlackPlayer, WhitePlayer, eID)
+                                      VALUES ('{game.round}', '{game.result}', '{game.moves}',
+                                              (SELECT pID FROM Players WHERE Name = '{game.blackPlayer}'),
+                                              (SELECT pID FROM Players WHERE Name = '{game.whitePlayer}'),
+                                              (SELECT Events.eID FROM Events WHERE Name = '{game.event_}' AND Site = '{game.site}' AND Date = '{game.date}'));";
+            gameCmd.ExecuteNonQuery();
+            await mainPage.NotifyWorkItemCompleted();
+          }
 
         }
         catch ( Exception e )

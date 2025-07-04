@@ -1,19 +1,20 @@
 using System.Text.RegularExpressions;
 
 namespace ChessBrowser {
-    internal class RawGame {
-        string event_ {get; set;}
-        string site {get; set;}
-        string date {get; set;}
-        string round {get; set;}
-        string whitePlayer {get; set;}
-        string blackPlayer {get; set;}
-        string result {get; set;}
-        string whiteElo {get; set;}
-        string blackElo {get; set;}
-        string moves {get; set;}
+    public class RawGame {
+        public string event_ {get; set;}
+        public string site {get; set;}
+        public string date {get; set;}
+        public string round {get; set;}
+        public string whitePlayer {get; set;}
+        public string blackPlayer {get; set;}
+        public string result {get; set;}
+        public string whiteElo {get; set;}
+        public string blackElo {get; set;}
+        public string moves {get; set;}
 
         public void setAttr(string attr, string value){
+            value = value.Replace("'", "''"); // Escape single qoutes for SQL insert
             if (attr == "Event"){
                 event_ = value;
             }
@@ -69,7 +70,8 @@ namespace ChessBrowser {
     public class PGNParser
     {
         private List<RawGame> allGames = new List<RawGame>();
-        public void parse (string fileName, MainPage mainPage){
+        
+        public void parse (string fileName){
             StreamReader reader = new StreamReader(fileName);
 
             string line = reader.ReadLine();
@@ -93,13 +95,12 @@ namespace ChessBrowser {
                     line = reader.ReadLine();
                 }
                 game.setAttr("moves", moves);
-
-                mainPage.setOutText(game.ToString());    
+                allGames.Add(game);
                 line = reader.ReadLine();
             }
         }
 
-        List<RawGame> GetGames(){
+        public List<RawGame> GetGames(){
             return allGames;
         }
     }
