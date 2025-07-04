@@ -5,6 +5,11 @@ public partial class MainPage : ContentPage
   private int numWorkItems = 0;
   private int workItemsCompleted = 0;
 
+
+  public void setOutText(string str){
+    outputText.Text = str;
+  }
+
   public MainPage()
 	{
 		InitializeComponent();
