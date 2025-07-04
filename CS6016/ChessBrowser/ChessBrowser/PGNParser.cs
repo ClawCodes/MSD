@@ -14,7 +14,7 @@ namespace ChessBrowser {
         public string moves {get; set;}
 
         public void setAttr(string attr, string value){
-            value = value.Replace("'", "''"); // Escape single qoutes for SQL insert
+            value = value.Replace("'", "''"); // Escape single quotes for SQL insert
             if (attr == "Event"){
                 event_ = value;
             }
@@ -25,8 +25,7 @@ namespace ChessBrowser {
                 if (value.Contains('?')){
                     date = "0000-00-00";
                 } else {
-                    value.Replace('.', '-');
-                    date = value;
+                    date = value.Replace('.', '-');
                 }
             }
             if (attr == "Round") {

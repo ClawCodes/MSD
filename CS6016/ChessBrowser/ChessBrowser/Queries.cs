@@ -26,11 +26,7 @@ namespace ChessBrowser
 
       PGNParser parser = new PGNParser();
       parser.parse(PGNfilename);
-    
-      // TODO:
-      //       Use this to tell the GUI's progress bar how many total work steps there are
-      //       For example, one iteration of your main upload loop could be one work step
-      //mainPage.SetNumWorkItems( ... );
+
       mainPage.SetNumWorkItems(parser.GetGames().Count);
       RawGame g = null;
       using ( MySqlConnection conn = new MySqlConnection( connection ) )
@@ -70,6 +66,7 @@ namespace ChessBrowser
         }
         catch ( Exception e )
         {
+          mainPage.setOutText(e.Message + "\n" + g.ToString());
           System.Diagnostics.Debug.WriteLine( e.Message );
         }
       }
