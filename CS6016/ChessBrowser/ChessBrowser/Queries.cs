@@ -129,7 +129,9 @@ namespace ChessBrowser
                                        e.Site,
                                        e.Date,
                                        wp.Name AS WP,
+                                       wp.Elo AS wpElo,
                                        bp.Name AS BP,
+                                       bp.Elo AS bpElo,
                                        g.Result,
                                        g.Moves
                                 FROM Games AS g
@@ -156,8 +158,8 @@ namespace ChessBrowser
               parsedResult += $"Event: {reader["EventName"]}\n";
               parsedResult += $"Site: {reader["Site"]}\n";
               parsedResult += $"Date: {reader["Date"]}\n";
-              parsedResult += $"White: {reader["WP"]}\n";
-              parsedResult += $"Black: {reader["BP"]}\n";
+              parsedResult += $"White: {reader["WP"]} ({reader["wpElo"]})\n";
+              parsedResult += $"Black: {reader["BP"]} ({reader["bpElo"]})\n";
               parsedResult += $"Result: {reader["Result"]}\n";
 
               if (showMoves){
@@ -170,6 +172,7 @@ namespace ChessBrowser
         }
         catch ( Exception e )
         {
+          parsedResult += e.Message;
           System.Diagnostics.Debug.WriteLine( e.Message );
         }
       }
