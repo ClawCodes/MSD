@@ -36,7 +36,6 @@ namespace ChessBrowser
           // Open a connection
           conn.Open();
           foreach (RawGame game in parser.GetGames()){
-            g = game;
             // Insert Players
             MySqlCommand playerCmd = conn.CreateCommand();
             playerCmd.CommandText = @$"INSERT INTO Players(Name, Elo)
@@ -66,7 +65,6 @@ namespace ChessBrowser
         }
         catch ( Exception e )
         {
-          mainPage.setOutText(e.Message + "\n" + g.ToString());
           System.Diagnostics.Debug.WriteLine( e.Message );
         }
       }
@@ -91,41 +89,91 @@ namespace ChessBrowser
       string winner, bool useDate, DateTime start, DateTime end, bool showMoves,
       MainPage mainPage )
     {
-      // TODO: REMOVE
-
-      TestParser.run();
-
-      return "";
       // This will build a connection string to your user's database on atr,
       // assuimg you've typed a user and password in the GUI
-      // string connection = mainPage.GetConnectionString();
+      string connection = mainPage.GetConnectionString();
 
-      // // Build up this string containing the results from your query
-      // string parsedResult = "";
+      // Build up this string containing the results from your query
+      string parsedResult = "";
 
-      // // Use this to count the number of rows returned by your query
-      // // (see below return statement)
-      // int numRows = 0;
+      // Use this to count the number of rows returned by your query
+      // (see below return statement)
+      int numRows = 0;
 
-      // using ( MySqlConnection conn = new MySqlConnection( connection ) )
-      // {
-      //   try
-      //   {
-      //     // Open a connection
-      //     conn.Open();
+      string queryText = "";
+      using ( MySqlConnection conn = new MySqlConnection( connection ) )
+      {
+        try
+        {
+          parsedResult += "b";
+          // Open a connection
+          conn.Open();
+          MySqlCommand query = conn.CreateCommand();
+          
+          query.CommandText = @$"WITH white_player AS (
+                                    SELECT *
+                                    FROM Players
+                                    WHERE @WhitePlayer IS NULL OR Name = @WhitePlayer
+                                ),
+                                black_player AS (
+                                  SELECT *
+                                  FROM Players
+                                  WHERE @BlackPlayer IS NULL OR Name = @BlackPlayer
+                                ),
+                                events AS (
+                                  SELECT *
+                                  FROM Events
+                                  WHERE Date BETWEEN @startParam AND @endParam
+                                )
+                                SELECT e.Name as EventName,
+                                       e.Site,
+                                       e.Date,
+                                       wp.Name AS WP,
+                                       bp.Name AS BP,
+                                       g.Result,
+                                       g.Moves
+                                FROM Games AS g
+                                JOIN black_player AS bp
+                                  ON g.BlackPlayer = bp.pID
+                                JOIN white_player AS wp
+                                  ON g.WhitePlayer = wp.pID
+                                JOIN events AS e
+                                  ON g.eID = e.eID
+                                WHERE (@Result IS NULL OR g.Result = @Result) AND g.Moves LIKE @Moves;
+                              ";
 
-      //     // TODO:
-      //     //       Generate and execute an SQL command,
-      //     //       then parse the results into an appropriate string and return it.
-      //   }
-      //   catch ( Exception e )
-      //   {
-      //     System.Diagnostics.Debug.WriteLine( e.Message );
-      //   }
-      // }
+        query.Parameters.AddWithValue("@WhitePlayer", string.IsNullOrEmpty(white) ? null : white);
+        query.Parameters.AddWithValue("@BlackPlayer", string.IsNullOrEmpty(black) ? null : black);
+        query.Parameters.AddWithValue("@startParam", useDate ? start : DateTime.MinValue);
+        query.Parameters.AddWithValue("@endParam", useDate ? end : DateTime.MaxValue);
+        query.Parameters.AddWithValue("@Result", string.IsNullOrEmpty(winner) ? null : winner);
+        query.Parameters.AddWithValue("@Moves", string.IsNullOrEmpty(opening) ? "%" : $"{opening}%");
 
-      // return numRows + " results\n" + parsedResult;
+        queryText = query.CommandText;
+
+        using (MySqlDataReader reader = query.ExecuteReader()){  
+          while (reader.Read()){
+              parsedResult += $"Event: {reader["EventName"]}\n";
+              parsedResult += $"Site: {reader["Site"]}\n";
+              parsedResult += $"Date: {reader["Date"]}\n";
+              parsedResult += $"White: {reader["WP"]}\n";
+              parsedResult += $"Black: {reader["BP"]}\n";
+              parsedResult += $"Result: {reader["Result"]}\n";
+
+              if (showMoves){
+                parsedResult += $"Moves: {reader["Moves"]}\n";
+              }
+              parsedResult += "\n";
+              numRows += 1;
+          }
+        }   
+        }
+        catch ( Exception e )
+        {
+          System.Diagnostics.Debug.WriteLine( e.Message );
+        }
+      }
+      return numRows + " results\n\n" + parsedResult;
     }
-
   }
 }
