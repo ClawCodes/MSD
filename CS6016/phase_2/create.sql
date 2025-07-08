@@ -59,6 +59,7 @@ CREATE TABLE classes
     PRIMARY KEY (id),
     FOREIGN KEY (course_id) REFERENCES courses (id),
     FOREIGN KEY (professor) REFERENCES professors (uid),
+
     UNIQUE (course_id, semester)
 );
 

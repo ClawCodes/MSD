@@ -28,7 +28,6 @@ namespace ChessBrowser
       parser.parse(PGNfilename);
 
       mainPage.SetNumWorkItems(parser.GetGames().Count);
-      RawGame g = null;
       using ( MySqlConnection conn = new MySqlConnection( connection ) )
       {
         try

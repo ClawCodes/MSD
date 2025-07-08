@@ -53,7 +53,7 @@ CREATE TABLE CheckedOut
 (
     id (integer) PRIMARY_KEY,
     serial (integer) FOREIGN_KEY REFERENCES Inventory(serial),
-    CardNum (integer) FOREIGN KEY REFERENCES Patrons(CardNum),
+    CardNum (integer) FOREIGN KEY REFERENCES Patrons(CardNum)
 )
 
 CREATE TABLE Phones
