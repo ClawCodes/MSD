@@ -48,3 +48,8 @@ __MACOSX
 
 # Cmake
 cmake-build-debug/
+
+# C#
+**/obj/
+**/bin/
+**/lib/
