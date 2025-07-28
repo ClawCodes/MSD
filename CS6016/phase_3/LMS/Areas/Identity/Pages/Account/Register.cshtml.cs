@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -180,6 +181,22 @@ namespace LMS.Areas.Identity.Pages.Account
             }
         }
 
+        string generateuID(){
+            var qProf = from r in db.Professors select int.Parse(r.UId.Substring(1));
+            var qAdmin = from r in db.Administrators select int.Parse(r.UId.Substring(1));
+            var qStudent = from r in db.Students select int.Parse(r.UId.Substring(1));
+
+            int mostRecent = (from id in qProf.Union(qAdmin).Union(qStudent) select id).Max();
+
+            string newId = (mostRecent + 1).ToString();
+
+            while(newId.Length != 7){
+                newId = "0" + newId;
+            }
+
+            return "u" + newId;
+        }
+
         /*******Begin code to modify********/
 
         /// <summary>
@@ -194,6 +211,10 @@ namespace LMS.Areas.Identity.Pages.Account
         /// <returns>The uID of the new user</returns>
         string CreateNewUser( string firstName, string lastName, DateTime DOB, string departmentAbbrev, string role )
         {
+            string id = generateuID();
+            if (role == "Administrator"){
+                // db.Administrators.Add(new Administrator(UriIdnScope=));
+            }
             return "unknown";
         }
 
