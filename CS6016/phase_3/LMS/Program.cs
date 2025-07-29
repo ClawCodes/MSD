@@ -1,8 +1,10 @@
 ﻿using LMS.Areas.Identity.Data;
+using LMS.Areas.Identity.Pages.Account;
 using LMS.Models;
 using LMS.Models.LMSModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace LMS;
 
