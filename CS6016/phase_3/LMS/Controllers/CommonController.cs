@@ -177,8 +177,57 @@ namespace LMS.Controllers
         /// <param name="uid">The uid of the student who submitted it</param>
         /// <returns>The submission text</returns>
         public IActionResult GetSubmissionText(string subject, int num, string season, int year, string category, string asgname, string uid)
-        {            
-            return Content("");
+        {
+            var submission = (from a in db.Assignments
+                              join assCat in db.AssignmentCategories
+                              on a.Category equals assCat.CategoryId
+                              into fullAss
+
+                              from fa in fullAss.DefaultIfEmpty()
+                              join c in db.Classes
+                              on fa.InClass equals c.ClassId
+                              into assClass
+
+                              from ac in assClass.DefaultIfEmpty()
+                              join cc in db.Courses
+                              on ac.Listing equals cc.CatalogId
+                              into join3
+
+                              from j3 in join3.DefaultIfEmpty()
+                              join d in db.Departments
+                              on j3.Department equals d.Subject
+                              into join4
+
+                              from j4 in join4.DefaultIfEmpty()
+                              join sub in db.Submissions
+                              on a.AssignmentId equals sub.Assignment
+                              into join5
+
+                              from j5 in join5.DefaultIfEmpty()
+                              join stu in db.Students
+                              // TODO on
+                              where subject == j4.Subject
+                             && num == j3.Number
+                             && season == ac.Season
+                             && year == ac.Year
+                             && category == fa.Name
+                             && asgname == a.Name
+                             // TODO uid match
+                            //  && uid == 
+                              select new
+                              {
+                                  submission = j5.SubmissionContents
+                              }).ToList()
+
+            string submissionText = "";
+
+            if (submission.Count > 1)
+                throw new Exception("Cannot return more than one assignment's submissions");
+            if (submission.Count == 0)
+                return Content(submissionText);
+
+            submissionText = submission.ToString();
+            return Content(submissionText);
         }
 
 
