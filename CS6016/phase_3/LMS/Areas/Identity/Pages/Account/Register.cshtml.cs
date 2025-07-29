@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -182,11 +183,19 @@ namespace LMS.Areas.Identity.Pages.Account
         }
 
         string generateuID(){
-            var qProf = from r in db.Professors select int.Parse(r.UId.Substring(1));
-            var qAdmin = from r in db.Administrators select int.Parse(r.UId.Substring(1));
-            var qStudent = from r in db.Students select int.Parse(r.UId.Substring(1));
+            var qProf = from r in db.Professors select r.UId;
+            var qAdmin = from r in db.Administrators select r.UId;
+            var qStudent = from r in db.Students select r.UId;
 
-            int mostRecent = (from id in qProf.Union(qAdmin).Union(qStudent) select id).Max();
+            var allIds = qProf.Union(qAdmin).Union(qStudent).ToList();
+
+            int mostRecent = 0;
+            foreach (var id in allIds){
+                int num = int.Parse(id.Substring(1));
+                if (num > mostRecent){
+                    mostRecent = num;
+                }
+            }
 
             string newId = (mostRecent + 1).ToString();
 
@@ -213,9 +222,31 @@ namespace LMS.Areas.Identity.Pages.Account
         {
             string id = generateuID();
             if (role == "Administrator"){
-                // db.Administrators.Add(new Administrator(UriIdnScope=));
+                var admin = new Administrator();
+                admin.UId = id;
+                admin.FName = firstName;
+                admin.LName = lastName;
+                admin.Dob = DateOnly.FromDateTime(DOB);
+                db.Administrators.Add(admin);
+            } else if (role == "Professor"){
+                var prof = new Professor();
+                prof.UId = id;
+                prof.FName = firstName;
+                prof.LName = lastName;
+                prof.Dob = DateOnly.FromDateTime(DOB);
+                prof.WorksIn = departmentAbbrev;
+                db.Professors.Add(prof);
+            } else if (role == "Student"){
+                var stu = new Student();
+                stu.UId = id;
+                stu.FName = firstName;
+                stu.LName = lastName;
+                stu.Dob = DateOnly.FromDateTime(DOB);
+                stu.Major = departmentAbbrev;
+                db.Students.Add(stu);
             }
-            return "unknown";
+            
+            return id;
         }
 
         /*******End code to modify********/

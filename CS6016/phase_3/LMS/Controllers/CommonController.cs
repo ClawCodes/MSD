@@ -35,14 +35,15 @@ namespace LMS.Controllers
         public IActionResult GetDepartments()
         {
             var departments = from d in db.Departments
-                        select new
-                        {
-                            name = d.Name,
-                            subject = d.Subject
-                        };
+                              select new
+                              {
+                                  name = d.Name,
+                                  subject = d.Subject
+                              };
 
             return Json(departments);
         }
+
 
 
 
@@ -65,7 +66,7 @@ namespace LMS.Controllers
                                       subject = d.Subject,
                                       dname = d.Name,
                                       courses = (from c in db.Courses
-                                      where c.Department == d.Subject
+                                                 where c.Department == d.Subject
                                                  select new
                                                  {
                                                      number = c.Number,
