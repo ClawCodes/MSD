@@ -205,19 +205,18 @@ namespace LMS.Controllers
 
                               from j5 in join5.DefaultIfEmpty()
                               join stu in db.Students
-                              // TODO on
+                              on j5.Student equals stu.UId
                               where subject == j4.Subject
                              && num == j3.Number
                              && season == ac.Season
                              && year == ac.Year
                              && category == fa.Name
                              && asgname == a.Name
-                             // TODO uid match
-                            //  && uid == 
+                             && uid == stu.UId
                               select new
                               {
                                   submission = j5.SubmissionContents
-                              }).ToList()
+                              }).ToList();
 
             string submissionText = "";
 
@@ -248,7 +247,43 @@ namespace LMS.Controllers
         /// or an object containing {success: false} if the user doesn't exist
         /// </returns>
         public IActionResult GetUser(string uid)
-        {           
+        {
+            var studentsQuery = from s in db.Students
+                                where uid == s.UId
+                                select new
+                                {
+                                    fname = s.FName,
+                                    lname = s.LName,
+                                    uid = s.UId,
+                                    department = s.Major
+                                };
+
+            var professorQuery = from p in db.Professors
+                                 where uid == p.UId
+                                 select new
+                                 {
+                                     fname = p.FName,
+                                     lname = p.LName,
+                                     uid = p.UId,
+                                     department = p.WorksIn
+                                 };
+
+            var adminQuery = from a in db.Administrators
+                             where uid == a.UId
+                             select new
+                             {
+                                 fname = a.FName,
+                                 lname = a.LName,
+                                 uid = a.UId,
+                             };
+
+            if (studentsQuery is not null)
+                return Json(studentsQuery);
+            if (professorQuery is not null)
+                return Json(professorQuery);
+            if (adminQuery is not null)
+                return Json(adminQuery);
+            
             return Json(new { success = false });
         }
 
