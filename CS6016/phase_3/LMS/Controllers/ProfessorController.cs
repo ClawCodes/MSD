@@ -160,7 +160,6 @@ namespace LMS_CustomIdentity.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetAssignmentsInCategory(string subject, int num, string season, int year, string category)
         {
-            // join Courses -> Classes -> Assignment Categories -> Assignements
             var subGroups = from sub in db.Submissions
                             group sub by sub.Assignment into g
                             select new {assignId=g.Key, count=g.Count()};
@@ -171,19 +170,20 @@ namespace LMS_CustomIdentity.Controllers
                         join cat in db.AssignmentCategories
                         on class_.ClassId equals cat.InClass
                         join assign in db.Assignments
-                        on cat.CategoryId equals assign.Category
+                        on cat.CategoryId equals assign.Category into assignTemp
+
+                        from at in assignTemp.DefaultIfEmpty()
                         join g in subGroups
-                        on assign.AssignmentId equals g.assignId into assignGroup
-                        from subcount in assignGroup.DefaultIfEmpty()
+                        on at.AssignmentId equals g.assignId 
                         where course.Department == subject
                         where course.Number == num
                         where class_.Season == season
                         where class_.Year == year
                         select new {
-                            aname=assign.Name,
+                            aname=at.Name,
                             cname=cat.Name,
-                            due=assign.Due,
-                            submissions=subcount == null ? 0 : subcount.count
+                            due=at.Due,
+                            submissions=g == null ? 0 : g.count
                         };
 
             return Json(query);
@@ -253,7 +253,7 @@ namespace LMS_CustomIdentity.Controllers
                 return Json(new { success = false });
             }
 
-            if (classID == null){
+            if (classID == 0){
                 return Json(new { success = false });
             }
 
@@ -292,10 +292,10 @@ namespace LMS_CustomIdentity.Controllers
                                 where class_.Season == season
                                 where class_.Year == year
                                 where cat.Name == category
-                                select cat.CategoryId).FirstOrDefault();
+                                select (uint?)cat.CategoryId).FirstOrDefault();
 
 
-            if (categoryID == null){
+            if (categoryID == 0){
                 return Json(new { success = false });
             }
 
