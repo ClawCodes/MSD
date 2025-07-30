@@ -173,7 +173,8 @@ namespace LMS_CustomIdentity.Controllers
                         join assign in db.Assignments
                         on cat.CategoryId equals assign.Category
                         join g in subGroups
-                        on assign.AssignmentId equals g.assignId
+                        on assign.AssignmentId equals g.assignId into assignGroup
+                        from subcount in assignGroup.DefaultIfEmpty()
                         where course.Department == subject
                         where course.Number == num
                         where class_.Season == season
@@ -182,7 +183,7 @@ namespace LMS_CustomIdentity.Controllers
                             aname=assign.Name,
                             cname=cat.Name,
                             due=assign.Due,
-                            submissions=g.count
+                            submissions=subcount == null ? 0 : subcount.count
                         };
 
             return Json(query);
@@ -281,11 +282,7 @@ namespace LMS_CustomIdentity.Controllers
         /// <returns>A JSON object containing success = true/false</returns>
         public IActionResult CreateAssignment(string subject, int num, string season, int year, string category, string asgname, int asgpoints, DateTime asgdue, string asgcontents)
         {
-            uint categoryID;
-            
-            // get existing category ID
-            try {
-                categoryID = (from course in db.Courses
+            uint? categoryID = (from course in db.Courses
                                 join class_ in db.Classes
                                 on course.CatalogId equals class_.Listing
                                 join cat in db.AssignmentCategories
@@ -295,14 +292,11 @@ namespace LMS_CustomIdentity.Controllers
                                 where class_.Season == season
                                 where class_.Year == year
                                 where cat.Name == category
-                                select cat.CategoryId).First();
-            } catch (Exception ex){ 
-                // error will be thrown if no record exists
-                if (ex is ArgumentNullException || ex is InvalidOperationException){
-                    return Json(new { success = false });
-                } else {
-                    throw;
-                }
+                                select cat.CategoryId).FirstOrDefault();
+
+
+            if (categoryID == null){
+                return Json(new { success = false });
             }
 
             Assignment a = new Assignment();
@@ -310,7 +304,7 @@ namespace LMS_CustomIdentity.Controllers
             a.Contents = asgcontents;
             a.Due = asgdue;
             a.MaxPoints = (uint)asgpoints;
-            a.Category = categoryID;
+            a.Category = (uint)categoryID;
             db.Assignments.Add(a);
             db.SaveChanges();
 
