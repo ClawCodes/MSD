@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using LMS.Models.LMSModels;
@@ -143,14 +144,18 @@ namespace LMS.Controllers
 
                             from j5 in join5.DefaultIfEmpty()
                             where s.UId == uid
+                            && j5.Department == subject
+                            && j5.Number == num
+                            && j2.Season == season
+                            && j2.Year == year
                             select new
-                            {
-                                aname = j4.Name,
-                                num = j5.Number,
-                                season = j2.Season,
-                                year = j2.Year,
-                                uid = s.UId
-                            };
+                              {
+                                  aname = j4.Name,
+                                  num = j5.Number,
+                                  season = j2.Season,
+                                  year = j2.Year,
+                                  uid = s.UId
+                              };
 
             return Json(assignments);
         }
@@ -279,8 +284,6 @@ namespace LMS.Controllers
             {
                 return Json(new { success = false });
             }
-
-            // name of enrollment object?
 
             var newEnrollment = new Enrolled();
             
