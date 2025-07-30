@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LMS.Models.LMSModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json.Linq;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -280,14 +281,13 @@ namespace LMS.Controllers
             }
 
             // name of enrollment object?
-            // var newEnrollment = new Enrolleds
-            // {
-            //     ClassId = classObj.ClassId,
-            //     StudentId = uid,
-            //     Grade = null 
-            // };
 
-            // db.Enrolleds.Add(newEnrollment);
+            var newEnrollment = new Enrolled();
+            
+            newEnrollment.Class = classObj.ClassId;
+            newEnrollment.Student = uid;
+
+            db.Enrolleds.Add(newEnrollment);
             db.SaveChanges();
 
             return Json(new { success = true });
