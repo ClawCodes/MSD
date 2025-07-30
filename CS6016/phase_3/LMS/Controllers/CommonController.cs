@@ -92,20 +92,24 @@ namespace LMS.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetClassOfferings(string subject, int number)
         {
-            var classOfferings = from c in db.Classes
-                                 join p in db.Professors
-                                 on c.TaughtBy equals p.UId
+            var classOfferings = from cls in db.Classes
+                                 join course in db.Courses
+                                 on cls.Listing equals course.CatalogId
+                                 where course.Department == subject && course.Number == number
+                                 join prof in db.Professors
+                                 on cls.TaughtBy equals prof.UId
                                  select new
                                  {
-                                     season = c.Season,
-                                     year = c.Year,
-                                     location = c.Location,
-                                     start = c.StartTime,
-                                     end = c.EndTime,
-                                     fname = p.FName,
-                                     lname = p.LName
+                                     season = cls.Season,
+                                     year = cls.Year,
+                                     location = cls.Location,
+                                     start = cls.StartTime.ToString(@"hh\:mm\:ss"),
+                                     end = cls.EndTime.ToString(@"hh\:mm\:ss"),
+                                     fname = prof.FName,
+                                     lname = prof.LName
                                  };
-            return Json(classOfferings);
+
+            return Json(classOfferings.ToList());
         }
 
         /// <summary>
@@ -122,44 +126,30 @@ namespace LMS.Controllers
         /// <returns>The assignment contents</returns>
         public IActionResult GetAssignmentContents(string subject, int num, string season, int year, string category, string asgname)
         {
-            var assignmentContent = (from a in db.Assignments
-                             join assCat in db.AssignmentCategories
-                             on a.Category equals assCat.CategoryId
-                             into fullAss
+            var assignmentContents = (from a in db.Assignments
+                                      join assCat in db.AssignmentCategories
+                                      on a.Category equals assCat.CategoryId
+                                      join c in db.Classes
+                                      on assCat.InClass equals c.ClassId
+                                      join cc in db.Courses
+                                      on c.Listing equals cc.CatalogId
+                                      join d in db.Departments
+                                      on cc.Department equals d.Subject
+                                      where subject == d.Subject
+                                          && num == cc.Number
+                                          && season == c.Season
+                                          && year == c.Year
+                                          && category == assCat.Name
+                                          && asgname == a.Name
+                                      select a.Contents).ToList();
 
-                             from fa in fullAss.DefaultIfEmpty()
-                             join c in db.Classes
-                             on fa.InClass equals c.ClassId
-                             into assClass
-
-                             from ac in assClass.DefaultIfEmpty()
-                             join cc in db.Courses
-                             on ac.Listing equals cc.CatalogId
-                             into join3
-
-                             from j3 in join3.DefaultIfEmpty()
-                             join d in db.Departments
-                             on j3.Department equals d.Subject
-                             into join4
-
-                             from j4 in join4.DefaultIfEmpty()
-                             where subject == j4.Subject 
-                             && num == j3.Number
-                             && season == ac.Season
-                             && year == ac.Year
-                             && category == fa.Name
-                             && asgname == a.Name
-                             select new
-                             {
-                                 content = a.Contents
-                             }).ToList();
-
-            if (assignmentContent.Count > 1)
+            if (assignmentContents.Count > 1)
                 throw new Exception("Cannot return more than one assignment's content");
 
-            string contents = assignmentContent.ToString();
+            string contents = assignmentContents.FirstOrDefault() ?? "";
             return Content(contents);
         }
+
 
 
         /// <summary>
@@ -178,56 +168,26 @@ namespace LMS.Controllers
         /// <returns>The submission text</returns>
         public IActionResult GetSubmissionText(string subject, int num, string season, int year, string category, string asgname, string uid)
         {
-            var submission = (from a in db.Assignments
-                              join assCat in db.AssignmentCategories
-                              on a.Category equals assCat.CategoryId
-                              into fullAss
-
-                              from fa in fullAss.DefaultIfEmpty()
-                              join c in db.Classes
-                              on fa.InClass equals c.ClassId
-                              into assClass
-
-                              from ac in assClass.DefaultIfEmpty()
-                              join cc in db.Courses
-                              on ac.Listing equals cc.CatalogId
-                              into join3
-
-                              from j3 in join3.DefaultIfEmpty()
-                              join d in db.Departments
-                              on j3.Department equals d.Subject
-                              into join4
-
-                              from j4 in join4.DefaultIfEmpty()
+            var submission = (from course in db.Courses
+                              where course.Department == subject && course.Number == num
+                              join cls in db.Classes
+                              on course.CatalogId equals cls.Listing
+                              where cls.Season == season && cls.Year == year
+                              join cat in db.AssignmentCategories
+                              on cls.ClassId equals cat.InClass
+                              where cat.Name == category
+                              join asg in db.Assignments
+                              on cat.CategoryId equals asg.Category
+                              where asg.Name == asgname
                               join sub in db.Submissions
-                              on a.AssignmentId equals sub.Assignment
-                              into join5
+                              on asg.AssignmentId equals sub.Assignment
+                              where sub.Student == uid
+                              select sub.SubmissionContents).FirstOrDefault();
 
-                              from j5 in join5.DefaultIfEmpty()
-                              join stu in db.Students
-                              on j5.Student equals stu.UId
-                              where subject == j4.Subject
-                             && num == j3.Number
-                             && season == ac.Season
-                             && year == ac.Year
-                             && category == fa.Name
-                             && asgname == a.Name
-                             && uid == stu.UId
-                              select new
-                              {
-                                  submission = j5.SubmissionContents
-                              }).ToList();
-
-            string submissionText = "";
-
-            if (submission.Count > 1)
-                throw new Exception("Cannot return more than one assignment's submissions");
-            if (submission.Count == 0)
-                return Content(submissionText);
-
-            submissionText = submission.ToString();
-            return Content(submissionText);
+            // If no submission was found, return an empty string
+            return Content(submission ?? "");
         }
+
 
 
         /// <summary>
@@ -248,42 +208,44 @@ namespace LMS.Controllers
         /// </returns>
         public IActionResult GetUser(string uid)
         {
-            var studentsQuery = from s in db.Students
-                                where uid == s.UId
-                                select new
-                                {
-                                    fname = s.FName,
-                                    lname = s.LName,
-                                    uid = s.UId,
-                                    department = s.Major
-                                };
+            var student = (from s in db.Students
+                           where s.UId == uid
+                           select new
+                           {
+                               fname = s.FName,
+                               lname = s.LName,
+                               uid = s.UId,
+                               department = s.Major
+                           }).FirstOrDefault();
 
-            var professorQuery = from p in db.Professors
-                                 where uid == p.UId
-                                 select new
-                                 {
-                                     fname = p.FName,
-                                     lname = p.LName,
-                                     uid = p.UId,
-                                     department = p.WorksIn
-                                 };
+            if (student != null)
+                return Json(student);
 
-            var adminQuery = from a in db.Administrators
-                             where uid == a.UId
+            var professor = (from p in db.Professors
+                             where p.UId == uid
                              select new
                              {
-                                 fname = a.FName,
-                                 lname = a.LName,
-                                 uid = a.UId,
-                             };
+                                 fname = p.FName,
+                                 lname = p.LName,
+                                 uid = p.UId,
+                                 department = p.WorksIn
+                             }).FirstOrDefault();
 
-            if (studentsQuery is not null)
-                return Json(studentsQuery);
-            if (professorQuery is not null)
-                return Json(professorQuery);
-            if (adminQuery is not null)
-                return Json(adminQuery);
-            
+            if (professor != null)
+                return Json(professor);
+
+            var admin = (from a in db.Administrators
+                         where a.UId == uid
+                         select new
+                         {
+                             fname = a.FName,
+                             lname = a.LName,
+                             uid = a.UId
+                         }).FirstOrDefault();
+
+            if (admin != null)
+                return Json(admin);
+
             return Json(new { success = false });
         }
 
