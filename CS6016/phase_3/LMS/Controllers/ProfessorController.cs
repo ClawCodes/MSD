@@ -235,26 +235,31 @@ namespace LMS_CustomIdentity.Controllers
         public IActionResult CreateAssignmentCategory(string subject, int num, string season, int year, string category, int catweight)
         {
             // Get class ID to add into assignment cats
-            uint classID = (from course in db.Courses
+            uint? classID = (from course in db.Courses
                         join clazz in db.Classes
                         on course.CatalogId equals clazz.Listing
                         where course.Department == subject
                         where course.Number == num
                         where clazz.Season == season
                         where clazz.Year == year
-                        select clazz.ClassId).First();
+                        select clazz.ClassId).FirstOrDefault();
 
-            var currentCat = from c in db.AssignmentCategories where c.InClass == classID select c.InClass;
+            var currentCat = from c in db.AssignmentCategories
+                             where c.InClass == classID select c.InClass;
 
             // Return false if category already exists for this requested class
             if (currentCat.Any()){
                 return Json(new { success = false });
             }
 
+            if (classID == null){
+                return Json(new { success = false });
+            }
+
             AssignmentCategory cat = new AssignmentCategory();
             cat.Name = category;
             cat.Weight = (uint)catweight;
-            cat.InClass = classID;
+            cat.InClass = (uint)classID;
             db.AssignmentCategories.Add(cat);
             db.SaveChanges();
 
@@ -307,6 +312,7 @@ namespace LMS_CustomIdentity.Controllers
             a.MaxPoints = (uint)asgpoints;
             a.Category = categoryID;
             db.Assignments.Add(a);
+            db.SaveChanges();
 
             return Json(new { success = true });
         }
@@ -432,9 +438,6 @@ namespace LMS_CustomIdentity.Controllers
 
             return Json(query);
         }
-
-
-        
         /*******End code to modify********/
     }
 }
