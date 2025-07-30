@@ -245,7 +245,8 @@ namespace LMS.Areas.Identity.Pages.Account
                 stu.Major = departmentAbbrev;
                 db.Students.Add(stu);
             }
-            
+            db.SaveChanges();
+        
             return id;
         }
 
