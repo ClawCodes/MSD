@@ -7632,19 +7632,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/christopherlawton/.nuget/packages/": {}
+    "/Users/isc/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMSControllerTests/LMSControllerTests.csproj",
+      "projectUniqueName": "/Users/isc/crip/MSD/CS6016/phase_3/LMSControllerTests/LMSControllerTests.csproj",
       "projectName": "LMSControllerTests",
-      "projectPath": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMSControllerTests/LMSControllerTests.csproj",
-      "packagesPath": "/Users/christopherlawton/.nuget/packages/",
-      "outputPath": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMSControllerTests/obj/",
+      "projectPath": "/Users/isc/crip/MSD/CS6016/phase_3/LMSControllerTests/LMSControllerTests.csproj",
+      "packagesPath": "/Users/isc/.nuget/packages/",
+      "outputPath": "/Users/isc/crip/MSD/CS6016/phase_3/LMSControllerTests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/christopherlawton/.nuget/NuGet/NuGet.Config"
+        "/Users/isc/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -7657,8 +7657,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj": {
-              "projectPath": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj"
+            "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj": {
+              "projectPath": "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj"
             }
           }
         }

@@ -234,6 +234,21 @@ namespace LMS.Controllers
         /// false if the student is already enrolled in the class, true otherwise.</returns>
         public IActionResult Enroll(string subject, int num, string season, int year, string uid)
         {
+            var alreadyEnrolled = (from e in db.Enrolleds
+                                   join cls in db.Classes on e.Class equals cls.ClassId
+                                   join crs in db.Courses on cls.Listing equals crs.CatalogId
+                                   where e.Student == uid
+                                   && crs.Department.ToUpper() == subject.ToUpper()
+                                   && crs.Number == num
+                                   && cls.Season.ToUpper() == season.ToUpper()
+                                   && cls.Year == year
+                                   select e).Any();
+
+            if (alreadyEnrolled)
+            {
+                return Json(new { success = false });
+            }
+
             var course = db.Courses.FirstOrDefault(c =>
                 c.Department.ToUpper() == subject.ToUpper()
                 && c.Number == num);
@@ -241,6 +256,7 @@ namespace LMS.Controllers
             if (course == null)
                 return Json(new { success = false });
 
+            // Find the class
             var classObj = db.Classes.FirstOrDefault(c =>
                 c.Listing == course.CatalogId
                 && c.Season.ToUpper() == season.ToUpper()
@@ -249,33 +265,16 @@ namespace LMS.Controllers
             if (classObj == null)
                 return Json(new { success = false });
 
-            var enrollment = db.Enrolleds.FirstOrDefault(e =>
-                e.Class == classObj.ClassId
-                && e.Student == uid);
-
-            if (enrollment != null)
-            {
-                return Json(new { success = false });
-            }
 
             var newEnrollment = new Enrolled
             {
                 Class = classObj.ClassId,
                 Student = uid,
-                // Grade = "--" // Uncomment if required
+                Grade = "A"
             };
 
             db.Enrolleds.Add(newEnrollment);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                // Log error if necessary
-                return Json(new { success = false });
-            }
+            db.SaveChanges();
 
             return Json(new { success = true });
         }

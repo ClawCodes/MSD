@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj": {}
+    "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj": {}
   },
   "projects": {
-    "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj": {
+    "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj",
+        "projectUniqueName": "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj",
         "projectName": "LMS",
-        "projectPath": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/LMS.csproj",
-        "packagesPath": "/Users/christopherlawton/.nuget/packages/",
-        "outputPath": "/Users/christopherlawton/msd/MSD/CS6016/phase_3/LMS/obj/",
+        "projectPath": "/Users/isc/crip/MSD/CS6016/phase_3/LMS/LMS.csproj",
+        "packagesPath": "/Users/isc/.nuget/packages/",
+        "outputPath": "/Users/isc/crip/MSD/CS6016/phase_3/LMS/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/christopherlawton/.nuget/NuGet/NuGet.Config"
+          "/Users/isc/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
