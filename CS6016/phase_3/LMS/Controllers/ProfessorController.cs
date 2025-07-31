@@ -202,32 +202,6 @@ namespace LMS_CustomIdentity.Controllers
                             submissions = g == null ? 0 : g.count
                         };
 
-            // var subGroups = from sub in db.Submissions
-            //                 group sub by sub.Assignment into g
-            //                 select new { assignId = g.Key, count = g.Count() };
-
-            // var query = from course in db.Courses
-            //             join class_ in db.Classes
-            //             on course.CatalogId equals class_.Listing
-            //             join cat in db.AssignmentCategories
-            //             on class_.ClassId equals cat.InClass
-            //             join assign in db.Assignments
-            //             on cat.CategoryId equals assign.Category into assignTemp
-            //             from at in assignTemp
-            //             join g in subGroups.DefaultIfEmpty()
-            //             on at.AssignmentId equals g.assignId
-            //             where course.Department == subject
-            //             where course.Number == num
-            //             where class_.Season == season
-            //             where class_.Year == year
-            //             select new
-            //             {
-            //                 aname = at.Name,
-            //                 cname = cat.Name,
-            //                 due = at.Due,
-            //                 submissions = g == null ? 0 : g.count
-            //             };
-
             // Filter by category if provided
             if (category != null){
 
