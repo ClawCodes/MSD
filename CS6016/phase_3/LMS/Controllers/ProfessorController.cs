@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -160,9 +161,48 @@ namespace LMS_CustomIdentity.Controllers
         /// <returns>The JSON array</returns>
         public IActionResult GetAssignmentsInCategory(string subject, int num, string season, int year, string category)
         {
+            // // Get submission count by assignment
+            // var subGroups = from sub in db.Submissions
+            //                 group sub by sub.Assignment into g
+            //                 select new {
+            //                     assignId = g.Key,
+            //                     count = g.Count()
+            //                 };
+
+            // // Get all assignments in a course
+            // var courseAssigns = from course in db.Courses
+            //                     join class_ in db.Classes
+            //                     on course.CatalogId equals class_.Listing
+            //                     join cat in db.AssignmentCategories
+            //                     on class_.ClassId equals cat.InClass
+            //                     join assign in db.Assignments
+            //                     on cat.CategoryId equals assign.Category
+            //                     where course.Department == subject
+            //                     where course.Number == num
+            //                     where class_.Season == season
+            //                     where class_.Year == year
+            //                     select new {
+            //                         assign.AssignmentId,
+            //                         assign.Name,
+            //                         CatName = cat.Name,
+            //                         assign.Due
+            //                     };
+
+            // // Join submission counts to the respective assignments
+            // var query = from c in courseAssigns
+            //             join subg in subGroups
+            //             on c.AssignmentId equals subg.assignId into gc
+            //             from g in gc.DefaultIfEmpty()
+            //             select new {
+            //                 aname = c.Name,
+            //                 cname = c.CatName,
+            //                 due = c.Due,
+            //                 submissions = g == null ? 0 : g.count
+            //             };
+
             var subGroups = from sub in db.Submissions
                             group sub by sub.Assignment into g
-                            select new {assignId=g.Key, count=g.Count()};
+                            select new { assignId = g.Key, count = g.Count() };
 
             var query = from course in db.Courses
                         join class_ in db.Classes
@@ -172,19 +212,27 @@ namespace LMS_CustomIdentity.Controllers
                         join assign in db.Assignments
                         on cat.CategoryId equals assign.Category into assignTemp
 
-                        from at in assignTemp.DefaultIfEmpty()
-                        join g in subGroups
-                        on at.AssignmentId equals g.assignId 
+                        from at in assignTemp
+                        join g in subGroups.DefaultIfEmpty()
+                        on at.AssignmentId equals g.assignId
                         where course.Department == subject
                         where course.Number == num
                         where class_.Season == season
                         where class_.Year == year
-                        select new {
-                            aname=at.Name,
-                            cname=cat.Name,
-                            due=at.Due,
-                            submissions=g == null ? 0 : g.count
+                        select new
+                        {
+                            aname = at.Name,
+                            cname = cat.Name,
+                            due = at.Due,
+                            submissions = g == null ? 0 : g.count
                         };
+
+            // Filter by category if provided
+            if (category != null){
+                query = from q in query
+                        where q.cname == category
+                        select q;
+            }
 
             return Json(query);
         }
