@@ -7,6 +7,7 @@ using LMS.Models.LMSModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Experimental.ProjectCache;
+using Microsoft.EntityFrameworkCore.Storage.Json;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -188,6 +189,13 @@ namespace LMS_CustomIdentity.Controllers
                             submissions = g == null ? 0 : g.count
                         };
 
+            if (category != null)
+            {
+                query = from q in query
+                        where q.cname == category
+                        select q;
+            }
+
             return Json(query);
         }
 
@@ -248,30 +256,33 @@ namespace LMS_CustomIdentity.Controllers
                              where clazz.Year == year
                              select clazz.ClassId).FirstOrDefault();
 
-            var currentCat = from c in db.AssignmentCategories
-                             where c.InClass == classID
-                             select c.InClass;
-
-            // Return false if category already exists for this requested class
-            if (currentCat.Any())
+            if (classID == null || classID == 0)
             {
                 return Json(new { success = false });
             }
 
-            if (classID == 0)
+            // Check if a category with the same name already exists for the class
+            bool exists = db.AssignmentCategories
+                .Any(c => c.InClass == classID && c.Name == category);
+
+            if (exists)
             {
                 return Json(new { success = false });
             }
 
-            AssignmentCategory cat = new AssignmentCategory();
-            cat.Name = category;
-            cat.Weight = (uint)catweight;
-            cat.InClass = (uint)classID;
+            AssignmentCategory cat = new AssignmentCategory
+            {
+                Name = category,
+                Weight = (uint)catweight,
+                InClass = (uint)classID
+            };
+
             db.AssignmentCategories.Add(cat);
             db.SaveChanges();
 
             return Json(new { success = true });
         }
+
 
         /// <summary>
         /// Creates a new assignment for the given class and category.
@@ -313,6 +324,25 @@ namespace LMS_CustomIdentity.Controllers
             a.MaxPoints = (uint)asgpoints;
             a.Category = (uint)categoryID;
             db.Assignments.Add(a);
+
+            var students = (from course in db.Courses
+                           join clazz in db.Classes
+                               on course.CatalogId equals clazz.Listing
+                           join enrollment in db.Enrolleds
+                               on clazz.ClassId equals enrollment.Class
+                           join student in db.Students
+                               on enrollment.Student equals student.UId
+                           where course.Number == num
+                           select new
+                           {
+                               student.UId,
+                               clazz.ClassId,
+                           }).ToList();
+
+
+            foreach (var student in students)
+                CalculateStudentGrade(student.UId, student.ClassId);
+
             db.SaveChanges();
 
             return Json(new { success = true });
