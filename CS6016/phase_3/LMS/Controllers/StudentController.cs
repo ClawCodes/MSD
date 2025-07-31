@@ -166,7 +166,7 @@ namespace LMS.Controllers
                 return Json(new { success = false });
 
             var assClass = (from c in db.Classes
-                            where c.ClassId == course.CatalogId
+                            where c.Listing == course.CatalogId
                              && c.Season == season
                              && c.Year == year
                             select c).FirstOrDefault();
@@ -270,7 +270,7 @@ namespace LMS.Controllers
             {
                 Class = classObj.ClassId,
                 Student = uid,
-                Grade = "A"
+                Grade = "--"
             };
 
             db.Enrolleds.Add(newEnrollment);
