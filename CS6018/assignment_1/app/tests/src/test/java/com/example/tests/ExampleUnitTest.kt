@@ -1,4 +1,4 @@
-package com.example.degreeplanner
+package com.example.tests
 
 import org.junit.Test
 
