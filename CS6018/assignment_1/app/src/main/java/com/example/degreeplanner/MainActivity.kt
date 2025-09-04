@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,8 +12,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -24,8 +23,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val vm: DegreePlannerViewModel by viewModels()
         setContent {
-            DegreePlannerTheme { // Apply your app's theme
+            DegreePlannerTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -37,22 +37,23 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    DegreePlannerScreen(modifier = Modifier.padding(innerPadding))
+                    DegreePlannerScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = vm
+                    )
                 }
             }
         }
     }
 }
 
-//@OptIn(ExperimentalMaterial3Api::class) // Needed for TopAppBar and OutlinedTextField in M3
 @Composable
-fun DegreePlannerScreen(modifier: Modifier = Modifier) {
-    var selectedCourse by remember { mutableStateOf<Course?>(null) }
-    var stagedCourses by remember { mutableStateOf<List<Course>>(emptyList()) }
-    var prerequisiteWarning by remember { mutableStateOf<String?>(null) }
-    var dropdownExpanded by remember { mutableStateOf(false) }
-
-    val allCourses = CourseList.courses // From CourseList.kt
+fun DegreePlannerScreen(
+    modifier: Modifier = Modifier,
+    viewModel: DegreePlannerViewModel
+) {
+    // Collect the UI state as Compose state
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -60,42 +61,72 @@ fun DegreePlannerScreen(modifier: Modifier = Modifier) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Text(
-            "Plan Your Degree",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Dropdown list containing unselected courses
+        // Dropdown list containing major
         Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = selectedCourse?.name ?: "Select a Course",
-                onValueChange = {}, // Do nothing on change - read only
+                value = uiState.selectedCourse?.name ?: "Select a Major",
+                onValueChange = {}, // Read-only
                 readOnly = true,
-                label = { Text("Available Courses") },
+                label = { Text("Available Majors") },
                 trailingIcon = {
                     Icon(
                         Icons.Filled.ArrowDropDown,
                         contentDescription = "Toggle Dropdown",
-                        Modifier.clickable { dropdownExpanded = !dropdownExpanded }
+                        Modifier.clickable { viewModel.onMajorDropdown() }
                     )
                 },
                 modifier = Modifier.fillMaxWidth()
             )
 
             DropdownMenu(
-                expanded = dropdownExpanded,
-                onDismissRequest = { dropdownExpanded = false },
+                expanded = uiState.majorDropdownExpanded,
+                onDismissRequest = { viewModel.onDismissMajorDropdown() },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                allCourses.filterNot { stagedCourses.any { staged -> staged.id == it.id } }.forEach { course ->
+                uiState.allMajors.forEach { major ->
                     DropdownMenuItem(
+                        text = { Text(major) },
+                        onClick = {
+                            viewModel.onMajorSelected(major) // Call ViewModel
+                        }
+                    )
+                }
+            }
+        }
+
+        // Dropdown list containing unselected courses
+        Box(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = uiState.selectedCourse?.name ?: "Select a Course",
+                onValueChange = {}, // Read-only
+                readOnly = true,
+                label = { Text("Available Courses") },
+                trailingIcon = {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = "Toggle Dropdown",
+                        Modifier.clickable { viewModel.onCourseDropdown() } // Call ViewModel
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            DropdownMenu(
+                expanded = uiState.courseDropdownExpanded,
+                onDismissRequest = { viewModel.onDismissCourseDropdown() }, // Call ViewModel
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                // TODO: start here - only surface available courses
+                // Filter available courses based on what's already staged
+                val availableCourses = uiState.allCourses.filterNot { course ->
+                    uiState.stagedCourses.any { staged -> staged.id == course.id }
+                }
+                availableCourses.forEach { course ->
+                    DropdownMenuItem(
+                        enabled = uiState.majorSelected,
                         text = { Text(course.name) },
                         onClick = {
-                            selectedCourse = course
-                            dropdownExpanded = false
-                            prerequisiteWarning = null // Clear warning when selecting a new course
+                            viewModel.onCourseSelected(course) // Call ViewModel
                         }
                     )
                 }
@@ -105,14 +136,8 @@ fun DegreePlannerScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = {
-                selectedCourse?.let { courseToAdd ->
-                    stagedCourses = stagedCourses + courseToAdd
-                    prerequisiteWarning = checkPrerequisites(stagedCourses, allCourses)
-                    selectedCourse = null // Reset dropdown selection so select course doesn't remain
-                }
-            },
-            enabled = selectedCourse != null,
+            onClick = { viewModel.onAddCourseToPlan() }, // Call ViewModel
+            enabled = uiState.selectedCourse != null,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Add to Plan")
@@ -120,33 +145,30 @@ fun DegreePlannerScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Staging area for selected courses
         Text(
             "Your Current Plan:",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        if (stagedCourses.isEmpty()) {
+        if (uiState.stagedCourses.isEmpty()) {
             Text("No courses added yet. Select a course and click 'Add to Plan'.")
         } else {
             Column(modifier = Modifier.fillMaxWidth()) {
-                stagedCourses.forEach { course ->
+                uiState.stagedCourses.forEach { course ->
                     CourseStagingItem(
                         course = course,
                         onRemove = {
-                            stagedCourses = stagedCourses - course
-                            prerequisiteWarning = checkPrerequisites(stagedCourses, allCourses)
+                            viewModel.onRemoveCourseFromPlan(course) // Call ViewModel
                         }
                     )
-                    HorizontalDivider() // Include divider line between items
+                    HorizontalDivider()
                 }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 4. Prerequisite notification area
-        prerequisiteWarning?.let {
+        uiState.prerequisiteWarning?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.error,
