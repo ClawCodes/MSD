@@ -83,11 +83,12 @@ fun DegreePlannerScreen(
                 onDismissRequest = { viewModel.onDismissMajorDropdown() },
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // TODO: START HERE - MAJORS NOT SHOWING UP
                 uiState.allMajors.forEach { major ->
                     DropdownMenuItem(
                         text = { Text(major) },
                         onClick = {
-                            viewModel.onMajorSelected(major) // Call ViewModel
+                            viewModel.onMajorSelected(major)
                         }
                     )
                 }
@@ -105,7 +106,7 @@ fun DegreePlannerScreen(
                     Icon(
                         Icons.Filled.ArrowDropDown,
                         contentDescription = "Toggle Dropdown",
-                        Modifier.clickable { viewModel.onCourseDropdown() } // Call ViewModel
+                        Modifier.clickable { viewModel.onCourseDropdown() }
                     )
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -113,10 +114,9 @@ fun DegreePlannerScreen(
 
             DropdownMenu(
                 expanded = uiState.courseDropdownExpanded,
-                onDismissRequest = { viewModel.onDismissCourseDropdown() }, // Call ViewModel
+                onDismissRequest = { viewModel.onDismissCourseDropdown() },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // TODO: start here - only surface available courses
                 // Filter available courses based on what's already staged
                 val availableCourses = uiState.allCourses.filterNot { course ->
                     uiState.stagedCourses.any { staged -> staged.id == course.id }
@@ -124,9 +124,9 @@ fun DegreePlannerScreen(
                 availableCourses.forEach { course ->
                     DropdownMenuItem(
                         enabled = uiState.majorSelected,
-                        text = { Text(course.name) },
+                        text = { Text(course.id) },
                         onClick = {
-                            viewModel.onCourseSelected(course) // Call ViewModel
+                            viewModel.onCourseSelected(course)
                         }
                     )
                 }
@@ -190,7 +190,7 @@ fun CourseStagingItem(course: Course, onRemove: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(course.name, style = MaterialTheme.typography.bodyLarge)
+            Text(course.id, style = MaterialTheme.typography.bodyLarge)
         }
         IconButton(onClick = onRemove) {
             Icon(Icons.Filled.Close, contentDescription = "Remove ${course.name}")

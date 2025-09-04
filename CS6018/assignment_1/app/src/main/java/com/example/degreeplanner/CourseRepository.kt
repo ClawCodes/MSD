@@ -17,6 +17,7 @@ import kotlinx.serialization.json.Json
 data class PlanList(
     val plans: List<Plan>
 )
+
 @SuppressLint("UnsafeOptInUsageError")
 @Serializable
 data class Plan(
@@ -24,10 +25,32 @@ data class Plan(
     val path: String,
 )
 
-class CourseRepository (val scope: CoroutineScope) {
-    private val client = HttpClient(CIO){
-        install(ContentNegotiation){
-            json(Json{
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+data class PlanCourseList(
+    val name: String,
+    val requirements: List<Requirement>
+)
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+data class Requirement(
+    val type: String,
+    val course: PlanCourse? = null,
+    val courses: List<PlanCourse>? = null,
+)
+
+@SuppressLint("UnsafeOptInUsageError")
+@Serializable
+data class PlanCourse(
+    val department: String,
+    val number: String
+)
+
+class CourseRepository(val scope: CoroutineScope) {
+    private val client = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json(Json {
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
@@ -36,6 +59,7 @@ class CourseRepository (val scope: CoroutineScope) {
     }
     private val baseUrl = "https://msd2025.github.io/degreePlans/"
     var plans = mutableListOf<Plan>()
+    var courses: PlanCourseList? = null
 
     private suspend fun _fetchPlans(): PlanList {
         try {
@@ -46,9 +70,48 @@ class CourseRepository (val scope: CoroutineScope) {
         }
     }
 
-    fun fetchPlans(){
+    fun fetchPlans() {
         scope.launch {
             plans = _fetchPlans().plans.toMutableList()
+        }
+    }
+
+    private suspend fun _fetchCourses(path: String): PlanCourseList {
+        return client.get(baseUrl + path).body()
+    }
+
+    fun getCourses(major: String) {
+        for (plan in plans) {
+            if (plan.name == major) {
+                scope.launch {
+                    courses = _fetchCourses(plan.path)
+                }
+                return
+            }
+        }
+    }
+
+    fun getCourseList(): List<Course> {
+        if (courses == null) {
+            return emptyList()
+        } else {
+            val baseReqs: List<Course> = emptyList()
+            val optional: List<Course> = emptyList()
+            for (req in courses!!.requirements) {
+                if (req.type == "requiredCourse") {
+                    baseReqs.plus(Course(req.course!!.department + req.course.number))
+                }
+                if (req.type == "oneOf") {
+                    for (course in req.courses!!) {
+                        optional.plus(
+                            Course(
+                                course.department + course.number,
+                                prerequisites = baseReqs.map { it.id })
+                        )
+                    }
+                }
+            }
+            return baseReqs + optional
         }
     }
 }

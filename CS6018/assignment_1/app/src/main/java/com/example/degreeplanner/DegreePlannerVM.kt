@@ -32,12 +32,13 @@ class DegreePlannerViewModel : ViewModel() {
     }
 
     fun onMajorSelected(major: String) {
+        courseRepo.getCourses(major)
         _uiState.update { currentState ->
             currentState.copy(
                 selectedMajor = major,
                 majorSelected = !currentState.majorSelected,
-                majorDropdownExpanded = false
-                // TODO: filter all available courses by major
+                majorDropdownExpanded = false,
+                allCourses = courseRepo.getCourseList()
             )
         }
     }
