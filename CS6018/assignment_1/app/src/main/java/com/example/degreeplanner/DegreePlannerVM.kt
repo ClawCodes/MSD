@@ -1,12 +1,14 @@
 package com.example.degreeplanner
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 data class DegreePlannerUiState(
@@ -29,6 +31,24 @@ class DegreePlannerViewModel : ViewModel() {
 
     init {
         courseRepo.fetchPlans()
+        viewModelScope.launch {
+            courseRepo.plansFlow.collect { plans ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        allMajors = plans.map { it.name }
+                    )
+                }
+            }
+        }
+        viewModelScope.launch {
+            courseRepo.coursesFlow.collect { courses ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        allCourses = courses
+                    )
+                }
+            }
+        }
     }
 
     fun onMajorSelected(major: String) {
@@ -36,12 +56,13 @@ class DegreePlannerViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 selectedMajor = major,
-                majorSelected = !currentState.majorSelected,
+                majorSelected = true,
                 majorDropdownExpanded = false,
-                allCourses = courseRepo.getCourseList()
+                stagedCourses = emptyList(),
             )
         }
     }
+
     fun onCourseSelected(course: Course) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -59,7 +80,10 @@ class DegreePlannerViewModel : ViewModel() {
                 currentState.copy(
                     stagedCourses = updatedStagedCourses,
                     selectedCourse = null,
-                    prerequisiteWarning = checkPrerequisites(updatedStagedCourses, currentState.allCourses)
+                    prerequisiteWarning = checkPrerequisites(
+                        updatedStagedCourses,
+                        currentState.allCourses
+                    )
                 )
             }
         }
@@ -70,20 +94,26 @@ class DegreePlannerViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 stagedCourses = updatedStagedCourses,
-                prerequisiteWarning = checkPrerequisites(updatedStagedCourses, currentState.allCourses)
+                prerequisiteWarning = checkPrerequisites(
+                    updatedStagedCourses,
+                    currentState.allCourses
+                )
             )
         }
     }
+
     fun onMajorDropdown() {
         _uiState.update { currentState ->
             currentState.copy(majorDropdownExpanded = !currentState.majorDropdownExpanded)
         }
     }
+
     fun onDismissMajorDropdown() {
         _uiState.update { currentState ->
             currentState.copy(majorDropdownExpanded = false)
         }
     }
+
     fun onCourseDropdown() {
         _uiState.update { currentState ->
             currentState.copy(courseDropdownExpanded = !currentState.courseDropdownExpanded)
@@ -100,8 +130,9 @@ class DegreePlannerViewModel : ViewModel() {
         for (stagedCourse in stagedCourses) {
             for (prereqId in stagedCourse.prerequisites) {
                 if (stagedCourses.none { it.id == prereqId }) {
-                    val prereqCourseName = allCourses.find { it.id == prereqId }?.name ?: "Unknown Course"
-                    return "Warning: ${stagedCourse.name} is missing prerequisite: $prereqCourseName"
+                    val prereqCourseid =
+                        allCourses.find { it.id == prereqId }?.id ?: "Unknown Course"
+                    return "Warning: ${stagedCourse.id} is missing prerequisite: $prereqCourseid"
                 }
             }
         }

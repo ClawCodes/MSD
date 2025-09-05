@@ -8,6 +8,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -58,21 +60,18 @@ class CourseRepository(val scope: CoroutineScope) {
         }
     }
     private val baseUrl = "https://msd2025.github.io/degreePlans/"
-    var plans = mutableListOf<Plan>()
-    var courses: PlanCourseList? = null
+    private var plans = MutableStateFlow<List<Plan>>(emptyList())
+    val plansFlow = plans.asStateFlow()
+    private var courses = MutableStateFlow<List<Course>>(emptyList())
+    val coursesFlow = courses.asStateFlow()
 
     private suspend fun _fetchPlans(): PlanList {
-        try {
-            return client.get(baseUrl + "degreePlans.json").body()
-        } catch (e: Exception) {
-            throw Exception("Network request failed")
-            e.printStackTrace()
-        }
+        return client.get(baseUrl + "degreePlans.json").body()
     }
 
     fun fetchPlans() {
         scope.launch {
-            plans = _fetchPlans().plans.toMutableList()
+            plans.value = _fetchPlans().plans
         }
     }
 
@@ -81,37 +80,65 @@ class CourseRepository(val scope: CoroutineScope) {
     }
 
     fun getCourses(major: String) {
-        for (plan in plans) {
+        for (plan in plans.value) {
             if (plan.name == major) {
                 scope.launch {
-                    courses = _fetchCourses(plan.path)
+                    val res = _fetchCourses(plan.path)
+                    val c = convertCourseFormat(res)
+                    courses.value = c
+//                    courses.value = convertCourseFormat(_fetchCourses(plan.path))
                 }
-                return
+                break
             }
         }
     }
 
-    fun getCourseList(): List<Course> {
-        if (courses == null) {
-            return emptyList()
-        } else {
-            val baseReqs: List<Course> = emptyList()
-            val optional: List<Course> = emptyList()
-            for (req in courses!!.requirements) {
-                if (req.type == "requiredCourse") {
-                    baseReqs.plus(Course(req.course!!.department + req.course.number))
+//    private fun convertCourseFormat(courseList: PlanCourseList): List<Course> {
+//        val baseReqs: MutableList<Course> = mutableListOf()
+//        val optional: MutableList<Course> = mutableListOf()
+//        for (req in courseList.requirements!!) {
+//            if (req.type == "requiredCourse") {
+//                baseReqs = baseReqs.plus(Course(req.course!!.department + req.course.number))
+//            }
+//            if (req.type == "oneOf") {
+//                for (course in req.courses!!) {
+//                    optional.plus(
+//                        Course(
+//                            course.department + course.number,
+//                            prerequisites = baseReqs.map { it.id }
+//                        )
+//                    )
+//                }
+//            }
+//        }
+//        return baseReqs + optional
+//    }
+
+    // In CourseRepository.kt [1]
+    private fun convertCourseFormat(courseList: PlanCourseList): List<Course> {
+        var baseReqs: List<Course> = emptyList()
+        var optional: List<Course> = emptyList()
+
+        courseList.requirements?.forEach { req ->
+            when (req.type) {
+                "requiredCourse" -> {
+                    req.course?.let {
+                        baseReqs = baseReqs.plus(Course(it.department + it.number))
+                    }
                 }
-                if (req.type == "oneOf") {
-                    for (course in req.courses!!) {
-                        optional.plus(
+                "oneOf" -> {
+                    req.courses?.forEach { planCourse ->
+                        val currentBaseReqIds = baseReqs.map { it.id }
+                        optional = optional.plus(
                             Course(
-                                course.department + course.number,
-                                prerequisites = baseReqs.map { it.id })
+                                planCourse.department + planCourse.number,
+                                prerequisites = currentBaseReqIds
+                            )
                         )
                     }
                 }
             }
-            return baseReqs + optional
         }
+        return baseReqs + optional
     }
 }

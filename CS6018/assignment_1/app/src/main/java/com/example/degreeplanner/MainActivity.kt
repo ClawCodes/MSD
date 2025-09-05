@@ -64,8 +64,8 @@ fun DegreePlannerScreen(
         // Dropdown list containing major
         Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = uiState.selectedCourse?.name ?: "Select a Major",
-                onValueChange = {}, // Read-only
+                value = uiState.selectedMajor ?: "Select a Major",
+                onValueChange = {},
                 readOnly = true,
                 label = { Text("Available Majors") },
                 trailingIcon = {
@@ -83,7 +83,6 @@ fun DegreePlannerScreen(
                 onDismissRequest = { viewModel.onDismissMajorDropdown() },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // TODO: START HERE - MAJORS NOT SHOWING UP
                 uiState.allMajors.forEach { major ->
                     DropdownMenuItem(
                         text = { Text(major) },
@@ -136,7 +135,7 @@ fun DegreePlannerScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { viewModel.onAddCourseToPlan() }, // Call ViewModel
+            onClick = { viewModel.onAddCourseToPlan() },
             enabled = uiState.selectedCourse != null,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -158,7 +157,7 @@ fun DegreePlannerScreen(
                     CourseStagingItem(
                         course = course,
                         onRemove = {
-                            viewModel.onRemoveCourseFromPlan(course) // Call ViewModel
+                            viewModel.onRemoveCourseFromPlan(course)
                         }
                     )
                     HorizontalDivider()
