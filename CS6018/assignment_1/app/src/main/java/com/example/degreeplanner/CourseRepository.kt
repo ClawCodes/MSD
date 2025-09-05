@@ -83,38 +83,18 @@ class CourseRepository(val scope: CoroutineScope) {
         for (plan in plans.value) {
             if (plan.name == major) {
                 scope.launch {
-                    val res = _fetchCourses(plan.path)
-                    val c = convertCourseFormat(res)
-                    courses.value = c
-//                    courses.value = convertCourseFormat(_fetchCourses(plan.path))
+                    val planCourses = _fetchCourses(plan.path)
+                    var newCourses = convertCourseFormat(planCourses)
+                    if (planCourses.name == "Computer Science") {
+                        newCourses = newCourses + CourseList.courses
+                    }
+                    courses.value = newCourses
                 }
                 break
             }
         }
     }
 
-//    private fun convertCourseFormat(courseList: PlanCourseList): List<Course> {
-//        val baseReqs: MutableList<Course> = mutableListOf()
-//        val optional: MutableList<Course> = mutableListOf()
-//        for (req in courseList.requirements!!) {
-//            if (req.type == "requiredCourse") {
-//                baseReqs = baseReqs.plus(Course(req.course!!.department + req.course.number))
-//            }
-//            if (req.type == "oneOf") {
-//                for (course in req.courses!!) {
-//                    optional.plus(
-//                        Course(
-//                            course.department + course.number,
-//                            prerequisites = baseReqs.map { it.id }
-//                        )
-//                    )
-//                }
-//            }
-//        }
-//        return baseReqs + optional
-//    }
-
-    // In CourseRepository.kt [1]
     private fun convertCourseFormat(courseList: PlanCourseList): List<Course> {
         var baseReqs: List<Course> = emptyList()
         var optional: List<Course> = emptyList()

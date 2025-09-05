@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
@@ -54,10 +56,12 @@ fun DegreePlannerScreen(
 ) {
     // Collect the UI state as Compose state
     val uiState by viewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -97,7 +101,7 @@ fun DegreePlannerScreen(
         // Dropdown list containing unselected courses
         Box(modifier = Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = uiState.selectedCourse?.name ?: "Select a Course",
+                value = uiState.selectedCourse?.id ?: "Select a Course",
                 onValueChange = {}, // Read-only
                 readOnly = true,
                 label = { Text("Available Courses") },
