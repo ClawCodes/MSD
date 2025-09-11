@@ -1,6 +1,6 @@
 package com.example.maraca
-import com.example.maraca.data.GyroDB
-import com.example.maraca.data.GyroRepository
+import com.example.maraca.data.AccDB
+import com.example.maraca.data.AccRepository
 
 import android.app.Application
 import androidx.room.Room
@@ -13,10 +13,10 @@ class MaracaApplication : Application() {
     val db by lazy {
         Room.databaseBuilder(
             applicationContext,
-            GyroDB::class.java,
-            "gryro_database"
+            AccDB::class.java,
+            "accel_database"
         ).build()
     }
 
-    val gryoRepository by lazy { GyroRepository(scope, db.gyroDao()) }
+    val accRepository by lazy { AccRepository(scope, db.accDao()) }
 }
