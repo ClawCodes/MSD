@@ -1,6 +1,7 @@
 package com.example.maraca.data
 import androidx.room.Dao
 import androidx.room.Database
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
@@ -18,7 +19,7 @@ data class AccReading(val x: Float, val y: Float, val z: Float, val timestamp: L
     }
 }
 
-@Database(entities = [AccReading::class], version = 1, exportSchema = false)
+@Database(entities = [AccReading::class], version = 2, exportSchema = false)
 abstract class AccDB : RoomDatabase() {
     abstract fun accDao(): AccDao
 }
@@ -31,7 +32,12 @@ interface AccDao {
     @Query("SELECT * FROM acc_data ORDER BY timestamp DESC LIMIT 1")
     fun latest(): Flow<AccReading?>
 
-    @Query("SELECT * FROM acc_data ORDER BY timestamp DESC")
+    @Query("SELECT * FROM acc_data ORDER BY timestamp")
     fun all(): Flow<List<AccReading>>
 
+    @Delete
+    fun delete(reading: List<AccReading>)
+
+    @Query("DELETE FROM acc_data")
+    fun deleteAll()
 }

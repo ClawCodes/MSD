@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.maraca.composables.AccLineChart
+import com.example.maraca.composables.BottomBanner
 import com.example.maraca.data.AccReading
 import com.example.maraca.ui.theme.MaracaTheme
 import kotlin.getValue
@@ -58,10 +60,7 @@ class MainActivity : ComponentActivity() {
                                 .weight(1f)
                                 .fillMaxWidth()
                         ) {
-                            RealtimeMagnitudeBar(
-                                currentReading = accReading,
-                                modifier = Modifier.fillMaxSize()
-                            )
+                            AccLineChart(allReadings, Modifier.fillMaxSize())
                         }
 
                         Box(
@@ -73,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             LazyColumn(
                                 modifier = Modifier.fillMaxSize(),
-                                reverseLayout = true // show newest at top
+                                reverseLayout = true // show most recent at top
                             ) {
                                 items(allReadings) { reading ->
                                     Text(
@@ -84,45 +83,25 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
+                        Box(
+                            modifier = Modifier
+                                .weight(0.3f)
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .padding(8.dp)
+                        ) {
+                            BottomBanner(
+                                modifier = Modifier.fillMaxSize(),
+                                onDeleteN = maracaVM::deleteNRecords,
+                                onDeleteAll = maracaVM::deleteAllRecords
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
-
-@Composable
-fun RealtimeMagnitudeBar(
-    currentReading: AccReading,
-    modifier: Modifier = Modifier
-) {
-    val maxValue = 30f
-    val clamped = currentReading.magnitude().coerceAtMost(maxValue)
-    val targetFraction = clamped / maxValue
-
-    // Smooth animation between values
-    val animatedFraction by animateFloatAsState(
-        targetValue = targetFraction,
-        animationSpec = tween(durationMillis = 150),
-        label = "magnitudeAnim"
-    )
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.DarkGray)
-            .padding(8.dp),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .fillMaxHeight(animatedFraction)
-                .background(Color.Blue, RoundedCornerShape(4.dp))
-        )
-    }
-}
-
 
 @Composable
 fun AccelerometerReading(reading: AccReading, modifier: Modifier = Modifier) {

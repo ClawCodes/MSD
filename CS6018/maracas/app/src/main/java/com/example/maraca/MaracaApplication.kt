@@ -12,10 +12,10 @@ class MaracaApplication : Application() {
 
     val db by lazy {
         Room.databaseBuilder(
-            applicationContext,
-            AccDB::class.java,
-            "accel_database"
-        ).build()
+                applicationContext,
+                AccDB::class.java,
+                "accel_database"
+            ).fallbackToDestructiveMigration(true).build()
     }
 
     val accRepository by lazy { AccRepository(scope, db.accDao()) }

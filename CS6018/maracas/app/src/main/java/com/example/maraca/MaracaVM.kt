@@ -33,7 +33,7 @@ class MaracaVM(accRepository: AccRepository) : ViewModel() {
     private fun getGyroData(sensor: Sensor, sensorManager: SensorManager): Flow<AccReading> {
         return channelFlow {
             var lastShakeTime = 0L
-            val shakeCooldownMs = 100L      // minimum time between shakes
+            val shakeCooldownMs = 50L      // minimum time between shakes
             val shakeThreshold = 15f
             var lastReading: AccReading? = null
 
@@ -87,6 +87,16 @@ class MaracaVM(accRepository: AccRepository) : ViewModel() {
                 sensorManager.unregisterListener(listener)
             }
         }
+    }
+
+    fun deleteNRecords(numToDelete: Int?) {
+        if (numToDelete != null){
+            repository.deleteOldestN(numToDelete)
+        }
+    }
+
+    fun deleteAllRecords() {
+        repository.deleteAll()
     }
 
 }

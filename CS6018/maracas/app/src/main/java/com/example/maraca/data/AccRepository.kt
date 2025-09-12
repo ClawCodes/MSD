@@ -2,6 +2,7 @@ package com.example.maraca.data
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class AccRepository(
@@ -17,4 +18,18 @@ class AccRepository(
             db.insert(reading)
         }
     }
+
+    fun deleteOldestN(n: Int) {
+        scope.launch {
+            val toDelete = allReadings.first().take(n)
+            db.delete(toDelete)
+        }
+    }
+
+    fun deleteAll(){
+        scope.launch {
+            db.deleteAll()
+        }
+
+}
 }
