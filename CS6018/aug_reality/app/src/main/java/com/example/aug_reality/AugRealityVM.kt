@@ -2,7 +2,6 @@ package com.example.aug_reality
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.Surface
 import androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
 import androidx.camera.core.CameraSelector.DEFAULT_FRONT_CAMERA
@@ -15,10 +14,6 @@ import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -30,7 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
 import java.util.concurrent.Executors
 import kotlin.math.abs
 
@@ -148,6 +142,14 @@ class AugRealityVM : ViewModel() {
             awaitCancellation()
         } finally {
             processCameraProvider.unbindAll()
+        }
+    }
+
+    fun rebindCamera(appContext: Context, lifecycleOwner: LifecycleOwner) {
+        // If the camera was running, cancel the old job and bind to the new lifecycle owner
+        cameraJob?.cancel()
+        cameraJob = viewModelScope.launch {
+            bindToCamera(appContext, lifecycleOwner)
         }
     }
 
