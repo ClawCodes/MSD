@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.initializer
