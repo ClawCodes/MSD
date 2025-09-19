@@ -99,6 +99,10 @@ class MainActivity : ComponentActivity() {
                     { vm.toggleCamera(appContext = applicationContext, lifecycleOwner = this@MainActivity) }
                 }
 
+                val onFlipCamera = remember(vm) {
+                    { vm.flipCamera(appContext = applicationContext, lifecycleOwner = this@MainActivity) }
+                }
+
 
                 Box(modifier = Modifier.fillMaxSize()) {
                     surfaceRequestState.value?.let { request ->
@@ -158,6 +162,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(onClick = onToggleCamera) {
                                 Text(recordingState.state)
+                            }
+
+                            Spacer(Modifier.weight(1f))
+
+                            Button(onClick = onFlipCamera) {
+                                Text("Flip camera")
                             }
 
                             Spacer(Modifier.weight(1f))

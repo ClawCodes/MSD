@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.Surface
 import androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
+import androidx.camera.core.CameraSelector.DEFAULT_FRONT_CAMERA
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -84,6 +85,8 @@ class AugRealityVM : ViewModel() {
         .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
         .build()
 
+    private var cameraSelector = DEFAULT_BACK_CAMERA
+
     private fun setContrastPoint(image: ImageProxy) {
         val yPlane = image.planes[0]
         val rowStride = yPlane.rowStride
@@ -135,7 +138,7 @@ class AugRealityVM : ViewModel() {
         val processCameraProvider = ProcessCameraProvider.awaitInstance(appContext)
         processCameraProvider.bindToLifecycle(
             lifecycleOwner,
-            DEFAULT_BACK_CAMERA,
+            cameraSelector,
             cameraPreviewUseCase,
             contrastAnalysis,
             imageCapture
@@ -177,7 +180,17 @@ class AugRealityVM : ViewModel() {
         )
     }
 
-
+    fun flipCamera(appContext: Context, lifecycleOwner: LifecycleOwner) {
+        cameraJob?.cancel()
+        cameraSelector = if (cameraSelector == DEFAULT_BACK_CAMERA) {
+            DEFAULT_FRONT_CAMERA
+        } else {
+            DEFAULT_BACK_CAMERA
+        }
+        cameraJob = viewModelScope.launch {
+            bindToCamera(appContext, lifecycleOwner)
+        }
+    }
 
     fun toggleCamera(appContext: Context, lifecycleOwner: LifecycleOwner) {
         when (_recordingState.value) {
