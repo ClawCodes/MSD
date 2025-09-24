@@ -43,7 +43,7 @@ data class ContrastPoint(
 @ExperimentalGetImage
 class AugRealityVM : ViewModel() {
     private var cameraJob: Job? = null
-    private val _recordingState = MutableStateFlow<Recording>(Recording.Start)
+    private val _recordingState = MutableStateFlow(Recording.Start)
 
     val recordingState: StateFlow<Recording> = _recordingState.asStateFlow()
 
