@@ -36,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        mlModelBinding = true
     }
 }
 
@@ -51,6 +52,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.vision.common)
     implementation(libs.play.services.mlkit.face.detection)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.androidx.compose.foundation.layout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -63,4 +67,5 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.mlkit.vision)
     implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.fragment)
 }
