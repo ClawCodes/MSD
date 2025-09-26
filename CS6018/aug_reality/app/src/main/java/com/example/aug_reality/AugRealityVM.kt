@@ -31,6 +31,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 import kotlin.math.abs
 
@@ -87,7 +90,6 @@ class AugRealityVM : ViewModel() {
 
     private var cameraSelector = DEFAULT_BACK_CAMERA
 
-    // TODO: ML STUFF
     private val faceDetector = FaceDetection.getClient(FaceDetectorOptions.Builder().apply {
         enableTracking() // tracks faces over time
         setExecutor(executor)
@@ -105,31 +107,21 @@ class AugRealityVM : ViewModel() {
     }.build().apply {
         setAnalyzer(executor) { imageProxy ->
 
-            imageProxy.image?.let { //inside here, it is the MediaImage passed to the analyzer
-                //Log.d("original image size", "${it.width} x ${it.height}")
+            imageProxy.image?.let {
                 val inputImage = InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
-                //will always be 640x480 because setOuputImageRotation is false above
                 Log.d("imgsize", "${inputImage.width} x " + "${inputImage.height}")
-                //should be 0 or 90, I think, if 180/270 are possible, add more flippers
-                Log.d("rotation", "rotation: ${imageProxy.imageInfo.rotationDegrees}")
+                Log.d("rotation 1", "rotation: ${imageProxy.imageInfo.rotationDegrees}")
                 faceDetector.process(inputImage)
                     .addOnSuccessListener { res ->
                         _faces.value = res
-                        // FIXME: OLD implementation
-                        imageProxy.image?.let { //inside here, it is the MediaImage passed to the analyzer
-                            //Log.d("original image size", "${it.width} x ${it.height}")
+                        imageProxy.image?.let {
                             val inputImage =
                                 InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
-                            //will always be 640x480 because setOuputImageRotation is false above
                             Log.d("imgsize", "${inputImage.width} x " + "${inputImage.height}")
-                            //should be 0 or 90, I think, if 180/270 are possible, add more flippers
-                            Log.d("rotation", "rotation: ${imageProxy.imageInfo.rotationDegrees}")
+                            Log.d("rotation 2", "rotation: ${imageProxy.imageInfo.rotationDegrees}")
                             faceDetector.process(inputImage)
                                 .addOnSuccessListener { res ->
                                     _faces.value = res
-                                    //Log.d("analyzer mat before invert", "${imageProxy.imageInfo.sensorToBufferTransformMatrix}")
-                                    //store the buffer to sensor transform in this state
-                                    // since we'll be transforming boxes in buffer coordinates
                                     val inverse = android.graphics.Matrix()
                                     imageProxy.imageInfo.sensorToBufferTransformMatrix.invert(
                                         inverse
@@ -148,28 +140,14 @@ class AugRealityVM : ViewModel() {
                                                 )
                                             )
                                         }
-                                        //for debugging
-//                                faces.firstOrNull()?.let {
-//                                    Log.d("face bb", "${it.boundingBox}")
-//                                    val transformed = RectF(it.boundingBox)
-//                                    flipper.mapRect(transformed)
-//                                    Log.d("flipper transform", "$transformed")
-//                                }
-
-                                        //apply this rotation/flipping BEFORE the other transform, if
-                                        //we need to do it
                                         inverse.preConcat(flipper)
-
                                     }
-
                                     _analyzerToBuffer.value = inverse
-                                    //Log.d("analyzer mat after invert", "${analyzerToBuffer.value}")
                                 }
                                 .addOnFailureListener { err ->
                                     Log.d("MLKIT", "ObjectDetectionFailure: $err")
                                 }
                                 .addOnCompleteListener {
-                                    //don't close before we look at it
                                     imageProxy.close()
                                 }
                         }
@@ -177,6 +155,57 @@ class AugRealityVM : ViewModel() {
             }
         }
     }
+
+    // TODO: efficient det
+//    val model by lazy {LightweightFaceDetectionW8a8.newInstance(this)}
+//    private val liteRTUseCase = ImageAnalysis.Builder().apply {
+//        //throw away any frames we can't handle in time
+//        setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
+//        setOutputImageRotationEnabled(false)
+//    }.build().apply {
+//        setAnalyzer(executor) { imageProxy ->
+//            val bitmap = imageProxy.toBitmap()
+//            Log.d("Bitmap", "${bitmap.width}x${bitmap.height}")
+//            //val tensorImage = TensorImage.fromBitmap(bitmap)
+//            //Log.d("tensor image", "${tensorImage.width} x ${tensorImage.height} ${tensorImage.dataType}")
+//            //needs to be 1 channel image...
+//            val buffer = ByteBuffer.allocateDirect(bitmap.width * bitmap.height);
+//            for (y in 0..<bitmap.height) {
+//                for (x in 0..<bitmap.width) {
+//                    val pixel = bitmap[x, y]
+//                    val r = (pixel shr 16) and 0xFF
+//                    val g = (pixel shr 8) and 0xFF
+//                    val b = pixel and 0xFF
+//                    val gray = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+//                    buffer.put(gray.toByte())
+//                }
+//            }
+//
+//            val tensorBuffer =
+//                TensorBuffer.createFixedSize(intArrayOf(1, bitmap.height, bitmap.width, 1), DataType.UINT8)
+//            tensorBuffer.loadBuffer(buffer)
+//
+//
+//            val result = model.process(tensorBuffer)
+//
+//            //3 tensors according to https://github.com/quic/ai-hub-models/blob/main/qai_hub_models/models/face_det_lite/app.py
+//            // are "HM, Box, Landmark"
+//            //Box is probably what we're most interested in
+//            //The code in that repo for converting these tensors to faces is quite involved, so actually using
+//            //the results of this model seems quite difficult!
+//
+//            val r1 = result.outputFeature0AsTensorBuffer
+//            //Log.d("R1 size", "${r1.shape.toList()}")
+//            //Log.d("R1 vals", "${r1.floatArray.toList()}")
+//            val r2 = result.outputFeature1AsTensorBuffer
+//            val r3 = result.outputFeature2AsTensorBuffer
+//            //Log.d("R2 size", "${r2.shape.toList()}")
+//            //Log.d("R2 vals", "${r2.floatArray.toList()}")
+//            //Log.d("R3 size", "${r3.shape.toList()}")
+//            //Log.d("R3 vals", "${r3.floatArray.toList()}")
+//
+//            imageProxy.close()
+//        }
 
     private fun setContrastPoint(image: ImageProxy) {
         val yPlane = image.planes[0]

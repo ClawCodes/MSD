@@ -168,9 +168,11 @@ class MainActivity : ComponentActivity() {
                                 request.clearTransformationInfoListener()
                             }
                         }
-                        Text(modifier = Modifier.offset(100.dp,100.dp),
+                        Text(
+                            modifier = Modifier.offset(100.dp, 100.dp),
                             text = "Num Faces: ${faces.value.size}",
-                            color = Color.Red)
+                            color = Color.Red
+                        )
                         Canvas(modifier = Modifier.fillMaxSize()) {
                             transformInfo?.let {
                                 val bufferToUiTransformMatrix = Matrix().apply {
@@ -190,24 +192,27 @@ class MainActivity : ComponentActivity() {
                                     }
 
                                     faces.value.forEach {
+                                        // FIXME: bounding box tracking is inverted in x and y motion
                                         val faceBox = it.boundingBox
 
                                         val bb = androidx.compose.ui.geometry.Rect(
-                                            faceBox.left.toFloat(), faceBox.top.toFloat(),
-                                            faceBox.right.toFloat(), faceBox.bottom.toFloat()
+                                            faceBox.left.toFloat(), faceBox.bottom.toFloat(),
+                                            faceBox.right.toFloat(), faceBox.top.toFloat()
                                         )
                                         val bufferRect = totalMatrixCompose.map(bb)
                                         val uiRect = bufferToUiTransformMatrix.map(bufferRect)
 
                                         drawRect(
                                             Color.Red, topLeft = Offset(uiRect.left, uiRect.top),
-                                            size = Size(uiRect.width, uiRect.height)
+                                            size = Size(uiRect.width, uiRect.height),
+                                            style = Stroke(width = 10f),
+
                                         )
                                     }
                                 }
                             }
                         }
-
+                    }
                         androidx.compose.material3.Surface(
                             modifier = Modifier
                                 .align(androidx.compose.ui.Alignment.BottomCenter)
@@ -257,8 +262,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
     fun verifyPermissions() {
         if (checkSelfPermission(Manifest.permission.CAMERA) ==
             PackageManager.PERMISSION_GRANTED
@@ -268,7 +271,7 @@ class MainActivity : ComponentActivity() {
             requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
-}
+    }
 
 
 
