@@ -1,6 +1,7 @@
 package com.example.aug_reality
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.view.Surface
@@ -17,9 +18,11 @@ import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.get
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.aug_reality.ml.Model
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.Face
 import com.google.mlkit.vision.face.FaceDetection
@@ -32,14 +35,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.util.concurrent.Executors
 import kotlin.math.abs
 
 enum class Recording(val state: String) {
     Start("Start"),
     Stop("Stop")
+}
+
+enum class CVModel(val state: String) {
+    Face("Face Detection"),
+    Obj("Object Detection")
 }
 
 data class ContrastPoint(
@@ -55,6 +65,9 @@ class AugRealityVM : ViewModel() {
     private val _recordingState = MutableStateFlow(Recording.Start)
 
     val recordingState: StateFlow<Recording> = _recordingState.asStateFlow()
+
+    private val _modelInUse = MutableStateFlow(CVModel.Face)
+    val modelInUse: StateFlow<CVModel> = _modelInUse.asStateFlow()
 
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
     val surfaceRequest: StateFlow<SurfaceRequest?> = _surfaceRequest.asStateFlow()
@@ -155,57 +168,13 @@ class AugRealityVM : ViewModel() {
             }
         }
     }
-
-    // TODO: efficient det
-//    val model by lazy {LightweightFaceDetectionW8a8.newInstance(this)}
-//    private val liteRTUseCase = ImageAnalysis.Builder().apply {
-//        //throw away any frames we can't handle in time
-//        setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
-//        setOutputImageRotationEnabled(false)
-//    }.build().apply {
-//        setAnalyzer(executor) { imageProxy ->
-//            val bitmap = imageProxy.toBitmap()
-//            Log.d("Bitmap", "${bitmap.width}x${bitmap.height}")
-//            //val tensorImage = TensorImage.fromBitmap(bitmap)
-//            //Log.d("tensor image", "${tensorImage.width} x ${tensorImage.height} ${tensorImage.dataType}")
-//            //needs to be 1 channel image...
-//            val buffer = ByteBuffer.allocateDirect(bitmap.width * bitmap.height);
-//            for (y in 0..<bitmap.height) {
-//                for (x in 0..<bitmap.width) {
-//                    val pixel = bitmap[x, y]
-//                    val r = (pixel shr 16) and 0xFF
-//                    val g = (pixel shr 8) and 0xFF
-//                    val b = pixel and 0xFF
-//                    val gray = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
-//                    buffer.put(gray.toByte())
-//                }
-//            }
-//
-//            val tensorBuffer =
-//                TensorBuffer.createFixedSize(intArrayOf(1, bitmap.height, bitmap.width, 1), DataType.UINT8)
-//            tensorBuffer.loadBuffer(buffer)
-//
-//
-//            val result = model.process(tensorBuffer)
-//
-//            //3 tensors according to https://github.com/quic/ai-hub-models/blob/main/qai_hub_models/models/face_det_lite/app.py
-//            // are "HM, Box, Landmark"
-//            //Box is probably what we're most interested in
-//            //The code in that repo for converting these tensors to faces is quite involved, so actually using
-//            //the results of this model seems quite difficult!
-//
-//            val r1 = result.outputFeature0AsTensorBuffer
-//            //Log.d("R1 size", "${r1.shape.toList()}")
-//            //Log.d("R1 vals", "${r1.floatArray.toList()}")
-//            val r2 = result.outputFeature1AsTensorBuffer
-//            val r3 = result.outputFeature2AsTensorBuffer
-//            //Log.d("R2 size", "${r2.shape.toList()}")
-//            //Log.d("R2 vals", "${r2.floatArray.toList()}")
-//            //Log.d("R3 size", "${r3.shape.toList()}")
-//            //Log.d("R3 vals", "${r3.floatArray.toList()}")
-//
-//            imageProxy.close()
-//        }
+    private val _detObjects = MutableStateFlow<Model.Outputs?>(null)
+    val detObjects: StateFlow<Model.Outputs?> = _detObjects.asStateFlow()
+//    val model by lazy {ObjDet.newInstance(this)}
+    // The following two members are constructed during camera binding as they require context
+    private lateinit var objDetector: Model
+    private lateinit var liteRTUseCase: ImageAnalysis
+    private lateinit var CVUseCase: ImageAnalysis
 
     private fun setContrastPoint(image: ImageProxy) {
         val yPlane = image.planes[0]
@@ -250,18 +219,48 @@ class AugRealityVM : ViewModel() {
         )
     }
 
+    fun initObjectDetection(appContext: Context) {
+        objDetector = Model.newInstance(appContext)
+        liteRTUseCase = ImageAnalysis.Builder().apply {
+            setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
+            setOutputImageRotationEnabled(false)
+        }.build().apply {
+            setAnalyzer(executor) { imageProxy ->
+                val bitmap = imageProxy.toBitmap()
+                val tensorBuffer = TensorImage.fromBitmap(bitmap)
+
+                _detObjects.value = objDetector.process(tensorBuffer)
+
+                imageProxy.close()
+            }
+        }
+    }
+
     fun setSurfaceRequest(value: SurfaceRequest?) {
         _surfaceRequest.value = value
     }
 
+    fun setCVModel(value: CVModel) {
+        _modelInUse.value = value
+    }
+
     suspend fun bindToCamera(appContext: Context, lifecycleOwner: LifecycleOwner) {
+        if (_modelInUse.value == CVModel.Face) {
+            CVUseCase = mlKitManualUseCase
+        } else {
+            initObjectDetection(appContext)
+            CVUseCase = liteRTUseCase
+        }
+        initObjectDetection(appContext)
         val processCameraProvider = ProcessCameraProvider.awaitInstance(appContext)
         processCameraProvider.bindToLifecycle(
             lifecycleOwner,
             cameraSelector,
             cameraPreviewUseCase,
             imageCapture,
-            mlKitManualUseCase,
+            CVUseCase
+//            mlKitManualUseCase,
+//            liteRTUseCase
 //            contrastAnalysis,
         )
 
@@ -342,6 +341,13 @@ class AugRealityVM : ViewModel() {
                 _recordingState.value = Recording.Start
                 setSurfaceRequest(null)
             }
+        }
+    }
+
+    fun swapCVModel() {
+        when (_modelInUse.value) {
+            CVModel.Face -> _modelInUse.value = CVModel.Obj
+            CVModel.Obj -> _modelInUse.value = CVModel.Face
         }
     }
 }
