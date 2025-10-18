@@ -1,9 +1,8 @@
-package com.codersee.repository
+package com.example.repository
 
-import com.codersee.model.User
-import com.codersee.routing.request.LoginRequest
-import com.codersee.routing.request.UserRequest
-import io.ktor.server.application.Application
+import com.example.model.User
+import com.example.routing.request.LoginRequest
+import com.example.routing.request.UserRequest
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.UserPasswordCredential
 import io.ktor.server.auth.ldap.ldapAuthenticate

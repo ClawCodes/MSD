@@ -1,7 +1,6 @@
-package com.codersee.repository
+package com.example.repository
 
-import com.codersee.model.Note
-import java.util.*
+import com.example.model.Note
 import kotlin.collections.HashMap
 
 class NotesRepository {

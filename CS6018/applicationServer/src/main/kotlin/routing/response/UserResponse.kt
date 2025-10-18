@@ -1,8 +1,6 @@
-package com.codersee.routing.response
+package com.example.routing.response
 
-import com.codersee.util.UUIDSerializer
 import kotlinx.serialization.Serializable
-import java.util.*
 
 @Serializable
 data class UserResponse(

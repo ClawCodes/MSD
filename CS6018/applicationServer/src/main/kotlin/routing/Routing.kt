@@ -1,8 +1,8 @@
-package com.codersee.routing
+package com.example.routing
 
-import com.codersee.repository.NotesRepository
-import com.codersee.service.JwtService
-import com.codersee.service.UserService
+import com.example.repository.NotesRepository
+import com.example.service.JwtService
+import com.example.service.UserService
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*

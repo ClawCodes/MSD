@@ -1,6 +1,4 @@
-package com.codersee.model
-
-import java.util.UUID
+package com.example.model
 
 data class User(
   //val id: UUID,

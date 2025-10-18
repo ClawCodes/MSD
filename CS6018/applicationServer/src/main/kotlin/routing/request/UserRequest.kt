@@ -1,4 +1,4 @@
-package com.codersee.routing.request
+package com.example.routing.request
 
 import kotlinx.serialization.Serializable
 

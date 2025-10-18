@@ -1,17 +1,14 @@
-package com.codersee.service
+package com.example.service
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.codersee.model.User
-import com.codersee.routing.request.LoginRequest
+import com.example.model.User
+import com.example.routing.request.LoginRequest
 import java.util.*
-import at.favre.lib.crypto.bcrypt.BCrypt
 import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.util.*
-import kotlin.text.toCharArray
 
 class JwtService(
     private val application: Application,
@@ -44,25 +41,6 @@ class JwtService(
                 .withExpiresAt(Date(System.currentTimeMillis() + 3_600_000))
                 .sign(Algorithm.HMAC256(secret))
         }
-
-        //val foundUser: User? = userService.findByUsername(loginRequest.username)
-
-
-
-//        return if (foundUser != null &&
-//            BCrypt.verifyer().verify(
-//                loginRequest.password.toCharArray(),
-//                foundUser.hashedPassword
-//            ).verified
-//        )
-//            JWT.create()
-//                .withAudience(audience)
-//                .withIssuer(issuer)
-//                .withClaim("username", loginRequest.username)
-//                .withExpiresAt(Date(System.currentTimeMillis() + 3_600_000))
-//                .sign(Algorithm.HMAC256(secret))
-//        else
-//            null
     }
 
     fun customValidator(

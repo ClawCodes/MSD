@@ -1,9 +1,8 @@
-package com.codersee.routing
+package com.example.routing
 
-import com.codersee.model.Note
-import com.codersee.repository.NotesRepository
+import com.example.model.Note
+import com.example.repository.NotesRepository
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -23,7 +22,7 @@ fun Route.noteRoute(notesRepository: NotesRepository){
         if(reqName == null){
             call.respond(HttpStatusCode.BadRequest)
         }
-        val thisUser =  extractPrincipalUsername(call)
+        val thisUser = extractPrincipalUsername(call)
         if(thisUser == null){
             //I think this is impossible since this is in an auth{} block
             call.respond(HttpStatusCode.Unauthorized)

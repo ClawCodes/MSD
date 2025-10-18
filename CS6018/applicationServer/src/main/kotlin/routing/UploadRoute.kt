@@ -1,8 +1,7 @@
-package com.codersee.routing
+package com.example.routing
 
 import io.ktor.http.*
 import io.ktor.http.content.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -10,6 +9,7 @@ import io.ktor.util.cio.*
 import kotlin.io.path.Path
 import kotlin.io.path.div
 import io.ktor.utils.io.*
+import java.io.File
 import java.nio.file.Files.createDirectories
 
 val uploadDir = Path("uploads/")
@@ -30,7 +30,7 @@ fun Route.uploadRoute(){
 
         //ensure this exists
         createDirectories(uploadDir/username)
-        val file: java.io.File = (uploadDir / username / filename).toFile()
+        val file: File = (uploadDir / username / filename).toFile()
 
         multipartData.forEachPart { part ->
             when (part) {
