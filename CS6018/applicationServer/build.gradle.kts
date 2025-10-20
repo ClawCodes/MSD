@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
     alias(libs.plugins.kotlin.plugin.serialization)
+
 }
 
 group = "com.example"
@@ -26,14 +27,8 @@ ktor {
     }
 }
 
-java {
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-kotlin {
-    jvmToolchain(21)
-    java.targetCompatibility = JavaVersion.VERSION_21
-}
+java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }
+kotlin { jvmToolchain(21) }
 
 dependencies {
     implementation(libs.ktor.server.core)
