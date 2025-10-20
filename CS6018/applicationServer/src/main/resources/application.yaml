@@ -8,4 +8,4 @@ jwt:
   audience: "http://0.0.0.0:8080/photos"
   realm: "Photo Access"
   issuer: "http://0.0.0.0:8080/"
-  secret:  ${SECRET}
+  secret:  ${?SECRET}
