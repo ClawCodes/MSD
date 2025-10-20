@@ -9,6 +9,30 @@ version = "0.0.1"
 
 application {
     mainClass = "io.ktor.server.netty.EngineMain"
+
+    val isDevelopment: Boolean = project.ext.has("development")
+    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+repositories {
+    mavenCentral()
+}
+
+ktor {
+    docker {
+        localImageName.set("camera-server")
+        imageTag.set("1.0.0")
+        jreVersion.set(JavaVersion.VERSION_21)
+    }
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+kotlin {
+    jvmToolchain(21)
+    java.targetCompatibility = JavaVersion.VERSION_21
 }
 
 dependencies {
