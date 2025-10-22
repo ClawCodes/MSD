@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
 }
 
 android {
@@ -69,4 +70,10 @@ dependencies {
     implementation(libs.androidx.camera.mlkit.vision)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.fragment)
+
+    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.content.negotiation)
 }

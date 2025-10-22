@@ -1,7 +1,6 @@
 package com.example.aug_reality
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import android.view.Surface
@@ -17,8 +16,9 @@ import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
+import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.get
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,16 +29,13 @@ import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.TensorImage
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
 import java.util.concurrent.Executors
 import kotlin.math.abs
 
@@ -176,6 +173,29 @@ class AugRealityVM : ViewModel() {
     private lateinit var liteRTUseCase: ImageAnalysis
     private lateinit var CVUseCase: ImageAnalysis
 
+    // Authentication management
+    private lateinit var _authManager: AuthManager
+
+    fun login(username: String, password: String){
+        viewModelScope.launch {
+            _authManager.login(username, password)
+        }
+    }
+
+    fun signUp(username: String, password: String) {
+        viewModelScope.launch {
+            _authManager.signUp(username, password)
+        }
+    }
+
+    fun currentPreferences(): Flow<Preferences> {
+        return _authManager.prefsFlow
+    }
+
+    fun currentToken(): Preferences.Key<String>{
+        return _authManager.tokenKey
+    }
+
     private fun setContrastPoint(image: ImageProxy) {
         val yPlane = image.planes[0]
         val rowStride = yPlane.rowStride
@@ -217,6 +237,15 @@ class AugRealityVM : ViewModel() {
             bufferWidth = width,
             bufferHeight = height
         )
+    }
+
+    fun injectContext(appContext: Context){
+        initObjectDetection(appContext)
+        initAuthManager(appContext)
+    }
+
+    fun initAuthManager(appContext: Context){
+        _authManager = AuthManager(appContext.dataStore)
     }
 
     fun initObjectDetection(appContext: Context) {

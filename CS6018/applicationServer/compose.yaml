@@ -24,8 +24,8 @@ services:
 
 
 
-  notes-app-server:
-    image: notes-app-ldap:latest
+  camera-server:
+    image: camera-server:latest
     depends_on:
       - ldap
 
