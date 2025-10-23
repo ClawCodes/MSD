@@ -1,5 +1,6 @@
 package com.example.routing
 
+import com.example.database.ImageService
 import com.example.repository.NotesRepository
 import com.example.service.JwtService
 import com.example.service.UserService
@@ -11,7 +12,7 @@ import io.ktor.server.routing.*
 fun Application.configureRouting(
   jwtService: JwtService,
   userService: UserService,
-  notesRepository: NotesRepository
+  imageService: ImageService
 ) {
   routing {
 
@@ -24,12 +25,12 @@ fun Application.configureRouting(
     }
 
     authenticate {
-      route("/api/notes") {
-        noteRoute(notesRepository)
-      }
-
       route("/api/upload"){
         uploadRoute()
+      }
+
+      route("/api/images"){
+        imageRoute(imageService)
       }
     }
 

@@ -1,5 +1,6 @@
 package com.example.repository
 
+import com.example.auth.UserPrincipal
 import com.example.model.User
 import com.example.routing.request.LoginRequest
 import com.example.routing.request.UserRequest
@@ -16,14 +17,6 @@ import javax.naming.ldap.LdapName
 class UserRepository {
 
     val ldapURL = "ldap://ldap.asd.msd.localhost:389"
-
-    //private val users = mutableListOf<User>()
-
-//    fun findAll(): List<User> =
-//        users
-
-//    fun findById(id: UUID): User? =
-//        users.firstOrNull { it.id == id }
 
     fun findByUsername(username: String): User? {
         println("userRepo.findByUsername: $username")
@@ -95,13 +88,20 @@ class UserRepository {
 
     private fun nameToDN(name: String) = LdapName("cn=$name,dc=ldap,dc=asd,dc=msd,dc=localhost")
 
-    fun ldapAuth(loginRequest: LoginRequest): UserIdPrincipal? {
+    fun ldapAuth(loginRequest: LoginRequest): UserPrincipal? {
         val pwdCred = UserPasswordCredential(loginRequest.username, loginRequest.password)
-        return ldapAuthenticate(
-            pwdCred,
-            ldapURL,
-            // possible injection attack here, should really sanitize the username
-            nameToDN(loginRequest.username).toString()
-        )
+
+        val principal: UserIdPrincipal? = try {
+            ldapAuthenticate(
+                pwdCred,
+                ldapURL,
+                // possible injection attack here, should really sanitize the username
+                nameToDN(loginRequest.username).toString()
+            )
+        } catch (ex: Exception) {
+            println("LDAP auth failed: ${ex.message}")
+        } as UserIdPrincipal?
+
+        return principal?.let{ UserPrincipal(it.name)}
     }
 }

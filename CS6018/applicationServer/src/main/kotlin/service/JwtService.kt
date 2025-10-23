@@ -37,6 +37,7 @@ class JwtService(
             JWT.create()
                 .withAudience(audience)
                 .withIssuer(issuer)
+                .withSubject(principal.id)
                 .withClaim("username", loginRequest.username)
                 .withExpiresAt(Date(System.currentTimeMillis() + 3_600_000))
                 .sign(Algorithm.HMAC256(secret))
