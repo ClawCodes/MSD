@@ -16,6 +16,7 @@ application {
 
 repositories {
     mavenCentral()
+
 }
 
 ktor {

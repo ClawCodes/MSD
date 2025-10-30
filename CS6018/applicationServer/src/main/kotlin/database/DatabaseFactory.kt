@@ -19,7 +19,7 @@ fun dbFromEnv(environment: ApplicationEnvironment): Database {
     return DatabaseFactory.init(
         driver = cfg.property("db.driver").getString(),
         url = cfg.property("db.url").getString(),
-        user = cfg.propertyOrNull("db.user")?.getString(),
-        password = cfg.propertyOrNull("db.password")?.getString()
+        user = cfg.property("db.user").getString(),
+        password = cfg.property("db.password").getString()
     )
 }

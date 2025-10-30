@@ -10,10 +10,7 @@ class ApplicationTest {
 
     @Test
     fun testRoot() = testApplication {
-        application {
-            module()
-        }
-        client.get("/").apply {
+        client.get("/api/auth").apply {
             assertEquals(HttpStatusCode.OK, status)
         }
     }
