@@ -22,13 +22,15 @@ services:
       - backend
 
   camera-server:
-    image: camera-server:latest
+    image: camera-server:1.0.13
     depends_on:
       - ldap
 
     ports:
       - "8080:8080"
-    hostname: "api.asd.msd.localhos t"
+    hostname: "api.asd.msd.localhost"
+    volumes:
+      - ./data/images:/data/images
 
     environment:
       - SECRET=useSomethingBetter

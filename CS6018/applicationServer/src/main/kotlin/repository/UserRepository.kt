@@ -42,10 +42,16 @@ class UserRepository {
 
         println("LDAP answerList: $answerList")
 
-        return if (answerList.size == 1)
-            User(answerList.first().attributes["cn"].toString())
-        else null
+        if (answerList.size == 1) {
+            val attrs = answerList.first().attributes
+            val cnAttr = attrs.get("cn")
+            val cnValue = cnAttr?.get()?.toString()
+            println("Resolved CN: $cnValue")
+            return cnValue?.let { User(it) }
+        }
 
+        println("User not found for $username")
+        return null
     }
 
     fun save(user: UserRequest): Boolean {

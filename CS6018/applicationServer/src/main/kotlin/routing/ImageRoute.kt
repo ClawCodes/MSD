@@ -8,6 +8,7 @@ import com.example.model.ImageBytes
 import io.ktor.http.*
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
+import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -39,7 +40,8 @@ suspend fun saveUpload(part: PartData.FileItem, dstFile: File) {
 
 fun Route.imageRoute(imageService: ImageService) {
     post {
-        val principal = call.principal<UserPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
+        println("PRINCIPAL: ${call.principal<JWTPrincipal>()}")
+        val principal = call.principal<JWTPrincipal>() ?: return@post call.respond(HttpStatusCode.Unauthorized)
 
         val multipart = call.receiveMultipart()
         var saved: String? = null
@@ -59,11 +61,11 @@ fun Route.imageRoute(imageService: ImageService) {
                     val path = File("/data/images/$imageId.$ext")
 
                     saveUpload(part, path)
-
+                    println("SAVED IMAGE: ${path.absolutePath}}")
                     saved = imageService.create(
                         Image(
                             id = imageId,
-                            owner = principal.id,
+                            owner = principal.payload.subject,
                             path = path.absolutePath,
                         )
                     )
@@ -78,9 +80,9 @@ fun Route.imageRoute(imageService: ImageService) {
     }
 
     get {
-        val principal = call.principal<UserPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+        val principal = call.principal<JWTPrincipal>() ?: return@get call.respond(HttpStatusCode.Unauthorized)
 
-        val images = imageService.read(principal.id) // fetch all rows for this owner:contentReference[oaicite:1]{index=1}
+        val images = imageService.read(principal.payload.subject)
 
         val out = images.mapNotNull { img ->
             val file = File(img.path)

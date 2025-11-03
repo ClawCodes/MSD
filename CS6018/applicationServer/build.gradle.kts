@@ -22,7 +22,7 @@ repositories {
 ktor {
     docker {
         localImageName.set("camera-server")
-        imageTag.set("1.0.0")
+        imageTag.set("1.0.13")
         jreVersion.set(JavaVersion.VERSION_21)
     }
 }

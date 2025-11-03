@@ -51,11 +51,18 @@ class JwtService(
         println("Checking jwt for $username")
         val foundUser: User? = username?.let(userService::findByUsername)
 
+        println("Token audience(s): ${credential.payload.audience}")
+        println("Expected audience: $audience")
+        println("Found User: $foundUser")
+
+
         return foundUser?.let {
             if (audienceMatches(credential))
                 JWTPrincipal(credential.payload)
-            else
+            else {
+                println("Invalid audience")
                 null
+            }
         }
     }
 
