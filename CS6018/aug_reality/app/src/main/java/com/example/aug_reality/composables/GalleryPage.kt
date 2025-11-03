@@ -3,7 +3,6 @@ package com.example.aug_reality.composables
 import android.graphics.BitmapFactory
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
-import androidx.camera.viewfinder.core.impl.ContentScale
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,7 +15,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +31,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import androidx.media3.effect.Crop
 import com.example.aug_reality.AugRealityVM
 import com.example.aug_reality.ImageBytesDto
 import kotlinx.coroutines.launch
@@ -39,7 +39,7 @@ import kotlin.io.encoding.Base64
 
 @OptIn(ExperimentalGetImage::class)
 @Composable
-fun GalleryScreen(vm: AugRealityVM) {
+fun Gallery(vm: AugRealityVM, onReturnHome: () -> Unit) {
     val scope = rememberCoroutineScope()
     var images by remember { mutableStateOf<List<ImageBytesDto>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
@@ -59,6 +59,11 @@ fun GalleryScreen(vm: AugRealityVM) {
             CircularProgressIndicator()
         }
     } else {
+        Button(
+            onClick = onReturnHome,
+        ) {
+            Text("Return Home")
+        }
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 120.dp),
             modifier = Modifier
@@ -82,7 +87,6 @@ fun GalleryScreen(vm: AugRealityVM) {
                             .clip(RoundedCornerShape(8.dp))
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                             .background(Color.LightGray)
-//                        contentScale = ContentScale.Crop
                     )
                 }
             }

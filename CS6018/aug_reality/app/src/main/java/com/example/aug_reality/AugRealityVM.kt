@@ -533,25 +533,4 @@ class AugRealityVM : ViewModel() {
             null
         }
     }
-
-
-//    fun getImages(appContext: Context): List<ImageBytesDto>? {
-//        viewModelScope.launch {
-//            return try {
-//                val response = _client.get("http://10.0.2.2:8080/api/images") {
-//                    bearerAuth(_authManager.getToken())
-//                }
-//
-//                if (response.status == HttpStatusCode.OK) {
-//                    response.body()
-//                } else {
-//                    Log.e("Gallery", "Failed to fetch images: ${response.status}")
-//                    null
-//                }
-//            } catch (e: Exception) {
-//                Log.e("Gallery", "Error: ${e.message}")
-//                null
-//            }
-//        }
-//    }
 }

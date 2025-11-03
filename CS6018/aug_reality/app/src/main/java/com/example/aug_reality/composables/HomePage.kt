@@ -74,11 +74,6 @@ fun HomePage(vm: AugRealityVM, context: Context, lifecycleOwner: LifecycleOwner,
         }
     }
 
-    // reset camera rotation for imageCapture use case
-//    window?.decorView?.display?.rotation?.let { rotation ->
-//        vm.imageCapture.targetRotation = rotation
-//    }
-
     val activity = LocalContext.current as? Activity
     val rotation = activity?.window?.decorView?.display?.rotation
     if (rotation != null) {
@@ -111,6 +106,22 @@ fun HomePage(vm: AugRealityVM, context: Context, lifecycleOwner: LifecycleOwner,
                 appContext = context,
                 lifecycleOwner = lifecycleOwner
             )
+        }
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            12.dp
+        )
+    ) {
+        Button(
+            onClick = onOpenGallery,
+        ) {
+            Text("Open Gallery")
         }
     }
     Box(modifier = Modifier.fillMaxSize()) {
