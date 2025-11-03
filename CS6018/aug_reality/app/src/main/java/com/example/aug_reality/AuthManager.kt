@@ -7,17 +7,12 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-
 
 fun endPoint(stem: String): String{
     return String.format("http://10.0.2.2:8080/api/%s", stem)
@@ -29,18 +24,14 @@ data class LoginRequest(val username: String, val password: String)
 @Serializable
 data class AuthResponse(val token: String)
 
-class AuthManager(val dataStore: DataStore<Preferences>){
-    private val client by lazy {
-        HttpClient(Android) {
-            install(ContentNegotiation) {
-                json(Json {
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
-            }
-        }
-    }
+@Serializable
+data class ImageBytesDto(
+    val id: String,
+    val bytesBase64: String,
+    val contentType: String
+)
 
+class AuthManager(val dataStore: DataStore<Preferences>, val client: HttpClient){
     val tokenKey = stringPreferencesKey("token")
     val usernameKey = stringPreferencesKey("username")
 

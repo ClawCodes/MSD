@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.tensorflow.lite.metadata)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.tensorflow.lite.gpu)
+    implementation(libs.androidx.media3.effect)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
