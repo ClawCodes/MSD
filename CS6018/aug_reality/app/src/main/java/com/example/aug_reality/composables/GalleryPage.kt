@@ -59,36 +59,42 @@ fun Gallery(vm: AugRealityVM, onReturnHome: () -> Unit) {
             CircularProgressIndicator()
         }
     } else {
-        Button(
-            onClick = onReturnHome,
-        ) {
-            Text("Return Home")
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 120.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(images) { img ->
-                val bitmap = remember(img.id) {
-                    val bytes = Base64.decode(img.bytesBase64)
-                    BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                }
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        )
+        {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 120.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(images) { img ->
+                    val bitmap = remember(img.id) {
+                        val bytes = Base64.decode(img.bytesBase64)
+                        BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    }
 
-                if (bitmap != null) {
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "Uploaded image",
-                        modifier = Modifier
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                            .background(Color.LightGray)
-                    )
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "Uploaded image",
+                            modifier = Modifier
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                                .background(Color.LightGray)
+                        )
+                    }
                 }
+            }
+            Button(
+                onClick = onReturnHome,
+            ) {
+                Text("Return Home")
             }
         }
     }

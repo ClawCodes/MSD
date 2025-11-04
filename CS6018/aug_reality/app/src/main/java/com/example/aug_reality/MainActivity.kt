@@ -85,7 +85,10 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     else {
-                        Gallery(vm){ currentScreen = Screen.HOME }
+                        Gallery(vm){
+                            Log.d("MainActivity", "Returning to home")
+                            currentScreen = Screen.HOME
+                        }
                     }
                 }
                 else {
